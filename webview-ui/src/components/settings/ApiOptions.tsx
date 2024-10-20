@@ -35,6 +35,7 @@ import OpenRouterModelPicker, {
 	ModelDescriptionMarkdown,
 	OPENROUTER_MODEL_PICKER_Z_INDEX,
 } from "./OpenRouterModelPicker"
+import { FormattedMessage } from 'react-intl'
 
 interface ApiOptionsProps {
 	showModelOptions: boolean
@@ -114,7 +115,9 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 		<div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
 			<div className="dropdown-container">
 				<label htmlFor="api-provider">
-					<span style={{ fontWeight: 500 }}>API Provider</span>
+					<span style={{ fontWeight: 500 }}>
+						<FormattedMessage id="apiOptions.provider" defaultMessage="API Provider" />
+					</span>
 				</label>
 				<VSCodeDropdown
 					id="api-provider"
@@ -171,7 +174,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 							marginTop: 3,
 							color: "var(--vscode-descriptionForeground)",
 						}}>
-						This key is stored locally and only used to make API requests from this extension.
+						<FormattedMessage id="apiOptions.apiKeyStorage" defaultMessage="This key is stored locally and only used to make API requests from this extension." />
 						{!apiConfiguration?.apiKey && (
 							<VSCodeLink
 								href="https://console.anthropic.com/settings/keys"
@@ -199,7 +202,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 							marginTop: 3,
 							color: "var(--vscode-descriptionForeground)",
 						}}>
-						This key is stored locally and only used to make API requests from this extension.
+						<FormattedMessage id="apiOptions.apiKeyStorage" defaultMessage="This key is stored locally and only used to make API requests from this extension." />
 						{!apiConfiguration?.openAiNativeApiKey && (
 							<VSCodeLink
 								href="https://platform.openai.com/api-keys"
@@ -219,14 +222,16 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 						type="password"
 						onInput={handleInputChange("openRouterApiKey")}
 						placeholder="Enter API Key...">
-						<span style={{ fontWeight: 500 }}>OpenRouter API Key</span>
+						<span style={{ fontWeight: 500 }}>
+							<FormattedMessage id="apiOptions.openRouterApiKey" defaultMessage="OpenRouter API Key" />
+						</span>
 					</VSCodeTextField>
 					{!apiConfiguration?.openRouterApiKey && (
 						<VSCodeButtonLink
 							href={getOpenRouterAuthUrl(uriScheme)}
 							style={{ margin: "5px 0 0 0" }}
 							appearance="secondary">
-							Get OpenRouter API Key
+							<FormattedMessage id="apiOptions.getOpenRouterApiKey" defaultMessage="Get OpenRouter API Key" />
 						</VSCodeButtonLink>
 					)}
 					<p
@@ -235,7 +240,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 							marginTop: "5px",
 							color: "var(--vscode-descriptionForeground)",
 						}}>
-						This key is stored locally and only used to make API requests from this extension.{" "}
+						<FormattedMessage id="apiOptions.apiKeyStorage" defaultMessage="This key is stored locally and only used to make API requests from this extension." />{" "}
 						{/* {!apiConfiguration?.openRouterApiKey && (
 							<span style={{ color: "var(--vscode-charts-green)" }}>
 								(<span style={{ fontWeight: 500 }}>Note:</span> OpenRouter is recommended for high rate
@@ -383,7 +388,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 							marginTop: 3,
 							color: "var(--vscode-descriptionForeground)",
 						}}>
-						This key is stored locally and only used to make API requests from this extension.
+						<FormattedMessage id="apiOptions.apiKeyStorage" defaultMessage="This key is stored locally and only used to make API requests from this extension." />
 						{!apiConfiguration?.geminiApiKey && (
 							<VSCodeLink
 								href="https://ai.google.dev/"

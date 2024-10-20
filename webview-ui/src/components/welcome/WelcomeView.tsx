@@ -4,6 +4,7 @@ import { useExtensionState } from "../../context/ExtensionStateContext"
 import { validateApiConfiguration } from "../../utils/validate"
 import { vscode } from "../../utils/vscode"
 import ApiOptions from "../settings/ApiOptions"
+import { FormattedMessage } from 'react-intl'
 
 const WelcomeView = () => {
 	const { apiConfiguration } = useExtensionState()
@@ -21,25 +22,28 @@ const WelcomeView = () => {
 	}, [apiConfiguration])
 
 	return (
-		<div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, padding: "0 20px" }}>
-			<h2>Hi, I'm Cline</h2>
+		<div style={{ padding: "20px", paddingTop: "40px" }}>
+			<h2>
+				<FormattedMessage id="welcome.title" defaultMessage="Hi, I'm Cline" />
+			</h2>
 			<p>
-				I can do all kinds of tasks thanks to the latest breakthroughs in{" "}
+				<FormattedMessage id="welcome.capabilities" defaultMessage="I can do all kinds of tasks thanks to the latest breakthroughs in" />{" "}
 				<VSCodeLink
 					href="https://www-cdn.anthropic.com/fed9cc193a14b84131812372d8d5857f8f304c52/Model_Card_Claude_3_Addendum.pdf"
 					style={{ display: "inline" }}>
-					Claude 3.5 Sonnet's agentic coding capabilities
+					<FormattedMessage id="welcome.capabilities.link" defaultMessage="Claude 3.5 Sonnet's agentic coding capabilities" />
 				</VSCodeLink>{" "}
-				and access to tools that let me create & edit files, explore complex projects, and execute terminal
-				commands (with your permission, of course).
+				<FormattedMessage id="welcome.tools" defaultMessage="and access to tools that let me create & edit files, explore complex projects, and execute terminal commands (with your permission, of course)." />
 			</p>
 
-			<b>To get started, this extension needs an API provider for Claude 3.5 Sonnet.</b>
+			<b>
+				<FormattedMessage id="welcome.apiProvider" defaultMessage="To get started, this extension needs an API provider for Claude 3.5 Sonnet." />
+			</b>
 
 			<div style={{ marginTop: "10px" }}>
 				<ApiOptions showModelOptions={false} />
 				<VSCodeButton onClick={handleSubmit} disabled={disableLetsGoButton} style={{ marginTop: "3px" }}>
-					Let's go!
+					<FormattedMessage id="welcome.letsGo" defaultMessage="Let's go！" />
 				</VSCodeButton>
 			</div>
 		</div>
