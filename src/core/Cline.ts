@@ -41,6 +41,7 @@ import { formatResponse } from "./prompts/responses"
 import { addCustomInstructions, SYSTEM_PROMPT } from "./prompts/system"
 import { truncateHalfConversation } from "./sliding-window"
 import { ClineProvider, GlobalFileNames } from "./webview/ClineProvider"
+import { showOmissionWarning } from "../integrations/editor/detect-omission"
 
 const cwd =
 	vscode.workspace.workspaceFolders?.map((folder) => folder.uri.fsPath).at(0) ?? path.join(os.homedir(), "Desktop") // may or may not exist but fs checking existence would immediately ask for permission which would be bad UX, need to come up with a better solution
@@ -68,6 +69,7 @@ export class Cline {
 	private providerRef: WeakRef<ClineProvider>
 	private abort: boolean = false
 	didFinishAborting = false
+	abandoned = false
 	private diffViewProvider: DiffViewProvider
 
 	// streaming
@@ -1074,6 +1076,7 @@ export class Cline {
 								await this.diffViewProvider.update(newContent, true)
 								await delay(300) // wait for diff view to update
 								this.diffViewProvider.scrollToFirstDiff()
+								showOmissionWarning(this.diffViewProvider.originalContent || "", newContent)
 
 								const completeMessage = JSON.stringify({
 									...sharedMessageProps,
@@ -1091,7 +1094,8 @@ export class Cline {
 									await this.diffViewProvider.revertChanges()
 									break
 								}
-								const { newProblemsMessage, userEdits } = await this.diffViewProvider.saveChanges()
+								const { newProblemsMessage, userEdits, finalContent } =
+									await this.diffViewProvider.saveChanges()
 								this.didEditFile = true // used to determine if we should wait for busy terminal to update before sending api request
 								if (userEdits) {
 									await this.say(
@@ -1103,7 +1107,14 @@ export class Cline {
 										} satisfies ClineSayTool)
 									)
 									pushToolResult(
-										`The user made the following updates to your content:\n\n${userEdits}\n\nThe updated content, which includes both your original modifications and the user's additional edits, has been successfully saved to ${relPath.toPosix()}. (Note this does not mean you need to re-write the file with the user's changes, as they have already been applied to the file.)${newProblemsMessage}`
+										`The user made the following updates to your content:\n\n${userEdits}\n\n` +
+											`The updated content, which includes both your original modifications and the user's edits, has been successfully saved to ${relPath.toPosix()}. Here is the full, updated content of the file:\n\n` +
+											`<final_file_content path="${relPath.toPosix()}">\n${finalContent}\n</final_file_content>\n\n` +
+											`Please note:\n` +
+											`1. You do not need to re-write the file with these changes, as they have already been applied.\n` +
+											`2. Proceed with the task using this updated file content as the new baseline.\n` +
+											`3. If the user's edits have addressed part of the task or changed the requirements, adjust your approach accordingly.` +
+											`${newProblemsMessage}`
 									)
 								} else {
 									pushToolResult(
@@ -1778,7 +1789,10 @@ export class Cline {
 
 					if (this.abort) {
 						console.log("aborting stream...")
-						await abortStream("user_cancelled")
+						if (!this.abandoned) {
+							// only need to gracefully abort if this instance isn't abandoned (sometimes openrouter stream hangs, in which case this would affect future instances of cline)
+							await abortStream("user_cancelled")
+						}
 						break // aborts the stream
 					}
 
@@ -1790,12 +1804,18 @@ export class Cline {
 					}
 				}
 			} catch (error) {
-				this.abortTask() // if the stream failed, there's various states the task could be in (i.e. could have streamed some tools the user may have executed), so we just resort to replicating a cancel task
-				await abortStream("streaming_failed", error.message ?? JSON.stringify(serializeError(error), null, 2))
-				const history = await this.providerRef.deref()?.getTaskWithId(this.taskId)
-				if (history) {
-					await this.providerRef.deref()?.initClineWithHistoryItem(history.historyItem)
-					// await this.providerRef.deref()?.postStateToWebview()
+				// abandoned happens when extension is no longer waiting for the cline instance to finish aborting (error is thrown here when any function in the for loop throws due to this.abort)
+				if (!this.abandoned) {
+					this.abortTask() // if the stream failed, there's various states the task could be in (i.e. could have streamed some tools the user may have executed), so we just resort to replicating a cancel task
+					await abortStream(
+						"streaming_failed",
+						error.message ?? JSON.stringify(serializeError(error), null, 2)
+					)
+					const history = await this.providerRef.deref()?.getTaskWithId(this.taskId)
+					if (history) {
+						await this.providerRef.deref()?.initClineWithHistoryItem(history.historyItem)
+						// await this.providerRef.deref()?.postStateToWebview()
+					}
 				}
 			}
 
@@ -1867,7 +1887,7 @@ export class Cline {
 			return didEndLoop // will always be false for now
 		} catch (error) {
 			// this should never happen since the only thing that can throw an error is the attemptApiRequest, which is wrapped in a try catch that sends an ask where if noButtonClicked, will clear current task and destroy this instance. However to avoid unhandled promise rejection, we will end this loop which will end execution of this instance (see startTask)
-			return true
+			return true // needs to be true so parent loop knows to end task
 		}
 	}
 
