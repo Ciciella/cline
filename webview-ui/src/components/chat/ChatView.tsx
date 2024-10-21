@@ -17,6 +17,7 @@ import Announcement from "./Announcement"
 import ChatRow from "./ChatRow"
 import ChatTextArea from "./ChatTextArea"
 import TaskHeader from "./TaskHeader"
+import { FormattedMessage, useIntl } from 'react-intl';
 
 interface ChatViewProps {
 	isHidden: boolean
@@ -479,7 +480,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 						return
 					}
 					const timer = setTimeout(() => {
-						scrollToBottomAuto()
+							scrollToBottomAuto()
 					}, 0)
 					return () => clearTimeout(timer)
 				} else {
@@ -531,10 +532,14 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 	}, [])
 	useEvent("wheel", handleWheel, window, { passive: true }) // passive improves scrolling performance
 
+	const { formatMessage } = useIntl();
+
 	const placeholderText = useMemo(() => {
-		const text = task ? "Type a message (@ to add context)..." : "Type your task here (@ to add context)..."
-		return text
-	}, [task])
+		const text = task ? 
+			formatMessage({ id: "chatView.typeMessage", defaultMessage: "Type a message (@ to add context)..." }) : 
+			formatMessage({ id: "chatView.typeTask", defaultMessage: "Type your task here (@ to add context)..." });
+		return text;
+	}, [task, formatMessage]);
 
 	const itemContent = useCallback(
 		(index: number, message: any) => (
@@ -584,17 +589,23 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 					}}>
 					{showAnnouncement && <Announcement version={version} hideAnnouncement={hideAnnouncement} />}
 					<div style={{ padding: "0 20px", flexShrink: 0 }}>
-						<h2>What can I do for you?</h2>
+						<h2>
+							<FormattedMessage id="chatView.whatCanIDo" defaultMessage="What can I do for you?" />
+						</h2>
 						<p>
-							Thanks to{" "}
+							<FormattedMessage id="chatView.thanksTo" defaultMessage="Thanks to" />{" "}
 							<VSCodeLink
 								href="https://www-cdn.anthropic.com/fed9cc193a14b84131812372d8d5857f8f304c52/Model_Card_Claude_3_Addendum.pdf"
 								style={{ display: "inline" }}>
-								Claude 3.5 Sonnet's agentic coding capabilities,
+								<FormattedMessage
+									id="chatView.agenticCodingCapabilities"
+									defaultMessage="Claude 3.5 Sonnet's agentic coding capabilities"
+								/>
 							</VSCodeLink>{" "}
-							I can handle complex software development tasks step-by-step. With tools that let me create
-							& edit files, explore complex projects, and execute terminal commands (after you grant
-							permission), I can assist you in ways that go beyond code completion or tech support.
+							<FormattedMessage
+								id="chatView.complexTasks"
+								defaultMessage="I can handle complex software development tasks step-by-step. With tools that let me create & edit files, explore complex projects, and execute terminal commands (after you grant permission), I can assist you in ways that go beyond code completion or tech support."
+							/>
 						</p>
 					</div>
 					{taskHistory.length > 0 && <HistoryPreview showHistoryView={showHistoryView} />}

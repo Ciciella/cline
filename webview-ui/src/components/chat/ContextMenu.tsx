@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef } from "react"
 import { ContextMenuOptionType, ContextMenuQueryItem, getContextMenuOptions } from "../../utils/context-mentions"
 import { removeLeadingNonAlphanumeric } from "../common/CodeAccordian"
+import { FormattedMessage } from "react-intl"
 
 interface ContextMenuProps {
 	onSelect: (type: ContextMenuOptionType, value?: string) => void
@@ -47,11 +48,32 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
 	const renderOptionContent = (option: ContextMenuQueryItem) => {
 		switch (option.type) {
 			case ContextMenuOptionType.Problems:
-				return <span>Problems</span>
+				return (
+					<span>
+						<FormattedMessage
+							id="contextMenu.problems"
+							defaultMessage="Problems"
+						/>
+					</span>
+				)
 			case ContextMenuOptionType.URL:
-				return <span>Paste URL to fetch contents</span>
+				return (
+					<span>
+						<FormattedMessage
+							id="contextMenu.pasteUrl"
+							defaultMessage="Paste URL to fetch contents"
+						/>
+					</span>
+				)
 			case ContextMenuOptionType.NoResults:
-				return <span>No results found</span>
+				return (
+					<span>
+						<FormattedMessage
+							id="contextMenu.noResults"
+							defaultMessage="No results found"
+						/>
+					</span>
+				)
 			case ContextMenuOptionType.File:
 			case ContextMenuOptionType.Folder:
 				if (option.value) {
@@ -72,7 +94,15 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
 						</>
 					)
 				} else {
-					return <span>Add {option.type === ContextMenuOptionType.File ? "File" : "Folder"}</span>
+					return (
+						<span>
+							<FormattedMessage
+								id="contextMenu.addFileOrFolder"
+								defaultMessage={`Add {type}`}
+								values={{ type: option.type === ContextMenuOptionType.File ? "File" : "Folder" }}
+							/>
+						</span>
+					)
 				}
 		}
 	}

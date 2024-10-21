@@ -408,7 +408,12 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 						type="url"
 						onInput={handleInputChange("openAiBaseUrl")}
 						placeholder={"Enter base URL..."}>
-						<span style={{ fontWeight: 500 }}>Base URL</span>
+						<span style={{ fontWeight: 500 }}>
+							<FormattedMessage
+								id="apiOptions.baseUrl"
+								defaultMessage="Base URL"
+							/>
+						</span>
 					</VSCodeTextField>
 					<VSCodeTextField
 						value={apiConfiguration?.openAiApiKey || ""}
@@ -434,7 +439,10 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 								setApiConfiguration({ ...apiConfiguration, azureApiVersion: "" })
 							}
 						}}>
-						Set Azure API version
+						<FormattedMessage
+							id="apiOptions.setAzureApiVersion"
+							defaultMessage="Set Azure API version"
+						/>
 					</VSCodeCheckbox>
 					{azureApiVersionSelected && (
 						<VSCodeTextField
@@ -451,8 +459,13 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 							color: "var(--vscode-descriptionForeground)",
 						}}>
 						<span style={{ color: "var(--vscode-errorForeground)" }}>
-							(<span style={{ fontWeight: 500 }}>Note:</span> Cline uses complex prompts and works best
-							with Claude models. Less capable models may not work as expected.)
+							(<span style={{ fontWeight: 500 }}>
+								<FormattedMessage id="apiOptions.note" defaultMessage="Note:" />
+							</span> 
+							<FormattedMessage 
+								id="apiOptions.complexPrompts" 
+								defaultMessage="Cline uses complex prompts and works best with Claude models. Less capable models may not work as expected." 
+							/>)
 						</span>
 					</p>
 				</div>
@@ -466,7 +479,12 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 						type="url"
 						onInput={handleInputChange("ollamaBaseUrl")}
 						placeholder={"Default: http://localhost:11434"}>
-						<span style={{ fontWeight: 500 }}>Base URL (optional)</span>
+						<span style={{ fontWeight: 500 }}>
+							<FormattedMessage
+								id="apiOptions.baseUrlOptional"
+								defaultMessage="Base URL (optional)"
+							/>
+						</span>
 					</VSCodeTextField>
 					<VSCodeTextField
 						value={apiConfiguration?.ollamaModelId || ""}
