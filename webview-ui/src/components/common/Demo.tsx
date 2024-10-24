@@ -20,8 +20,10 @@ import {
     VSCodeTextArea,
     VSCodeTextField,
 } from "@vscode/webview-ui-toolkit/react"
+import { FormattedMessage, useIntl } from 'react-intl';
 
 function Demo() {
+	const intl = useIntl();
 	// function handleHowdyClick() {
 	// 	vscode.postMessage({
 	// 		command: "hello",
@@ -99,30 +101,58 @@ function Demo() {
 				<span className="flex gap-3">
 					<VSCodeProgressRing />
 					<VSCodeTextField />
-					<VSCodeButton>Add</VSCodeButton>
-					<VSCodeButton appearance="secondary">Remove</VSCodeButton>
+					<VSCodeButton>
+						<FormattedMessage id="demo.addButton" defaultMessage="Add" />
+					</VSCodeButton>
+					<VSCodeButton appearance="secondary">
+						<FormattedMessage id="demo.removeButton" defaultMessage="Remove" />
+					</VSCodeButton>
 				</span>
 
-				<VSCodeBadge>Badge</VSCodeBadge>
-				<VSCodeCheckbox>Checkbox</VSCodeCheckbox>
+				<VSCodeBadge>
+					<FormattedMessage id="demo.badge" defaultMessage="Badge" />
+				</VSCodeBadge>
+				<VSCodeCheckbox>
+					<FormattedMessage id="demo.checkbox" defaultMessage="Checkbox" />
+				</VSCodeCheckbox>
 				<VSCodeDivider />
 				<VSCodeDropdown>
-					<VSCodeOption>Option 1</VSCodeOption>
-					<VSCodeOption>Option 2</VSCodeOption>
+					<VSCodeOption>
+						<FormattedMessage id="demo.option1" defaultMessage="Option 1" />
+					</VSCodeOption>
+					<VSCodeOption>
+						<FormattedMessage id="demo.option2" defaultMessage="Option 2" />
+					</VSCodeOption>
 				</VSCodeDropdown>
-				<VSCodeLink href="#">Link</VSCodeLink>
+				<VSCodeLink href="#">
+					<FormattedMessage id="demo.link" defaultMessage="Link" />
+				</VSCodeLink>
 				<VSCodePanels>
-					<VSCodePanelTab id="tab-1">Tab 1</VSCodePanelTab>
-					<VSCodePanelTab id="tab-2">Tab 2</VSCodePanelTab>
-					<VSCodePanelView id="view-1">Panel View 1</VSCodePanelView>
-					<VSCodePanelView id="view-2">Panel View 2</VSCodePanelView>
+					<VSCodePanelTab id="tab-1">
+						<FormattedMessage id="demo.tab1" defaultMessage="Tab 1" />
+					</VSCodePanelTab>
+					<VSCodePanelTab id="tab-2">
+						<FormattedMessage id="demo.tab2" defaultMessage="Tab 2" />
+					</VSCodePanelTab>
+					<VSCodePanelView id="view-1">
+						<FormattedMessage id="demo.panelView1" defaultMessage="Panel View 1" />
+					</VSCodePanelView>
+					<VSCodePanelView id="view-2">
+						<FormattedMessage id="demo.panelView2" defaultMessage="Panel View 2" />
+					</VSCodePanelView>
 				</VSCodePanels>
 				<VSCodeRadioGroup>
-					<VSCodeRadio>Radio 1</VSCodeRadio>
-					<VSCodeRadio>Radio 2</VSCodeRadio>
+					<VSCodeRadio>
+						<FormattedMessage id="demo.radio1" defaultMessage="Radio 1" />
+					</VSCodeRadio>
+					<VSCodeRadio>
+						<FormattedMessage id="demo.radio2" defaultMessage="Radio 2" />
+					</VSCodeRadio>
 				</VSCodeRadioGroup>
-				<VSCodeTag>Tag</VSCodeTag>
-				<VSCodeTextArea placeholder="Text Area" />
+				<VSCodeTag>
+					<FormattedMessage id="demo.tag" defaultMessage="Tag" />
+				</VSCodeTag>
+				<VSCodeTextArea placeholder={intl.formatMessage({ id: "demo.textAreaPlaceholder", defaultMessage: "Text Area" })} />
 			</div>
 		</main>
 	)

@@ -113,11 +113,11 @@ const App = () => {
 
 	return (
 		<IntlProvider key={locale} messages={messages[locale]} locale={locale}>
-			<div style={{ position: 'fixed', top: 10, right: 10, zIndex: 1000 }}>
+			{/* <div style={{ position: 'fixed', top: 10, right: 10, zIndex: 1000 }}>
 				<VSCodeButton onClick={toggleLanguage}>
 					{locale === 'en' ? 'Switch to Chinese' : '切换到英文'}
 				</VSCodeButton>
-			</div>
+			</div> */}
 			<ExtensionStateContextProvider>
 				<AppContent />
 			</ExtensionStateContextProvider>

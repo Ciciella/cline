@@ -3,6 +3,7 @@ import { useExtensionState } from "../../context/ExtensionStateContext"
 import { vscode } from "../../utils/vscode"
 import { memo } from "react"
 import { formatLargeNumber } from "../../utils/format"
+import { FormattedMessage } from 'react-intl'
 
 type HistoryPreviewProps = {
 	showHistoryView: () => void
@@ -142,7 +143,7 @@ const HistoryPreview = ({ showHistoryView }: HistoryPreviewProps) => {
 								fontSize: "var(--vscode-font-size)",
 								color: "var(--vscode-descriptionForeground)",
 							}}>
-							View all history
+							<FormattedMessage id="historyPreview.viewAllHistory" defaultMessage="View all history" />
 						</div>
 					</VSCodeButton>
 				</div>

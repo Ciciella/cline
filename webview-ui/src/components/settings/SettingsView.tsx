@@ -84,7 +84,9 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
 				<h3 style={{ color: "var(--vscode-foreground)", margin: 0 }}>
 					<FormattedMessage id="settings.title" defaultMessage="Settings" />
 				</h3>
-				<VSCodeButton onClick={handleSubmit}>Done</VSCodeButton>
+				<VSCodeButton onClick={handleSubmit}>
+					<FormattedMessage id="settings.done" defaultMessage="Done" />
+				</VSCodeButton>
 			</div>
 			<div
 				style={{ flexGrow: 1, overflowY: "scroll", paddingRight: 8, display: "flex", flexDirection: "column" }}>

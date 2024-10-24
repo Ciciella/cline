@@ -7,6 +7,7 @@ import { vscode } from "../../utils/vscode"
 import Thumbnails from "../common/Thumbnails"
 import { mentionRegexGlobal } from "../../../../src/shared/context-mentions"
 import { formatLargeNumber } from "../../utils/format"
+import { FormattedMessage } from 'react-intl';
 
 interface TaskHeaderProps {
 	task: ClineMessage
@@ -273,7 +274,9 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 
 							{shouldShowPromptCacheInfo && (cacheReads !== undefined || cacheWrites !== undefined) && (
 								<div style={{ display: "flex", alignItems: "center", gap: "4px", flexWrap: "wrap" }}>
-									<span style={{ fontWeight: "bold" }}>Cache:</span>
+									<span style={{ fontWeight: "bold" }}>
+										<FormattedMessage id="taskHeader.cache" defaultMessage="Cache:" />
+									</span>
 									<span style={{ display: "flex", alignItems: "center", gap: "3px" }}>
 										<i
 											className="codicon codicon-database"
@@ -298,7 +301,9 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 										alignItems: "center",
 									}}>
 									<div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-										<span style={{ fontWeight: "bold" }}>API Cost:</span>
+										<span style={{ fontWeight: "bold" }}>
+											<FormattedMessage id="taskHeader.apiCost" defaultMessage="API Cost:" />
+										</span>
 										<span>${totalCost?.toFixed(4)}</span>
 									</div>
 									<ExportButton />
@@ -372,7 +377,9 @@ const ExportButton = () => (
 				// marginRight: "-2.5px",
 			}
 		}>
-		<div style={{ fontSize: "10.5px", fontWeight: "bold", opacity: 0.6 }}>EXPORT</div>
+		<div style={{ fontSize: "10.5px", fontWeight: "bold", opacity: 0.6 }}>
+			<FormattedMessage id="taskHeader.export" defaultMessage="EXPORT" />
+		</div>
 	</VSCodeButton>
 )
 

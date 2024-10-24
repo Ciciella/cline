@@ -9,6 +9,7 @@ import { useExtensionState } from "../../context/ExtensionStateContext"
 import { vscode } from "../../utils/vscode"
 import { highlight } from "../history/HistoryView"
 import { ModelInfoView, normalizeApiConfiguration } from "./ApiOptions"
+import { FormattedMessage } from 'react-intl';
 
 const OpenRouterModelPicker: React.FC = () => {
 	const { apiConfiguration, setApiConfiguration, openRouterModels } = useExtensionState()
@@ -208,17 +209,26 @@ const OpenRouterModelPicker: React.FC = () => {
 						marginTop: 0,
 						color: "var(--vscode-descriptionForeground)",
 					}}>
-					The extension automatically fetches the latest list of models available on{" "}
+					<FormattedMessage
+						id="openRouterModelPicker.fetchModels"
+						defaultMessage="The extension automatically fetches the latest list of models available on "
+					/>
 					<VSCodeLink style={{ display: "inline", fontSize: "inherit" }} href="https://openrouter.ai/models">
-						OpenRouter.
+							<FormattedMessage id="openRouterModelPicker.openRouter" defaultMessage="OpenRouter." />
 					</VSCodeLink>
-					If you're unsure which model to choose, Cline works best with{" "}
+					<FormattedMessage
+						id="openRouterModelPicker.modelRecommendation"
+						defaultMessage="If you're unsure which model to choose, Cline works best with "
+					/>
 					<VSCodeLink
 						style={{ display: "inline", fontSize: "inherit" }}
 						onClick={() => handleModelChange("anthropic/claude-3.5-sonnet:beta")}>
-						anthropic/claude-3.5-sonnet:beta.
+						<FormattedMessage id="openRouterModelPicker.recommendedModel" defaultMessage="anthropic/claude-3.5-sonnet:beta." />
 					</VSCodeLink>
-					You can also try searching "free" for no-cost options currently available.
+					<FormattedMessage
+						id="openRouterModelPicker.searchFreeOptions"
+						defaultMessage="You can also try searching 'free' for no-cost options currently available."
+					/>
 				</p>
 			)}
 		</>

@@ -130,7 +130,9 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 					<VSCodeOption value="vertex">GCP Vertex AI</VSCodeOption>
 					<VSCodeOption value="bedrock">AWS Bedrock</VSCodeOption>
 					<VSCodeOption value="openai-native">OpenAI</VSCodeOption>
-					<VSCodeOption value="openai">OpenAI Compatible</VSCodeOption>
+					<VSCodeOption value="openai">
+						<FormattedMessage id="apiOptions.openaiCompatible" defaultMessage="OpenAI Compatible" />
+					</VSCodeOption>
 					<VSCodeOption value="ollama">Ollama</VSCodeOption>
 				</VSCodeDropdown>
 			</div>
@@ -143,7 +145,9 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 						type="password"
 						onInput={handleInputChange("apiKey")}
 						placeholder="Enter API Key...">
-						<span style={{ fontWeight: 500 }}>Anthropic API Key</span>
+						<span style={{ fontWeight: 500 }}>
+							<FormattedMessage id="apiOptions.anthropicApiKey" defaultMessage="Anthropic API Key" />
+						</span>
 					</VSCodeTextField>
 
 					<VSCodeCheckbox
@@ -175,13 +179,11 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 							color: "var(--vscode-descriptionForeground)",
 						}}>
 						<FormattedMessage id="apiOptions.apiKeyStorage" defaultMessage="This key is stored locally and only used to make API requests from this extension." />
-						{!apiConfiguration?.apiKey && (
-							<VSCodeLink
-								href="https://console.anthropic.com/settings/keys"
-								style={{ display: "inline", fontSize: "inherit" }}>
-								You can get an Anthropic API key by signing up here.
-							</VSCodeLink>
-						)}
+						<VSCodeLink
+							href="https://console.anthropic.com/settings/keys"
+							style={{ display: "inline", fontSize: "inherit" }}>
+							<FormattedMessage id="apiOptions.anthropicApiKeyInfo" defaultMessage="You can get an Anthropic API key by signing up here." />
+						</VSCodeLink>
 					</p>
 				</div>
 			)}
@@ -203,13 +205,11 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 							color: "var(--vscode-descriptionForeground)",
 						}}>
 						<FormattedMessage id="apiOptions.apiKeyStorage" defaultMessage="This key is stored locally and only used to make API requests from this extension." />
-						{!apiConfiguration?.openAiNativeApiKey && (
-							<VSCodeLink
-								href="https://platform.openai.com/api-keys"
-								style={{ display: "inline", fontSize: "inherit" }}>
-								You can get an OpenAI API key by signing up here.
-							</VSCodeLink>
-						)}
+						<VSCodeLink
+							href="https://platform.openai.com/api-keys"
+							style={{ display: "inline", fontSize: "inherit" }}>
+							<FormattedMessage id="apiOptions.openaiApiKeyInfo" defaultMessage="You can get an OpenAI API key by signing up here." />
+						</VSCodeLink>
 					</p>
 				</div>
 			)}
@@ -316,9 +316,10 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 							marginTop: "5px",
 							color: "var(--vscode-descriptionForeground)",
 						}}>
-						Authenticate by either providing the keys above or use the default AWS credential providers,
-						i.e. ~/.aws/credentials or environment variables. These credentials are only used locally to
-						make API requests from this extension.
+						<FormattedMessage
+							id="apiOptions.awsAuthentication"
+							defaultMessage="Authenticate by either providing the keys above or use the default AWS credential providers, i.e. ~/.aws/credentials or environment variables. These credentials are only used locally to make API requests from this extension."
+						/>
 					</p>
 				</div>
 			)}
@@ -355,7 +356,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 							marginTop: "5px",
 							color: "var(--vscode-descriptionForeground)",
 						}}>
-						To use Google Cloud Vertex AI, you need to
+						<FormattedMessage id="apiOptions.vertexAIUsage" defaultMessage="To use Google Cloud Vertex AI, you need to" />
 						<VSCodeLink
 							href="https://cloud.google.com/vertex-ai/generative-ai/docs/partner-models/use-claude#before_you_begin"
 							style={{ display: "inline", fontSize: "inherit" }}>
@@ -389,13 +390,11 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 							color: "var(--vscode-descriptionForeground)",
 						}}>
 						<FormattedMessage id="apiOptions.apiKeyStorage" defaultMessage="This key is stored locally and only used to make API requests from this extension." />
-						{!apiConfiguration?.geminiApiKey && (
-							<VSCodeLink
-								href="https://ai.google.dev/"
-								style={{ display: "inline", fontSize: "inherit" }}>
-								You can get a Gemini API key by signing up here.
-							</VSCodeLink>
-						)}
+						<VSCodeLink
+							href="https://ai.google.dev/"
+							style={{ display: "inline", fontSize: "inherit" }}>
+							<FormattedMessage id="apiOptions.geminiApiKeyInfo" defaultMessage="You can get a Gemini API key by signing up here." />
+						</VSCodeLink>
 					</p>
 				</div>
 			)}
@@ -525,16 +524,17 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 							marginTop: "5px",
 							color: "var(--vscode-descriptionForeground)",
 						}}>
-						Ollama allows you to run models locally on your computer. For instructions on how to get
-						started, see their
+						<FormattedMessage id="apiOptions.ollamaUsage" defaultMessage="Ollama allows you to run models locally on your computer. For instructions on how to get started, see their" />
 						<VSCodeLink
 							href="https://github.com/ollama/ollama/blob/main/README.md"
 							style={{ display: "inline", fontSize: "inherit" }}>
-							quickstart guide.
+							<FormattedMessage id="apiOptions.quickstartGuide" defaultMessage="quickstart guide." />
 						</VSCodeLink>
 						<span style={{ color: "var(--vscode-errorForeground)" }}>
-							(<span style={{ fontWeight: 500 }}>Note:</span> Cline uses complex prompts and works best
-							with Claude models. Less capable models may not work as expected.)
+							<FormattedMessage
+								id="apiOptions.note2"
+								defaultMessage="(Note: Cline uses complex prompts and works best with Claude models. Less capable models may not work as expected.)"
+							/>
 						</span>
 					</p>
 				</div>
@@ -643,38 +643,49 @@ export const ModelInfoView = ({
 		),
 		modelInfo.maxTokens !== undefined && modelInfo.maxTokens > 0 && (
 			<span key="maxTokens">
-				<span style={{ fontWeight: 500 }}>Max output:</span> {modelInfo.maxTokens?.toLocaleString()} tokens
+				<span style={{ fontWeight: 500 }}>
+					<FormattedMessage id="apiOptions.maxOutput" defaultMessage="Max output:" />
+				</span> {modelInfo.maxTokens?.toLocaleString()} <FormattedMessage id="apiOptions.tokens" defaultMessage="tokens" />
 			</span>
 		),
 		modelInfo.inputPrice !== undefined && modelInfo.inputPrice > 0 && (
 			<span key="inputPrice">
-				<span style={{ fontWeight: 500 }}>Input price:</span> {formatPrice(modelInfo.inputPrice)}/million tokens
+				<span style={{ fontWeight: 500 }}>
+					<FormattedMessage id="apiOptions.inputPrice" defaultMessage="Input price:" />
+				</span> {formatPrice(modelInfo.inputPrice)}/<FormattedMessage id="apiOptions.millionTokens" defaultMessage="million tokens" />
 			</span>
 		),
 		modelInfo.supportsPromptCache && modelInfo.cacheWritesPrice && (
 			<span key="cacheWritesPrice">
-				<span style={{ fontWeight: 500 }}>Cache writes price:</span>{" "}
-				{formatPrice(modelInfo.cacheWritesPrice || 0)}/million tokens
+				<span style={{ fontWeight: 500 }}>
+					<FormattedMessage id="apiOptions.cacheWritesPrice" defaultMessage="Cache writes price:" />
+				</span> {formatPrice(modelInfo.cacheWritesPrice || 0)}/<FormattedMessage id="apiOptions.millionTokens" defaultMessage="million tokens" />
 			</span>
 		),
 		modelInfo.supportsPromptCache && modelInfo.cacheReadsPrice && (
 			<span key="cacheReadsPrice">
-				<span style={{ fontWeight: 500 }}>Cache reads price:</span>{" "}
-				{formatPrice(modelInfo.cacheReadsPrice || 0)}/million tokens
+				<span style={{ fontWeight: 500 }}>
+					<FormattedMessage id="apiOptions.cacheReadsPrice" defaultMessage="Cache reads price:" />
+				</span> {formatPrice(modelInfo.cacheReadsPrice || 0)}/<FormattedMessage id="apiOptions.millionTokens" defaultMessage="million tokens" />
 			</span>
 		),
 		modelInfo.outputPrice !== undefined && modelInfo.outputPrice > 0 && (
 			<span key="outputPrice">
-				<span style={{ fontWeight: 500 }}>Output price:</span> {formatPrice(modelInfo.outputPrice)}/million
-				tokens
+				<span style={{ fontWeight: 500 }}>
+					<FormattedMessage id="apiOptions.outputPrice" defaultMessage="Output price:" />
+				</span> {formatPrice(modelInfo.outputPrice)}/<FormattedMessage id="apiOptions.millionTokens" defaultMessage="million tokens" />
 			</span>
 		),
 		isGemini && (
 			<span key="geminiInfo" style={{ fontStyle: "italic" }}>
-				* Free up to {selectedModelId && selectedModelId.includes("flash") ? "15" : "2"} requests per minute.
-				After that, billing depends on prompt size.{" "}
+				<FormattedMessage
+					id="apiOptions.geminiInfo"
+					defaultMessage="* Free up to {requestLimit} requests per minute. After that, billing depends on prompt size."
+					values={{ requestLimit: selectedModelId && selectedModelId.includes("flash") ? "15" : "2" }}
+				/>
+				{" "}
 				<VSCodeLink href="https://ai.google.dev/pricing" style={{ display: "inline", fontSize: "inherit" }}>
-					For more info, see pricing details.
+					<FormattedMessage id="apiOptions.geminiPricingInfo" defaultMessage="For more info, see pricing details." />
 				</VSCodeLink>
 			</span>
 		),

@@ -1,5 +1,6 @@
 import { VSCodeButton, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
 import { memo } from "react"
+import { FormattedMessage } from "react-intl"
 // import VSCodeButtonLink from "./VSCodeButtonLink"
 // import { getOpenRouterAuthUrl } from "./ApiOptions"
 // import { vscode } from "../utils/vscode"
@@ -30,26 +31,24 @@ const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 				<span className="codicon codicon-close"></span>
 			</VSCodeButton>
 			<h3 style={{ margin: "0 0 8px" }}>
-				🎉{"  "}New in v{minorVersion}
+				<FormattedMessage id="announcement.newVersion" defaultMessage="🎉 New in v{minorVersion}" values={{ minorVersion }} />
 			</h3>
 			<p style={{ margin: "5px 0px" }}>
-				New name! Meet Cline, an AI assistant that can use your <strong>CLI</strong> a<strong>N</strong>d{" "}
-				<strong>E</strong>ditor.
+				<FormattedMessage id="announcement.introduction" defaultMessage="New name! Meet Cline, an AI assistant that can use your CLI and Editor." />
 			</p>
 			<ul style={{ margin: "0 0 8px", paddingLeft: "12px" }}>
 				<li>
-					Responses are now streamed + a yellow text decoration animation to keep track of Cline's progress as
-					he edits files.
+					<FormattedMessage id="announcement.streamedResponses" defaultMessage="Responses are now streamed + a yellow text decoration animation to keep track of Cline's progress as he edits files." />
 				</li>
 				<li>
-					Cancel button to give Cline feedback if he goes off in the wrong direction, giving you more control
-					over tasks.
+					<FormattedMessage id="announcement.cancelButton" defaultMessage="Cancel button to give Cline feedback if he goes off in the wrong direction, giving you more control over tasks." />
 				</li>
 				<li>
-					Re-imagined tool calling prompt resulting in ~40% fewer requests to accomplish tasks + better
-					performance with other models.
+					<FormattedMessage id="announcement.reimaginedPrompt" defaultMessage="Re-imagined tool calling prompt resulting in ~40% fewer requests to accomplish tasks + better performance with other models." />
 				</li>
-				<li>Search and use any model with OpenRouter (search "free" for no-cost options).</li>
+				<li>
+					<FormattedMessage id="announcement.openRouter" defaultMessage="Search and use any model with OpenRouter (search 'free' for no-cost options)." />
+				</li>
 			</ul>
 			{/*<ul style={{ margin: "0 0 8px", paddingLeft: "12px" }}>
 				 <li>
@@ -100,10 +99,14 @@ const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 			</ul>*/}
 			<p style={{ margin: "0" }}>
 				<VSCodeLink href="https://x.com/sdrzn/status/1843989769828602273" style={{ display: "inline" }}>
-					See a demo of the changes here.
+					<FormattedMessage id="announcement.demoLink" defaultMessage="See a demo of the changes here." />
 				</VSCodeLink>
-				I'm excited for you to try this update, and would love to hear how you like it in our Discord. Come say
-				hi!{" "}
+				{" "}
+				<FormattedMessage 
+					id="announcement.discordInvite" 
+					defaultMessage="I'm excited for you to try this update, and would love to hear how you like it in our Discord. Come say hi!" 
+				/>
+				{" "}
 				<VSCodeLink style={{ display: "inline" }} href="https://discord.gg/cline">
 					https://discord.gg/cline
 				</VSCodeLink>

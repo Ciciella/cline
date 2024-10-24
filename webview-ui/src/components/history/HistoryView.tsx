@@ -5,6 +5,7 @@ import { Virtuoso } from "react-virtuoso"
 import { memo, useMemo, useState, useEffect } from "react"
 import Fuse, { FuseResult } from "fuse.js"
 import { formatLargeNumber } from "../../utils/format"
+import { FormattedMessage } from "react-intl"
 
 type HistoryViewProps = {
 	onDone: () => void
@@ -137,7 +138,9 @@ const HistoryView = ({ onDone }: HistoryViewProps) => {
 						padding: "10px 17px 10px 20px",
 					}}>
 					<h3 style={{ color: "var(--vscode-foreground)", margin: 0 }}>History</h3>
-					<VSCodeButton onClick={onDone}>Done</VSCodeButton>
+					<VSCodeButton onClick={onDone}>
+						<FormattedMessage id="settings.done" defaultMessage="Done" />
+					</VSCodeButton>
 				</div>
 				<div style={{ padding: "5px 17px 6px 17px" }}>
 					<div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>

@@ -10,6 +10,7 @@ import MarkdownBlock from "../common/MarkdownBlock"
 import Thumbnails from "../common/Thumbnails"
 import { highlightMentions } from "./TaskHeader"
 import { useSize } from "react-use"
+import { FormattedMessage } from 'react-intl'
 
 interface ChatRowProps {
 	message: ClineMessage
@@ -89,14 +90,18 @@ const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifiedMessa
 					<span
 						className="codicon codicon-error"
 						style={{ color: errorColor, marginBottom: "-1.5px" }}></span>,
-					<span style={{ color: errorColor, fontWeight: "bold" }}>Error</span>,
+					<span style={{ color: errorColor, fontWeight: "bold" }}>
+						<FormattedMessage id="chatRow.error" defaultMessage="Error" />
+					</span>,
 				]
 			case "mistake_limit_reached":
 				return [
 					<span
 						className="codicon codicon-error"
 						style={{ color: errorColor, marginBottom: "-1.5px" }}></span>,
-					<span style={{ color: errorColor, fontWeight: "bold" }}>Cline is having trouble...</span>,
+					<span style={{ color: errorColor, fontWeight: "bold" }}>
+						<FormattedMessage id="chatRow.clineHavingTrouble" defaultMessage="Cline is having trouble..." />
+					</span>,
 				]
 			case "command":
 				return [
@@ -108,7 +113,7 @@ const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifiedMessa
 							style={{ color: normalColor, marginBottom: "-1.5px" }}></span>
 					),
 					<span style={{ color: normalColor, fontWeight: "bold" }}>
-						Cline wants to execute this command:
+						<FormattedMessage id="chatRow.clineExecuteCommand" defaultMessage="Cline wants to execute this command:" />
 					</span>,
 				]
 			case "completion_result":
@@ -116,7 +121,9 @@ const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifiedMessa
 					<span
 						className="codicon codicon-check"
 						style={{ color: successColor, marginBottom: "-1.5px" }}></span>,
-					<span style={{ color: successColor, fontWeight: "bold" }}>Task Completed</span>,
+					<span style={{ color: successColor, fontWeight: "bold" }}>
+						<FormattedMessage id="chatRow.taskCompleted" defaultMessage="Task Completed" />
+					</span>,
 				]
 			case "api_req_started":
 				const getIconSpan = (iconName: string, color: string) => (
@@ -153,16 +160,26 @@ const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifiedMessa
 					),
 					apiReqCancelReason != null ? (
 						apiReqCancelReason === "user_cancelled" ? (
-							<span style={{ color: normalColor, fontWeight: "bold" }}>API Request Cancelled</span>
+							<span style={{ color: normalColor, fontWeight: "bold" }}>
+								<FormattedMessage id="chatRow.apiRequestCancelled" defaultMessage="API Request Cancelled" />
+							</span>
 						) : (
-							<span style={{ color: errorColor, fontWeight: "bold" }}>API Streaming Failed</span>
+							<span style={{ color: errorColor, fontWeight: "bold" }}>
+								<FormattedMessage id="chatRow.apiStreamingFailed" defaultMessage="API Streaming Failed" />
+							</span>
 						)
 					) : cost != null ? (
-						<span style={{ color: normalColor, fontWeight: "bold" }}>API Request</span>
+						<span style={{ color: normalColor, fontWeight: "bold" }}>
+							<FormattedMessage id="chatRow.apiRequest" defaultMessage="API Request" />
+						</span>
 					) : apiRequestFailedMessage ? (
-						<span style={{ color: errorColor, fontWeight: "bold" }}>API Request Failed</span>
+						<span style={{ color: errorColor, fontWeight: "bold" }}>
+							<FormattedMessage id="chatRow.apiRequestFailed" defaultMessage="API Request Failed" />
+						</span>
 					) : (
-						<span style={{ color: normalColor, fontWeight: "bold" }}>API Request...</span>
+						<span style={{ color: normalColor, fontWeight: "bold" }}>
+							<FormattedMessage id="chatRow.apiRequestInProgress" defaultMessage="API Request..." />
+						</span>
 					),
 				]
 			case "followup":
@@ -170,7 +187,9 @@ const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifiedMessa
 					<span
 						className="codicon codicon-question"
 						style={{ color: normalColor, marginBottom: "-1.5px" }}></span>,
-					<span style={{ color: normalColor, fontWeight: "bold" }}>Cline has a question:</span>,
+					<span style={{ color: normalColor, fontWeight: "bold" }}>
+						<FormattedMessage id="chatRow.clineHasQuestion" defaultMessage="Cline has a question:" />
+					</span>,
 				]
 			default:
 				return [null, null]
@@ -211,7 +230,9 @@ const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifiedMessa
 					<>
 						<div style={headerStyle}>
 							{toolIcon("edit")}
-							<span style={{ fontWeight: "bold" }}>Cline wants to edit this file:</span>
+							<span style={{ fontWeight: "bold" }}>
+								<FormattedMessage id="chatRow.editFile" defaultMessage="Cline wants to edit this file:" />
+							</span>
 						</div>
 						<CodeAccordian
 							isLoading={message.partial}
@@ -227,7 +248,9 @@ const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifiedMessa
 					<>
 						<div style={headerStyle}>
 							{toolIcon("new-file")}
-							<span style={{ fontWeight: "bold" }}>Cline wants to create a new file:</span>
+							<span style={{ fontWeight: "bold" }}>
+								<FormattedMessage id="chatRow.createFile" defaultMessage="Cline wants to create a new file:" />
+							</span>
 						</div>
 						<CodeAccordian
 							isLoading={message.partial}
@@ -244,7 +267,11 @@ const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifiedMessa
 						<div style={headerStyle}>
 							{toolIcon("file-code")}
 							<span style={{ fontWeight: "bold" }}>
-								{message.type === "ask" ? "Cline wants to read this file:" : "Cline read this file:"}
+								{message.type === "ask" ? (
+									<FormattedMessage id="chatRow.readFileAsk" defaultMessage="Cline wants to read this file:" />
+								) : (
+									<FormattedMessage id="chatRow.readFileSay" defaultMessage="Cline read this file:" />
+								)}
 							</span>
 						</div>
 						{/* <CodeAccordian
@@ -301,9 +328,11 @@ const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifiedMessa
 						<div style={headerStyle}>
 							{toolIcon("folder-opened")}
 							<span style={{ fontWeight: "bold" }}>
-								{message.type === "ask"
-									? "Cline wants to view the top level files in this directory:"
-									: "Cline viewed the top level files in this directory:"}
+								{message.type === "ask" ? (
+									<FormattedMessage id="chatRow.listFilesTopLevelAsk" defaultMessage="Cline wants to view the top level files in this directory:" />
+								) : (
+									<FormattedMessage id="chatRow.listFilesTopLevelSay" defaultMessage="Cline viewed the top level files in this directory:" />
+								)}
 							</span>
 						</div>
 						<CodeAccordian
@@ -321,9 +350,11 @@ const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifiedMessa
 						<div style={headerStyle}>
 							{toolIcon("folder-opened")}
 							<span style={{ fontWeight: "bold" }}>
-								{message.type === "ask"
-									? "Cline wants to recursively view all files in this directory:"
-									: "Cline recursively viewed all files in this directory:"}
+								{message.type === "ask" ? (
+									<FormattedMessage id="chatRow.listFilesRecursiveAsk" defaultMessage="Cline wants to recursively view all files in this directory:" />
+								) : (
+									<FormattedMessage id="chatRow.listFilesRecursiveSay" defaultMessage="Cline recursively viewed all files in this directory:" />
+								)}
 							</span>
 						</div>
 						<CodeAccordian
@@ -341,9 +372,11 @@ const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifiedMessa
 						<div style={headerStyle}>
 							{toolIcon("file-code")}
 							<span style={{ fontWeight: "bold" }}>
-								{message.type === "ask"
-									? "Cline wants to view source code definition names used in this directory:"
-									: "Cline viewed source code definition names used in this directory:"}
+								{message.type === "ask" ? (
+									<FormattedMessage id="chatRow.listCodeDefinitionNamesAsk" defaultMessage="Cline wants to view source code definition names used in this directory:" />
+								) : (
+									<FormattedMessage id="chatRow.listCodeDefinitionNamesSay" defaultMessage="Cline viewed source code definition names used in this directory:" />
+								)}
 							</span>
 						</div>
 						<CodeAccordian
@@ -361,13 +394,9 @@ const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifiedMessa
 							{toolIcon("search")}
 							<span style={{ fontWeight: "bold" }}>
 								{message.type === "ask" ? (
-									<>
-										Cline wants to search this directory for <code>{tool.regex}</code>:
-									</>
+									<FormattedMessage id="chatRow.searchFilesAsk" defaultMessage="Cline wants to search this directory for {regex}:" values={{ regex: <code>{tool.regex}</code> }} />
 								) : (
-									<>
-										Cline searched this directory for <code>{tool.regex}</code>:
-									</>
+									<FormattedMessage id="chatRow.searchFilesSay" defaultMessage="Cline searched this directory for {regex}:" values={{ regex: <code>{tool.regex}</code> }} />
 								)}
 							</span>
 						</div>
@@ -389,9 +418,9 @@ const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifiedMessa
 							{isInspecting ? <ProgressIndicator /> : toolIcon("inspect")}
 							<span style={{ fontWeight: "bold" }}>
 								{message.type === "ask" ? (
-									<>Cline wants to inspect this website:</>
+									<FormattedMessage id="chatRow.inspectSiteAsk" defaultMessage="Cline wants to inspect this website:" />
 								) : (
-									<>Cline is inspecting this website:</>
+									<FormattedMessage id="chatRow.inspectSiteSay" defaultMessage="Cline is inspecting this website:" />
 								)}
 							</span>
 						</div>
@@ -630,18 +659,26 @@ const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifiedMessa
 											color: "#FFA500",
 										}}></i>
 									<span style={{ fontWeight: 500, color: "#FFA500" }}>
-										Shell Integration Unavailable
+										<FormattedMessage id="chatRow.shellIntegrationWarning" defaultMessage="Shell Integration Unavailable" />
 									</span>
 								</div>
 								<div>
-									Cline won't be able to view the command's output. Please update VSCode (
-									<code>CMD/CTRL + Shift + P</code> → "Update") and make sure you're using a supported
-									shell: zsh, bash, fish, or PowerShell (<code>CMD/CTRL + Shift + P</code> →
-									"Terminal: Select Default Profile").{" "}
+									<FormattedMessage
+										id="chatRow.shellIntegrationWarningDetails"
+										defaultMessage="Cline won't be able to view the command's output. Please update VSCode ({updateCommand} → 'Update') and make sure you're using a supported shell: zsh, bash, fish, or PowerShell ({terminalCommand} → 'Terminal: Select Default Profile')."
+										values={{
+											updateCommand: <code>CMD/CTRL + Shift + P</code>,
+											terminalCommand: <code>CMD/CTRL + Shift + P</code>,
+										}}
+									/>
+									{" "}
 									<a
 										href="https://github.com/cline/cline/wiki/Troubleshooting-%E2%80%90-Shell-Integration-Unavailable"
 										style={{ color: "inherit", textDecoration: "underline" }}>
-										Still having trouble?
+										<FormattedMessage
+											id="chatRow.shellIntegrationWarningTroubleshooting"
+											defaultMessage="Still having trouble?"
+										/>
 									</a>
 								</div>
 							</div>
@@ -741,7 +778,9 @@ const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifiedMessa
 												className={`codicon codicon-chevron-${
 													isExpanded ? "down" : "right"
 												}`}></span>
-											<span style={{ fontSize: "0.8em" }}>Command Output</span>
+											<span style={{ fontSize: "0.8em" }}>
+												<FormattedMessage id="chatRow.commandOutput" defaultMessage="Command Output" />
+											</span>
 										</div>
 										{isExpanded && <CodeBlock source={`${"```"}shell\n${output}\n${"```"}`} />}
 									</div>
@@ -807,3 +846,4 @@ const Markdown = memo(({ markdown }: { markdown?: string }) => {
 		</div>
 	)
 })
+
