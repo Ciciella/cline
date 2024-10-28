@@ -1,7 +1,7 @@
 {
   "name": "claude-dev-china",
-  "displayName": "AI Code: Chat, Deepseek",
-  "description": "ÔÚÄúµÄIDEÖĞ×Ô¶¯±àÂë´úÀí£¬ÄÜ¹»ÔÚÄúµÄĞí¿ÉÏÂ´´½¨/±à¼­ÎÄ¼ş¡¢Ö´ĞĞÃüÁîµÈµÈ¡£Ö§³ÖdeepseekÄ£ĞÍ",
+  "displayName": "AI Code: Chat, Deepseek, ä¸­æ–‡ç‰ˆ",
+  "description": "åœ¨æ‚¨çš„IDEä¸­è‡ªåŠ¨ç¼–ç ä»£ç†ï¼Œèƒ½å¤Ÿåœ¨æ‚¨çš„è®¸å¯ä¸‹åˆ›å»º/ç¼–è¾‘æ–‡ä»¶ã€æ‰§è¡Œå‘½ä»¤ç­‰ç­‰ã€‚æ”¯æŒdeepseekæ¨¡å‹",
   "version": "2.1.1",
   "icon": "assets/icons/icon.png",
   "galleryBanner": {
@@ -40,7 +40,8 @@
     "chatgpt",
     "sonnet",
     "ai",
-    "llama"
+    "llama",
+    "deepseek"
   ],
   "activationEvents": [],
   "main": "./dist/extension.js",
@@ -49,7 +50,7 @@
       "activitybar": [
         {
           "id": "claude-dev-ActivityBar",
-          "title": "Cline",
+          "title": "AI Code",
           "icon": "$(robot)"
         }
       ]
@@ -87,7 +88,7 @@
       {
         "command": "cline.openInNewTab",
         "title": "Open In New Tab",
-        "category": "Cline"
+        "category": "AI Code"
       }
     ],
     "menus": {
