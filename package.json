@@ -1,8 +1,8 @@
 {
   "name": "claude-dev-china",
   "displayName": "AI Code: Chat, Deepseek",
-  "description": "鍦ㄦ偍鐨処DE涓嚜鍔ㄧ紪鐮佷唬鐞嗭紝鑳藉鍦ㄦ偍鐨勮鍙笅鍒涘缓/缂栬緫鏂囦欢銆佹墽琛屽懡浠ょ瓑绛夈�傛敮鎸乨eepseek妯″瀷",
-  "version": "2.1.0",
+  "description": "在您的IDE中自动编码代理，能够在您的许可下创建/编辑文件、执行命令等等。支持deepseek模型",
+  "version": "2.1.1",
   "icon": "assets/icons/icon.png",
   "galleryBanner": {
     "color": "#617A91",

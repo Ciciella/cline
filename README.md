@@ -39,7 +39,7 @@
 ### API提供商
 国产模型和openAI兼容的api key 均可使用
 
-<img width="2000" height="0" src="https://github.com/user-attachments/assets/ee14e6f7-20b8-4391-9091-8e8e25561929"><br>
+<img width="340" src="./assets/docs/使用介绍.png">
 
 
 ### 使用任何API和模型
