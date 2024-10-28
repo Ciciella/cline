@@ -463,7 +463,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 							</span> 
 							<FormattedMessage 
 								id="apiOptions.complexPrompts" 
-								defaultMessage="Cline uses complex prompts and works best with Claude models. Less capable models may not work as expected." 
+								defaultMessage="AI code uses complex prompts and works best with Claude models. Less capable models may not work as expected." 
 							/>)
 						</span>
 					</p>
@@ -533,7 +533,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 						<span style={{ color: "var(--vscode-errorForeground)" }}>
 							<FormattedMessage
 								id="apiOptions.note2"
-								defaultMessage="(Note: Cline uses complex prompts and works best with Claude models. Less capable models may not work as expected.)"
+								defaultMessage="(Note: AI code uses complex prompts and works best with Claude models. Less capable models may not work as expected.)"
 							/>
 						</span>
 					</p>

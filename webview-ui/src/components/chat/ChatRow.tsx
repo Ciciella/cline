@@ -106,7 +106,7 @@ export const ChatRowContent = ({
 						className="codicon codicon-error"
 						style={{ color: errorColor, marginBottom: "-1.5px" }}></span>,
 					<span style={{ color: errorColor, fontWeight: "bold" }}>
-						<FormattedMessage id="chatRow.clineHavingTrouble" defaultMessage="Cline is having trouble..." />
+						<FormattedMessage id="chatRow.clineHavingTrouble" defaultMessage="AI code is having trouble..." />
 					</span>,
 				]
 			case "command":
@@ -119,7 +119,7 @@ export const ChatRowContent = ({
 							style={{ color: normalColor, marginBottom: "-1.5px" }}></span>
 					),
 					<span style={{ color: normalColor, fontWeight: "bold" }}>
-						<FormattedMessage id="chatRow.clineExecuteCommand" defaultMessage="Cline wants to execute this command:" />
+						<FormattedMessage id="chatRow.clineExecuteCommand" defaultMessage="AI code wants to execute this command:" />
 					</span>,
 				]
 			case "completion_result":
@@ -194,7 +194,7 @@ export const ChatRowContent = ({
 						className="codicon codicon-question"
 						style={{ color: normalColor, marginBottom: "-1.5px" }}></span>,
 					<span style={{ color: normalColor, fontWeight: "bold" }}>
-						<FormattedMessage id="chatRow.clineHasQuestion" defaultMessage="Cline has a question:" />
+						<FormattedMessage id="chatRow.clineHasQuestion" defaultMessage="AI code has a question:" />
 					</span>,
 				]
 			default:
@@ -237,7 +237,7 @@ export const ChatRowContent = ({
 						<div style={headerStyle}>
 							{toolIcon("edit")}
 							<span style={{ fontWeight: "bold" }}>
-								<FormattedMessage id="chatRow.editFile" defaultMessage="Cline wants to edit this file:" />
+								<FormattedMessage id="chatRow.editFile" defaultMessage="AI code wants to edit this file:" />
 							</span>
 						</div>
 						<CodeAccordian
@@ -255,7 +255,7 @@ export const ChatRowContent = ({
 						<div style={headerStyle}>
 							{toolIcon("new-file")}
 							<span style={{ fontWeight: "bold" }}>
-								<FormattedMessage id="chatRow.createFile" defaultMessage="Cline wants to create a new file:" />
+								<FormattedMessage id="chatRow.createFile" defaultMessage="AI code wants to create a new file:" />
 							</span>
 						</div>
 						<CodeAccordian
@@ -274,9 +274,9 @@ export const ChatRowContent = ({
 							{toolIcon("file-code")}
 							<span style={{ fontWeight: "bold" }}>
 								{message.type === "ask" ? (
-									<FormattedMessage id="chatRow.readFileAsk" defaultMessage="Cline wants to read this file:" />
+									<FormattedMessage id="chatRow.readFileAsk" defaultMessage="AI code wants to read this file:" />
 								) : (
-									<FormattedMessage id="chatRow.readFileSay" defaultMessage="Cline read this file:" />
+									<FormattedMessage id="chatRow.readFileSay" defaultMessage="AI code read this file:" />
 								)}
 							</span>
 						</div>
@@ -335,9 +335,9 @@ export const ChatRowContent = ({
 							{toolIcon("folder-opened")}
 							<span style={{ fontWeight: "bold" }}>
 								{message.type === "ask" ? (
-									<FormattedMessage id="chatRow.listFilesTopLevelAsk" defaultMessage="Cline wants to view the top level files in this directory:" />
+									<FormattedMessage id="chatRow.listFilesTopLevelAsk" defaultMessage="AI code wants to view the top level files in this directory:" />
 								) : (
-									<FormattedMessage id="chatRow.listFilesTopLevelSay" defaultMessage="Cline viewed the top level files in this directory:" />
+									<FormattedMessage id="chatRow.listFilesTopLevelSay" defaultMessage="AI code viewed the top level files in this directory:" />
 								)}
 							</span>
 						</div>
@@ -357,9 +357,9 @@ export const ChatRowContent = ({
 							{toolIcon("folder-opened")}
 							<span style={{ fontWeight: "bold" }}>
 								{message.type === "ask" ? (
-									<FormattedMessage id="chatRow.listFilesRecursiveAsk" defaultMessage="Cline wants to recursively view all files in this directory:" />
+									<FormattedMessage id="chatRow.listFilesRecursiveAsk" defaultMessage="AI code wants to recursively view all files in this directory:" />
 								) : (
-									<FormattedMessage id="chatRow.listFilesRecursiveSay" defaultMessage="Cline recursively viewed all files in this directory:" />
+									<FormattedMessage id="chatRow.listFilesRecursiveSay" defaultMessage="AI code recursively viewed all files in this directory:" />
 								)}
 							</span>
 						</div>
@@ -379,9 +379,9 @@ export const ChatRowContent = ({
 							{toolIcon("file-code")}
 							<span style={{ fontWeight: "bold" }}>
 								{message.type === "ask" ? (
-									<FormattedMessage id="chatRow.listCodeDefinitionNamesAsk" defaultMessage="Cline wants to view source code definition names used in this directory:" />
+									<FormattedMessage id="chatRow.listCodeDefinitionNamesAsk" defaultMessage="AI code wants to view source code definition names used in this directory:" />
 								) : (
-									<FormattedMessage id="chatRow.listCodeDefinitionNamesSay" defaultMessage="Cline viewed source code definition names used in this directory:" />
+									<FormattedMessage id="chatRow.listCodeDefinitionNamesSay" defaultMessage="AI code viewed source code definition names used in this directory:" />
 								)}
 							</span>
 						</div>
@@ -400,9 +400,9 @@ export const ChatRowContent = ({
 							{toolIcon("search")}
 							<span style={{ fontWeight: "bold" }}>
 								{message.type === "ask" ? (
-									<FormattedMessage id="chatRow.searchFilesAsk" defaultMessage="Cline wants to search this directory for {regex}:" values={{ regex: <code>{tool.regex}</code> }} />
+									<FormattedMessage id="chatRow.searchFilesAsk" defaultMessage="AI code wants to search this directory for {regex}:" values={{ regex: <code>{tool.regex}</code> }} />
 								) : (
-									<FormattedMessage id="chatRow.searchFilesSay" defaultMessage="Cline searched this directory for {regex}:" values={{ regex: <code>{tool.regex}</code> }} />
+									<FormattedMessage id="chatRow.searchFilesSay" defaultMessage="AI code searched this directory for {regex}:" values={{ regex: <code>{tool.regex}</code> }} />
 								)}
 							</span>
 						</div>
@@ -424,9 +424,9 @@ export const ChatRowContent = ({
 			// 				{isInspecting ? <ProgressIndicator /> : toolIcon("inspect")}
 			// 				<span style={{ fontWeight: "bold" }}>
 			// 					{message.type === "ask" ? (
-			// 						<>Cline wants to inspect this website:</>
+			// 						<>AI code wants to inspect this website:</>
 			// 					) : (
-			// 						<>Cline is inspecting this website:</>
+			// 						<>AI code is inspecting this website:</>
 			// 					)}
 			// 				</span>
 			// 			</div>
@@ -635,7 +635,7 @@ export const ChatRowContent = ({
 								<div>
 									<FormattedMessage
 										id="chatRow.shellIntegrationWarningDetails"
-										defaultMessage="Cline won't be able to view the command's output. Please update VSCode ({updateCommand} → 'Update') and make sure you're using a supported shell: zsh, bash, fish, or PowerShell ({terminalCommand} → 'Terminal: Select Default Profile')."
+										defaultMessage="AI code won't be able to view the command's output. Please update VSCode ({updateCommand} → 'Update') and make sure you're using a supported shell: zsh, bash, fish, or PowerShell ({terminalCommand} → 'Terminal: Select Default Profile')."
 										values={{
 											updateCommand: <code>CMD/CTRL + Shift + P</code>,
 											terminalCommand: <code>CMD/CTRL + Shift + P</code>,

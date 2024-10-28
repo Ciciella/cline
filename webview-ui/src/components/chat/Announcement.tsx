@@ -40,10 +40,10 @@ const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 					style={{ display: "inline" }}>
 					"Computer Use"
 				</VSCodeLink>{" "}
-				功能来启动浏览器、单击、键入和滚动。这给了他在运行时调试、端到端测试，甚至一般的web使用方面更多的自主权。试着问“查看上海的天气”，看看它是怎么回事，或者{" "}
-				<VSCodeLink href="https://x.com/sdrzn/status/1850880547825823989" style={{ display: "inline" }}>
+				功能来启动浏览器、单击、键入和滚动。这给了他在运行时调试、端到端测试，甚至一般的web使用方面更多的自主权。试着问“查看上海的天气”，看看它是怎么回事。{" "}
+				{/* <VSCodeLink href="https://x.com/sdrzn/status/1850880547825823989" style={{ display: "inline" }}>
 				   在这里查看完整的演示。
-				</VSCodeLink>
+				</VSCodeLink> */}
 			</p>
 			{/*<ul style={{ margin: "0 0 8px", paddingLeft: "12px" }}>
 				 <li>

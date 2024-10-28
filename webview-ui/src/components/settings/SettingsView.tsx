@@ -144,7 +144,7 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
 						}}>
 						<FormattedMessage
 							id="settingsView.autoReadFiles"
-							defaultMessage="When enabled, Cline will automatically read files, view directories, and inspect sites without requiring you to click the Approve button."
+							defaultMessage="When enabled, AI code will automatically read files, view directories, and inspect sites without requiring you to click the Approve button."
 						/>
 					</p>
 				</div>
@@ -185,8 +185,8 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
 							id="settingsView.questionsFeedback"
 							defaultMessage="If you have any questions or feedback, feel free to open an issue at "
 						/>
-						<VSCodeLink href="https://github.com/cline/cline" style={{ display: "inline" }}>
-							https://github.com/cline/cline
+						<VSCodeLink href="https://github.com/Ciciella/AIcoder" style={{ display: "inline" }}>
+							https://github.com/Ciciella/AIcoder
 						</VSCodeLink>
 					</p>
 					<p style={{ fontStyle: "italic", margin: "10px 0 0 0", padding: 0 }}>v{version}</p>

@@ -24,7 +24,7 @@ const WelcomeView = () => {
 	return (
 		<div style={{ padding: "20px", paddingTop: "40px" }}>
 			<h2>
-				<FormattedMessage id="welcome.title" defaultMessage="Hi, I'm Cline" />
+				<FormattedMessage id="welcome.title" defaultMessage="Hi, I'm AI code" />
 			</h2>
 			<p>
 				<FormattedMessage id="welcome.capabilities" defaultMessage="I can do all kinds of tasks thanks to the latest breakthroughs in" />{" "}
