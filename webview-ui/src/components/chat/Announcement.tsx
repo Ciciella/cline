@@ -34,22 +34,17 @@ const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 				<FormattedMessage id="announcement.newVersion" defaultMessage="🎉 New in v{minorVersion}" values={{ minorVersion }} />
 			</h3>
 			<p style={{ margin: "5px 0px" }}>
-				<FormattedMessage id="announcement.introduction" defaultMessage="New name! Meet Cline, an AI assistant that can use your CLI and Editor." />
+			现在使用Anthropic的新方法{" "}
+				<VSCodeLink
+					href="https://www.anthropic.com/news/3-5-models-and-computer-use"
+					style={{ display: "inline" }}>
+					"Computer Use"
+				</VSCodeLink>{" "}
+				功能来启动浏览器、单击、键入和滚动。这给了他在运行时调试、端到端测试，甚至一般的web使用方面更多的自主权。试着问“查看上海的天气”，看看它是怎么回事，或者{" "}
+				<VSCodeLink href="https://x.com/sdrzn/status/1850880547825823989" style={{ display: "inline" }}>
+				   在这里查看完整的演示。
+				</VSCodeLink>
 			</p>
-			<ul style={{ margin: "0 0 8px", paddingLeft: "12px" }}>
-				<li>
-					<FormattedMessage id="announcement.streamedResponses" defaultMessage="Responses are now streamed + a yellow text decoration animation to keep track of Cline's progress as he edits files." />
-				</li>
-				<li>
-					<FormattedMessage id="announcement.cancelButton" defaultMessage="Cancel button to give Cline feedback if he goes off in the wrong direction, giving you more control over tasks." />
-				</li>
-				<li>
-					<FormattedMessage id="announcement.reimaginedPrompt" defaultMessage="Re-imagined tool calling prompt resulting in ~40% fewer requests to accomplish tasks + better performance with other models." />
-				</li>
-				<li>
-					<FormattedMessage id="announcement.openRouter" defaultMessage="Search and use any model with OpenRouter (search 'free' for no-cost options)." />
-				</li>
-			</ul>
 			{/*<ul style={{ margin: "0 0 8px", paddingLeft: "12px" }}>
 				 <li>
 					OpenRouter now supports prompt caching! They also have much higher rate limits than other providers,
@@ -97,20 +92,13 @@ const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 					environments)
 				</li>
 			</ul>*/}
-			<p style={{ margin: "0" }}>
-				<VSCodeLink href="https://x.com/sdrzn/status/1843989769828602273" style={{ display: "inline" }}>
-					<FormattedMessage id="announcement.demoLink" defaultMessage="See a demo of the changes here." />
-				</VSCodeLink>
-				{" "}
-				<FormattedMessage 
-					id="announcement.discordInvite" 
-					defaultMessage="I'm excited for you to try this update, and would love to hear how you like it in our Discord. Come say hi!" 
-				/>
-				{" "}
+			{/* <p style={{ margin: "0" }}>
+				加入
 				<VSCodeLink style={{ display: "inline" }} href="https://discord.gg/cline">
-					https://discord.gg/cline
+					discord.gg/cline
 				</VSCodeLink>
-			</p>
+				获取更多更新！
+			</p> */}
 		</div>
 	)
 }

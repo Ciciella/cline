@@ -2,7 +2,7 @@
   "welcome.title": "你好，我是 Cline",
   "welcome.capabilities": "由于最新的突破性进展，我可以执行各种任务",
   "welcome.capabilities.link": "Claude 3.5 Sonnet 的主动编码能力",
-  "welcome.tools": "并且可以访问允许我创建和编辑文件、探索复杂项目以及执行终端命令的工具（当然，需要您的许可）。",
+  "welcome.tools": "以及访问允许我创建和编辑文件、探索复杂项目、使用浏览器和执行终端命令（当然需要您的许可）。",
   "welcome.apiProvider": "要开始使用，此扩展需要 Claude 3.5 Sonnet 的 API 提供者。",
   "apiOptions.provider": "API 提供者",
   "apiOptions.openRouterApiKey": "OpenRouter API 密钥",

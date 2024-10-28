@@ -33,7 +33,7 @@ const WelcomeView = () => {
 					style={{ display: "inline" }}>
 					<FormattedMessage id="welcome.capabilities.link" defaultMessage="Claude 3.5 Sonnet's agentic coding capabilities" />
 				</VSCodeLink>{" "}
-				<FormattedMessage id="welcome.tools" defaultMessage="and access to tools that let me create & edit files, explore complex projects, and execute terminal commands (with your permission, of course)." />
+				<FormattedMessage id="welcome.tools" defaultMessage="以及访问允许我创建和编辑文件、探索复杂项目、使用浏览器和执行终端命令（当然需要您的许可）。" />
 			</p>
 
 			<b>
@@ -43,7 +43,7 @@ const WelcomeView = () => {
 			<div style={{ marginTop: "10px" }}>
 				<ApiOptions showModelOptions={false} />
 				<VSCodeButton onClick={handleSubmit} disabled={disableLetsGoButton} style={{ marginTop: "3px" }}>
-					<FormattedMessage id="welcome.letsGo" defaultMessage="Let's go！" />
+					<FormattedMessage id="welcome.letsGo" defaultMessage="Let's go��" />
 				</VSCodeButton>
 			</div>
 		</div>

@@ -1,6 +1,7 @@
 import { VSCodeBadge, VSCodeProgressRing } from "@vscode/webview-ui-toolkit/react"
 import deepEqual from "fast-deep-equal"
 import React, { memo, useEffect, useMemo, useRef } from "react"
+import { useSize } from "react-use"
 import { ClineApiReqInfo, ClineMessage, ClineSayTool } from "../../../../src/shared/ExtensionMessage"
 import { COMMAND_OUTPUT_STRING } from "../../../../src/shared/combineCommandSequences"
 import { vscode } from "../../utils/vscode"
@@ -9,7 +10,6 @@ import CodeBlock, { CODE_BLOCK_BG_COLOR } from "../common/CodeBlock"
 import MarkdownBlock from "../common/MarkdownBlock"
 import Thumbnails from "../common/Thumbnails"
 import { highlightMentions } from "./TaskHeader"
-import { useSize } from "react-use"
 import { FormattedMessage } from 'react-intl'
 
 interface ChatRowProps {
@@ -61,7 +61,13 @@ const ChatRow = memo(
 
 export default ChatRow
 
-const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifiedMessage, isLast }: ChatRowContentProps) => {
+export const ChatRowContent = ({
+	message,
+	isExpanded,
+	onToggleExpand,
+	lastModifiedMessage,
+	isLast,
+}: ChatRowContentProps) => {
 	const [cost, apiReqCancelReason, apiReqStreamingFailedMessage] = useMemo(() => {
 		if (message.text != null && message.say === "api_req_started") {
 			const info: ClineApiReqInfo = JSON.parse(message.text)
@@ -409,32 +415,32 @@ const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifiedMessa
 						/>
 					</>
 				)
-			case "inspectSite":
-				const isInspecting =
-					isLast && lastModifiedMessage?.say === "inspect_site_result" && !lastModifiedMessage?.images
-				return (
-					<>
-						<div style={headerStyle}>
-							{isInspecting ? <ProgressIndicator /> : toolIcon("inspect")}
-							<span style={{ fontWeight: "bold" }}>
-								{message.type === "ask" ? (
-									<FormattedMessage id="chatRow.inspectSiteAsk" defaultMessage="Cline wants to inspect this website:" />
-								) : (
-									<FormattedMessage id="chatRow.inspectSiteSay" defaultMessage="Cline is inspecting this website:" />
-								)}
-							</span>
-						</div>
-						<div
-							style={{
-								borderRadius: 3,
-								border: "1px solid var(--vscode-editorGroup-border)",
-								overflow: "hidden",
-								backgroundColor: CODE_BLOCK_BG_COLOR,
-							}}>
-							<CodeBlock source={`${"```"}shell\n${tool.path}\n${"```"}`} forceWrap={true} />
-						</div>
-					</>
-				)
+			// case "inspectSite":
+			// 	const isInspecting =
+			// 		isLast && lastModifiedMessage?.say === "inspect_site_result" && !lastModifiedMessage?.images
+			// 	return (
+			// 		<>
+			// 			<div style={headerStyle}>
+			// 				{isInspecting ? <ProgressIndicator /> : toolIcon("inspect")}
+			// 				<span style={{ fontWeight: "bold" }}>
+			// 					{message.type === "ask" ? (
+			// 						<>Cline wants to inspect this website:</>
+			// 					) : (
+			// 						<>Cline is inspecting this website:</>
+			// 					)}
+			// 				</span>
+			// 			</div>
+			// 			<div
+			// 				style={{
+			// 					borderRadius: 3,
+			// 					border: "1px solid var(--vscode-editorGroup-border)",
+			// 					overflow: "hidden",
+			// 					backgroundColor: CODE_BLOCK_BG_COLOR,
+			// 				}}>
+			// 				<CodeBlock source={`${"```"}shell\n${tool.path}\n${"```"}`} forceWrap={true} />
+			// 			</div>
+			// 		</>
+			// 	)
 			default:
 				return null
 		}
@@ -578,42 +584,6 @@ const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifiedMessa
 							/>
 						</div>
 					)
-				case "inspect_site_result":
-					const logs = message.text || ""
-					const screenshot = message.images?.[0]
-					return (
-						<div
-							style={{
-								marginTop: -10,
-								width: "100%",
-							}}>
-							{screenshot && (
-								<img
-									src={screenshot}
-									alt="Inspect screenshot"
-									style={{
-										width: "calc(100% - 2px)",
-										height: "auto",
-										objectFit: "contain",
-										marginBottom: logs ? 7 : 0,
-										borderRadius: 3,
-										cursor: "pointer",
-										marginLeft: "1px",
-									}}
-									onClick={() => vscode.postMessage({ type: "openImage", text: screenshot })}
-								/>
-							)}
-							{logs && (
-								<CodeAccordian
-									code={logs}
-									language="shell"
-									isConsoleLogs={true}
-									isExpanded={isExpanded}
-									onToggleExpand={onToggleExpand}
-								/>
-							)}
-						</div>
-					)
 				case "error":
 					return (
 						<>
@@ -684,7 +654,6 @@ const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifiedMessa
 							</div>
 						</>
 					)
-
 				default:
 					return (
 						<>
@@ -824,7 +793,7 @@ const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifiedMessa
 	}
 }
 
-const ProgressIndicator = () => (
+export const ProgressIndicator = () => (
 	<div
 		style={{
 			width: "16px",
