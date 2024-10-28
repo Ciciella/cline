@@ -1,7 +1,7 @@
 {
-  "name": "claude-dev-china",
-  "displayName": "Cline 中文版",
-  "description": "Autonomous coding agent right in your IDE, capable of creating/editing files, executing commands, and more with your permission every step of the way.",
+  "name": "ai-code",
+  "displayName": "AI Code: Chat",
+  "description": "在您的IDE中自动编码代理，能够在您的许可下创建/编辑文件、执行命令等等。",
   "version": "2.0.19",
   "icon": "assets/icons/icon.png",
   "galleryBanner": {

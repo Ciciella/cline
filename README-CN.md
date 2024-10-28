@@ -164,8 +164,17 @@ Cline 还可以使用无头浏览器检查任何网站（例如本地主机）�
      ```bash
      npm run publish:marketplace
      ```
+9. 发布2
+  - 发布到 VS Code
+    ```bash
+     npx @vscode/vsce publish
+    ```
 
 </details>
+
+### 原作者仓库地址
+
+<a href="https://github.com/cline/cline">GitHub</a>
 
 ## 许可证
 
