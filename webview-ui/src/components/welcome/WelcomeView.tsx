@@ -43,7 +43,7 @@ const WelcomeView = () => {
 			<div style={{ marginTop: "10px" }}>
 				<ApiOptions showModelOptions={false} />
 				<VSCodeButton onClick={handleSubmit} disabled={disableLetsGoButton} style={{ marginTop: "3px" }}>
-					<FormattedMessage id="welcome.letsGo" defaultMessage="Let's go��" />
+					<FormattedMessage id="welcome.letsGo" defaultMessage="现在开始!" />
 				</VSCodeButton>
 			</div>
 		</div>
