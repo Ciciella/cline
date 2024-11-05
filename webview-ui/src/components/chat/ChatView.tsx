@@ -79,15 +79,15 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 							setTextAreaDisabled(true)
 							setClineAsk("api_req_failed")
 							setEnableButtons(true)
-							setPrimaryButtonText("Retry")
-							setSecondaryButtonText("Start New Task")
+							setPrimaryButtonText("重试")
+							setSecondaryButtonText("开始新任务")
 							break
 						case "mistake_limit_reached":
 							setTextAreaDisabled(false)
 							setClineAsk("mistake_limit_reached")
 							setEnableButtons(true)
-							setPrimaryButtonText("Proceed Anyways")
-							setSecondaryButtonText("Start New Task")
+							setPrimaryButtonText("不管怎样都要继续")
+							setSecondaryButtonText("开始新任务")
 							break
 						case "followup":
 							setTextAreaDisabled(isPartial)
@@ -108,7 +108,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 									setSecondaryButtonText("拒绝")
 									break
 								default:
-									setPrimaryButtonText("审批")
+									setPrimaryButtonText("批准")
 									setSecondaryButtonText("拒绝")
 									break
 							}
@@ -716,7 +716,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 							<FormattedMessage id="chatView.whatCanIDo" defaultMessage="What can I do for you?" />
 						</h2>
 						<p>
-							<FormattedMessage id="chatView.thanksTo" defaultMessage="Thanks to" />{" "}
+							{/* <FormattedMessage id="chatView.thanksTo" defaultMessage="Thanks to" />{" "}
 							<VSCodeLink
 								href="https://www-cdn.anthropic.com/fed9cc193a14b84131812372d8d5857f8f304c52/Model_Card_Claude_3_Addendum.pdf"
 								style={{ display: "inline" }}>
@@ -724,7 +724,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 									id="chatView.agenticCodingCapabilities"
 									defaultMessage="Claude 3.5 Sonnet's agentic coding capabilities"
 								/>
-							</VSCodeLink>{" "}
+							</VSCodeLink>{" "} */}
 
 							<FormattedMessage
 								id="chatView.complexTasks"
