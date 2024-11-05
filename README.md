@@ -1,7 +1,7 @@
-# AI Code
+# AI Code 代码编程助手 🤖
 
 <p align="center">
-  <img src="assets/docs/demo2.gif" width="100%" />
+  <img src="https://gitee.com/nulifendou99/ai-code/raw/master/assets/docs/demo2.gif" width="100%" />
 </p>
 
 <div align="center">
@@ -34,11 +34,11 @@ AI code可以逐步处理复杂的软件开发任务。通过允许他创建和�
 ### API提供商
 国产模型和openAI兼容的api key 均可使用
 
-<img width="340" src="assets/docs/shiyongjieshao.png">
+<img width="340" src="https://gitee.com/nulifendou99/ai-code/raw/master/assets/docs/shiyongjieshao.png">
 
 ### 支持模型列表：
 
-<img width="340" src="assets/docs/moxingjieshao.png">
+<img width="340" src="https://gitee.com/nulifendou99/ai-code/raw/master/assets/docs/moxingjieshao.png">
 
 
 ### 使用任何API和模型
@@ -47,11 +47,6 @@ AI code支持OpenRouter、Anthropic、OpenAI、Google Gemini、AWS Bedrock、Azu
 
 扩展还会跟踪整个任务循环和单个请求的总令牌和API使用成本，让你在每一步都了解支出。
 
-<!-- 透明像素以在浮动图像后创建换行 -->
-
-<!-- <img width="2000" height="0" src="https://github.com/user-attachments/assets/ee14e6f7-20b8-4391-9091-8e8e25561929"><br>
-
-<img align="left" width="370" src="https://github.com/user-attachments/assets/81be79a8-1fdb-4028-9129-5fe055e01e76"> -->
 
 ### 在终端中运行命令
 
@@ -59,11 +54,6 @@ AI code支持OpenRouter、Anthropic、OpenAI、Google Gemini、AWS Bedrock、Azu
 
 对于长时间运行的进程如开发服务器，使用“Proceed While Running”按钮让AI code在命令在后台运行时继续任务。当AI code工作时，他会在过程中收到任何新的终端输出通知，让他对可能出现的问题做出反应，例如编辑文件时的编译时错误。
 
-<!-- 透明像素以在浮动图像后创建换行 -->
-
-<!-- <img width="2000" height="0" src="https://github.com/user-attachments/assets/ee14e6f7-20b8-4391-9091-8e8e25561929"><br>
-
-<img align="right" width="400" src="https://github.com/user-attachments/assets/c5977833-d9b8-491e-90f9-05f9cd38c588"> -->
 
 ### 创建和编辑文件
 
@@ -71,11 +61,6 @@ AI code可以直接在你的编辑器中创建和编辑文件，向你展示更�
 
 AI code所做的所有更改都记录在你文件的时间轴中，提供了一种简单的方法来跟踪和还原修改（如果需要）。
 
-<!-- 透明像素以在浮动图像后创建换行 -->
-
-<!-- <img width="2000" height="0" src="https://github.com/user-attachments/assets/ee14e6f7-20b8-4391-9091-8e8e25561929"><br>
-
-<img align="left" width="350" src="https://github.com/user-attachments/assets/50019dba-a63d-41f0-ab0f-fd35ebcdd4c5"> -->
 
 ### 分析图像和浏览器截图
 
@@ -85,11 +70,11 @@ AI code还可以使用无头浏览器检查任何网站，例如localhost，允�
 
 <!-- 透明像素以在浮动图像后创建换行 -->
 
-<img width="2000" height="0" src="https://github.com/user-attachments/assets/ee14e6f7-20b8-4391-9091-8e8e25561929"><br>
+<img width="2000" height="0" src="https://gitee.com/nulifendou99/ai-code/raw/master/assets/docs/gongnengjieshao.png"><br>
 
 
 
-<img align="right" width="360" src="assets/docs/gongnengjieshao.png">
+<img align="right" width="360" src="https://gitee.com/nulifendou99/ai-code/raw/master/assets/docs/gongnengjieshao.png">
 
 ### 添加上下文
 
