@@ -144,7 +144,7 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
 						}}>
 						<FormattedMessage
 							id="settingsView.autoReadFiles"
-							defaultMessage="å¯ç”¨åŽï¼ŒAI Codeå°†è‡ªåŠ¨è¯»å–æ–‡ä»¶ã€æŸ¥çœ‹ç›®å½•å’Œæ£€æŸ¥ç«™ç‚¹ï¼Œè€Œæ— éœ€å•å‡»â€œæ‰¹å‡†â€æŒ‰é’®ã€‚"
+							defaultMessage="ÆôÓÃºó£¬AI Code½«×Ô¶¯¶ÁÈ¡ÎÄ¼þ¡¢²é¿´Ä¿Â¼ºÍ¼ì²éÕ¾µã£¬¶øÎÞÐèµ¥»÷¡°Åú×¼¡±°´Å¥¡£"
 						/>
 					</p>
 				</div>
