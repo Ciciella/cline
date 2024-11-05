@@ -1,7 +1,7 @@
 # AI Code
 
 <p align="center">
-  <img src="assets\docs\demo2.gif" width="100%" />
+  <img src="assets/docs/demo2.gif" width="100%" />
 </p>
 
 <div align="center">
@@ -34,11 +34,11 @@ AI code可以逐步处理复杂的软件开发任务。通过允许他创建和�
 ### API提供商
 国产模型和openAI兼容的api key 均可使用
 
-<img width="340" src="./assets/docs/使用介绍.png">
+<img width="340" src="assets/docs/shiyongjieshao.png">
 
 ### 支持模型列表：
 
-<img width="340" src="./assets/docs/模型介绍.png">
+<img width="340" src="assets/docs/moxingjieshao.png">
 
 
 ### 使用任何API和模型
@@ -89,7 +89,7 @@ AI code还可以使用无头浏览器检查任何网站，例如localhost，允�
 
 
 
-<img align="right" width="360" src="assets/docs/功能介绍.png">
+<img align="right" width="360" src="assets/docs/gongnengjieshao.png">
 
 ### 添加上下文
 
