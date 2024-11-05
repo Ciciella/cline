@@ -1,204 +1,209 @@
-# Change Log
+# 更新日志
+
+## [2.1.2]
+
+- 修复各种 bug
+- 更新 README，添加新的浏览器功能说明
 
 ## [2.1.1]
 
-- Add stricter prompt to prevent Cline from editing files during a browser session without first closing the browser
+- 添加更严格的提示，防止 Cline 在浏览器会话期间在未关闭浏览器的情况下编辑文件
 
 ## [2.1.0]
 
-- Cline now uses Anthropic's new "Computer Use" feature to launch a browser, click, type, and scroll. This gives him more autonomy in runtime debugging, end-to-end testing, and even general web use. Try asking "Look up the weather in Colorado" to see it in action! (Available with Claude 3.5 Sonnet v2)
+- Cline 现在使用 Anthropic 的新"计算机使用"功能来启动浏览器、点击、输入和滚动。这使他在运行时调试、端到端测试，甚至一般网络使用方面有了更多自主权。试试问"查看科罗拉多州的天气"来体验这个功能！（适用于 Claude 3.5 Sonnet v2）
 
 ## [2.0.19]
 
-- Fix model info for Claude 3.5 Sonnet v1 on OpenRouter
+- 修复 OpenRouter 上 Claude 3.5 Sonnet v1 的模型信息
 
 ## [2.0.18]
 
-- Add support for both v1 and v2 of Claude 3.5 Sonnet for GCP Vertex and AWS Bedrock (for cases where the new model is not enabled yet or unavailable in your region)
+- 为 GCP Vertex 和 AWS Bedrock 添加对 Claude 3.5 Sonnet v1 和 v2 的支持（适用于新模型尚未启用或在您所在地区不可用的情况）
 
 ## [2.0.17]
 
-- Update Anthropic model IDs
+- 更新 Anthropic 模型 ID
 
 ## [2.0.16]
 
-- Adjustments to system prompt
+- 调整系统提示
 
 ## [2.0.15]
 
-- Fix bug where modifying Cline's edits would lead him to try to re-apply the edits
-- Fix bug where weaker models would display file contents before using the write_to_file tool
-- Fix o1-mini and o1-preview errors when using OpenAI native
+- 修复修改 Cline 的编辑会导致他尝试重新应用编辑的 bug
+- 修复较弱的模型在使用 write_to_file 工具之前显示文件内容的 bug
+- 修复使用原生 OpenAI 时的 o1-mini 和 o1-preview 错误
 
 ## [2.0.14]
 
-- Gracefully cancel requests while stream could be hanging
+- 在流可能挂起时优雅地取消请求
 
 ## [2.0.13]
 
-- Detect code omission and show warning with troubleshooting link
+- 检测代码遗漏并显示带有故障排除链接的警告
 
 ## [2.0.12]
 
-- Keep cursor out of the way during file edit streaming animation
+- 在文件编辑流式动画期间保持光标不受干扰
 
 ## [2.0.11]
 
-- Adjust prompts around read_file to prevent re-reading files unnecessarily
+- 调整 read_file 相关的提示，以防止不必要的重复读取文件
 
 ## [2.0.10]
 
-- More adjustments to system prompt to prevent lazy coding
+- 进一步调整系统提示以防止懒惰编码
 
 ## [2.0.9]
 
-- Update system prompt to try to prevent Cline from lazy coding (`// rest of code here...`)
+- 更新系统提示以试图防止 Cline 懒惰编码（`// rest of code here...`）
 
 ## [2.0.8]
 
-- Fix o1-mini and o1-preview for OpenAI
-- Fix diff editor not opening sometimes in slow environments like project idx
+- 修复 OpenAI 的 o1-mini 和 o1-preview
+- 修复在项目索引等慢速环境中有时无法打开差异编辑器的问题
 
 ## [2.0.7]
 
-- Misc. bug fixes
+- 修复各种 bug
 
 ## [2.0.6]
 
-- Update URLs to https://github.com/Ciciella/AIcoder
+- 更新 URL 为 https://github.com/Ciciella/AIcoder
 
 ## [2.0.5]
 
-- Fixed bug where Cline's edits would stream into the active tab when switching tabs during a write_to_file
-- Added explanation in task continuation prompt that an interrupted write_to_file reverts the file to its original contents, preventing unnecessary re-reads
-- Fixed non-first chunk error handling in case stream fails mid-way through
+- 修复在 write_to_file 期间切换标签页时 Cline 的编辑会流入活动标签页的 bug
+- 在任务继续提示中添加说明，说明中断的 write_to_file 会将文件恢复到原始内容，避免不必要的重新读取
+- 修复流在中途失败时非第一块的错误处理
 
 ## [2.0.0]
 
-- New name! Meet Cline, an AI assistant that can use your CLI and Editor
-- Responses are now streamed with a yellow text decoration animation to keep track of Cline's progress as he edits files
-- New Cancel button to give Cline feedback if he goes off in the wrong direction, giving you more control over tasks
-- Re-imagined tool calling prompt resulting in ~40% fewer requests to accomplish tasks + better performance with other models
-- Search and use any model with OpenRouter
+- 新名字！认识 Cline，一个可以使用您的 CLI 和编辑器的 AI 助手
+- 响应现在以黄色文本装饰动画流式显示，以跟踪 Cline 编辑文件的进度
+- 新的取消按钮，让您在 Cline 走错方向时给予反馈，让您对任务有更多控制
+- 重新设计的工具调用提示，导致完成任务的请求减少约 40%，并提高了与其他模型的性能
+- 使用 OpenRouter 搜索和使用任何模型
 
 ## [1.9.7]
 
-- Only auto-include error diagnostics after file edits, removed warnings to keep Claude from getting distracted in projects with strict linting rules
+- 仅在文件编辑后自动包含错误诊断，删除警告以防止 Claude 在具有严格 linting 规则的项目中分心
 
 ## [1.9.6]
 
-- Added support for new Google Gemini models `gemini-1.5-flash-002` and `gemini-1.5-pro-002`
-- Updated system prompt to be more lenient when terminal output doesn't stream back properly
-- Adjusted system prompt to prevent overuse of the inspect_site tool
-- Increased global line height for improved readability
+- 添加对新 Google Gemini 模型 `gemini-1.5-flash-002` 和 `gemini-1.5-pro-002` 的支持
+- 更新系统提示，以便在终端输出未流式返回时更加宽容
+- 调整系统提示以防止过度使用 inspect_site 工具
+- 增加全局行高以提高可读性
 
 ## [1.9.0]
 
-- Claude can now use a browser! This update adds a new `inspect_site` tool that captures screenshots and console logs from websites (including localhost), making it easier for Claude to troubleshoot issues on his own.
-- Improved automatic linter/compiler debugging by only sending Claude new errors that result from his edits, rather than reporting all workspace problems.
+- Claude 现在可以使用浏览器！此更新添加了一个新的 `inspect_site` 工具，该工具捕获网站（包括 localhost）的屏幕截图和控制台日志，使 Claude 能够自行解决其上的问题。
+- 通过仅发送 Claude 新错误来改进自动 linter/compiler 调试，而不是报告所有工作区问题。
 
 ## [1.8.0]
 
-- You can now use '@' in the textarea to add context!
-    - @url: Paste in a URL for the extension to fetch and convert to markdown, useful when you want to give Claude the latest docs!
-    - @problems: Add workspace errors and warnings for Claude to fix, no more back-and-forth about debugging
-    - @file: Adds a file's contents so you don't have to waste API requests approving read file (+ type to search files)
-    - @folder: Adds folder's files all at once to speed up your workflow even more
+- 您现在可以使用 '@' 在 textarea 中添加上下文！
+    - @url: 粘贴一个 URL 以供扩展获取并转换为 markdown，当您想给 Claude 最新的文档时非常有用！
+    - @problems: 添加工作区错误和警告，以便 Claude 可以修复它们，不再需要来回调试
+    - @file: 添加文件的内容，这样您就不必浪费 API 请求来批准读取文件（+ 输入以搜索文件）
+    - @folder: 一次添加文件夹的所有文件，以进一步加快工作流程
 
 ## [1.7.0]
 
-- Adds problems monitoring to keep Claude updated on linter/compiler/build issues, letting him proactively fix errors on his own! (adding missing imports, fixing type errors, etc.)
+- 添加问题监控，以保持 Claude 了解 linter/compiler/build 问题，让他能够主动修复自己的错误（添加缺少的导入、修复类型错误等）
 
 ## [1.6.5]
 
-- Adds support for OpenAI o1, Azure OpenAI, and Google Gemini (free for up to 15 requests per minute!)
-- Task header can now be collapsed to provide more space for viewing conversations
-- Adds fuzzy search and sorting to Task History, making it easier to find specific tasks
+- 添加对 OpenAI o1、Azure OpenAI 和 Google Gemini（免费，每分钟最多 15 个请求！）的支持
+- 任务标题现在可以折叠，以提供更多空间用于查看对话
+- 添加模糊搜索和排序，以使任务历史记录更易于查找特定任务
 
 ## [1.6.0]
 
-- Commands now run directly in your terminal thanks to VSCode 1.93's new shell integration updates! Plus a new 'Proceed While Running' button to let Claude continue working while commands run, sending him new output along the way (i.e. letting him react to server errors as he edits files)
+- 命令现在直接在您的终端中运行，感谢 VSCode 1.93 的新 shell 集成更新！此外，一个新的“Proceed While Running”按钮，让 Claude 在命令运行时继续工作，同时发送新的输出（例如，让他在编辑文件时对服务器错误做出反应）
 
 ## [1.5.27]
 
-- Claude's changes now appear in your file's Timeline, allowing you to easily view a diff of each edit. This is especially helpful if you want to revert to a previous version. No need for git—everything is tracked by VSCode's local history!
-- Updated system prompt to keep Claude from re-reading files unnecessarily
+- Claude 的更改现在出现在文件的时间轴中，允许您轻松查看每个编辑的差异。这特别有助于如果您想恢复到以前的版本。不需要 git—一切都是由 VSCode 的本地历史记录跟踪的！
+- 更新系统提示，以防止 Claude 重新读取文件
 
 ## [1.5.19]
 
-- Adds support for OpenAI compatible API providers (e.g. Ollama!)
+- 添加对 OpenAI 兼容 API 提供者的支持（例如，Ollama！）
 
 ## [1.5.13]
 
-- New terminal emulator! When Claude runs commands, you can now type directly in the terminal (+ support for Python environments)
-- Adds search to Task History
+- 新的终端模拟器！当 Claude 运行命令时，您现在可以直接在终端中输入（+ 支持 Python 环境）
+- 添加任务历史记录中的搜索
 
 ## [1.5.6]
 
-- You can now edit Claude's changes before accepting! When he edits or creates a file, you can modify his changes directly in the right side of the diff view (+ hover over the 'Revert Block' arrow button in the center to undo `// rest of code here` shenanigans)
+- 您现在可以在接受 Claude 的更改之前对其进行编辑！当他在编辑或创建文件时，您可以直接在差异视图的右侧修改他的更改（+ 悬停以撤消 `// rest of code here` 的 shenanigans）
 
 ## [1.5.4]
 
-- Adds support for reading .pdf and .docx files (try "turn my business_plan.docx into a company website")
+- 添加对阅读 .pdf 和 .docx 文件的支持（尝试 "turn my business_plan.docx into a company website"）
 
 ## [1.5.0]
 
-- Adds new `search_files` tool that lets Claude perform regex searches in your project, making it easy for him to refactor code, address TODOs and FIXMEs, remove dead code, and more!
+- 添加新的 `search_files` 工具，让 Claude 可以在项目中执行正则表达式搜索，使他可以重构代码、解决 TODOs 和 FIXMEs、删除死代码等！
 
 ## [1.4.0]
 
-- Adds "Always allow read-only operations" setting to let Claude read files and view directories without needing approval (off by default)
-- Implement sliding window context management to keep tasks going past 200k tokens
-- Adds Google Cloud Vertex AI support and updates Claude 3.5 Sonnet max output to 8192 tokens for all providers.
-- Improves system prompt to gaurd against lazy edits (less "//rest of code here")
+- 添加 "Always allow read-only operations" 设置，以便 Claude 可以读取文件并查看目录，而无需批准（默认关闭）
+- 实现滑动窗口上下文管理，以保持任务在超过 200k 个令牌时继续进行
+- 添加 Google Cloud Vertex AI 支持，并将 Claude 3.5 Sonnet 的最大输出令牌数更新为 8192 个令牌，适用于所有提供者
+- 改进系统提示，以防止懒惰编辑（less "//rest of code here"）
 
 ## [1.3.0]
 
-- Adds task history
+- 添加任务历史记录
 
 ## [1.2.0]
 
-- Adds support for Prompt Caching to significantly reduce costs and response times (currently only available through Anthropic API for Claude 3.5 Sonnet and Claude 3.0 Haiku)
+- 添加对 Prompt Caching 的支持，以显著减少成本和响应时间（目前仅通过 Anthropic API 提供，适用于 Claude 3.5 Sonnet 和 Claude 3.0 Haiku）
 
 ## [1.1.1]
 
-- Adds option to choose other Claude models (+ GPT-4o, DeepSeek, and Mistral if you use OpenRouter)
-- Adds option to add custom instructions to the end of the system prompt
+- 添加选择其他 Claude 模型的选项（+ GPT-4o、DeepSeek 和 Mistral，如果您使用 OpenRouter）
+- 添加将自定义指令添加到系统提示末尾的选项
 
 ## [1.1.0]
 
-- Paste images in chat to use Claude's vision capabilities and turn mockups into fully functional applications or fix bugs with screenshots
+- 在聊天中粘贴图像以使用 Claude 的视觉功能，并将其转换为完全功能化的应用程序或修复屏幕截图中的错误
 
 ## [1.0.9]
 
-- Add support for OpenRouter and AWS Bedrock
+- 添加对 OpenRouter 和 AWS Bedrock 的支持
 
 ## [1.0.8]
 
-- Shows diff view of new or edited files right in the editor
+- 在编辑器中显示新文件或编辑文件的差异
 
 ## [1.0.7]
 
-- Replace `list_files` and `analyze_project` with more explicit `list_files_top_level`, `list_files_recursive`, and `view_source_code_definitions_top_level` to get source code definitions only for files relevant to the task
+- 用更明确的 `list_files_top_level`、`list_files_recursive` 和 `view_source_code_definitions_top_level` 替换 `list_files` 和 `analyze_project`，以仅获取与任务相关的文件的源代码定义
 
 ## [1.0.6]
 
-- Interact with CLI commands by sending messages to stdin and terminating long-running processes like servers
-- Export tasks to markdown files (useful as context for future tasks)
+- 通过向 stdin 发送消息并终止长时间运行的进程（例如，服务器）来与 CLI 命令交互
+- 将任务导出为 markdown 文件（作为未来任务的上下文）
 
 ## [1.0.5]
 
-- Claude now has context about vscode's visible editors and opened tabs
+- Claude 现在知道 vscode 的可见编辑器和打开的标签页
 
 ## [1.0.4]
 
-- Open in the editor (using menu bar or `Claude Dev: Open In New Tab` in command palette) to see how Claude updates your workspace more clearly
-- New `analyze_project` tool to help Claude get a comprehensive overview of your project's source code definitions and file structure
-- Provide feedback to tool use like terminal commands and file edits
-- Updated max output tokens to 8192 so less lazy coding (`// rest of code here...`)
-- Added ability to retry failed API requests (helpful for rate limits)
-- Quality of life improvements like markdown rendering, memory optimizations, better theme support
+- 在编辑器中打开（使用菜单栏或命令面板中的 `Claude Dev: Open In New Tab`），以更清楚地看到 Claude 如何更新您的工空间
+- 新的 `analyze_project` 工具，帮助 Claude 获取项目源代码定义和文件结构的全面概述
+- 提供反馈，例如终端命令和文件编辑
+- 更新最大输出令牌数为 8192，以防止懒惰编码（`// rest of code here...`）
+- 添加重试失败 API 请求的能力（有助于速率限制）
+- 生活质量改进，例如 markdown 渲染、内存优化、更好的主题支持
 
 ## [0.0.6]
 
-- Initial release
+- 初始版本

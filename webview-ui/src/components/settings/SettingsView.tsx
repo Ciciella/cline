@@ -144,7 +144,7 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
 						}}>
 						<FormattedMessage
 							id="settingsView.autoReadFiles"
-							defaultMessage="When enabled, AI code will automatically read files, view directories, and inspect sites without requiring you to click the Approve button."
+							defaultMessage="启用后，AI Code将自动读取文件、查看目录和检查站点，而无需单击“批准”按钮。"
 						/>
 					</p>
 				</div>
