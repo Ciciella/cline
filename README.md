@@ -1,4 +1,4 @@
-# AI code
+# AI Code
 
 <p align="center">
   <img src="assets\docs\demo2.gif" width="100%" />
@@ -27,7 +27,7 @@ AI code可以逐步处理复杂的软件开发任务。通过允许他创建和�
 4. 当任务完成时，AI code会通过一个终端命令如`open -a "Google Chrome" index.html`向你展示结果，你可以通过点击按钮来运行。
 
 > [!提示]
-> 使用`CMD/CTRL + Shift + P`快捷键打开命令面板并输入“AI code: Open In New Tab”以在编辑器中以选项卡形式打开扩展。这让你可以与文件资源管理器并排使用AI code，更清楚地看到他如何改变你的工作空间。
+> 使用`CMD/CTRL + Shift + P`快捷键打开命令面板并输入“AI Code: Open In New Tab”以在编辑器中以选项卡形式打开扩展。这让你可以与文件资源管理器并排使用AI code，更清楚地看到他如何改变你的工作空间。
 
 ---
 

@@ -232,7 +232,7 @@ const BrowserSessionRow = memo((props: BrowserSessionRowProps) => {
 						style={{ color: "var(--vscode-foreground)", marginBottom: "-1.5px" }}></span>
 				)}
 				<span style={{ fontWeight: "bold" }}>
-					<>AI code wants to use the browser:</>
+					<>AI Code 想要使用浏览器:</>
 				</span>
 			</div>
 			<div

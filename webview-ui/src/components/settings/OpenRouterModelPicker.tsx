@@ -218,7 +218,7 @@ const OpenRouterModelPicker: React.FC = () => {
 					</VSCodeLink>
 					<FormattedMessage
 						id="openRouterModelPicker.modelRecommendation"
-						defaultMessage="If you're unsure which model to choose, AI code works best with "
+						defaultMessage="If you're unsure which model to choose, AI Code works best with "
 					/>
 					<VSCodeLink
 						style={{ display: "inline", fontSize: "inherit" }}
