@@ -10,7 +10,7 @@ The Cline extension exposes an API that can be used by other extensions. To use 
     const clineExtension = vscode.extensions.getExtension<ClineAPI>("saoudrizwan.claude-dev")
 
     if (!clineExtension?.isActive) {
-    	throw new Error("Cline extension is not activated")
+    	throw new Error("AI Code extension is not activated")
     }
 
     const cline = clineExtension.exports
@@ -40,7 +40,7 @@ The Cline extension exposes an API that can be used by other extensions. To use 
     	// Simulate pressing the secondary button in the chat interface (e.g. 'Reject')
     	await cline.pressSecondaryButton()
     } else {
-    	console.error("Cline API is not available")
+    	console.error("AI Code API is not available")
     }
     ```
 
