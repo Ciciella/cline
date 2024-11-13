@@ -44,7 +44,12 @@ export function validateApiConfiguration(apiConfiguration?: ApiConfiguration): s
 				break
 			case "ollama":
 				if (!apiConfiguration.ollamaModelId) {
-					return "You must provide a valid model ID."
+					return "您必须提供有效的模型ID"
+				}
+				break
+			case "lmstudio":
+				if (!apiConfiguration.lmStudioModelId) {
+					return "您必须提供有效的模型ID"
 				}
 				break
 		}

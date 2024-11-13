@@ -1,6 +1,18 @@
 # 更新日志
 
 
+## [2.1.6]
+
+- 添加LM Studio作为API提供商选项（确保启动LM Studio服务器，以便与扩展一起使用！）
+
+## [2.1.5]
+
+- 为OpenRouter上的新Claude模型ID添加提示缓存支持（例如`anthropic/claude-3.5-sonnet-20240620`）
+
+## [2.1.4]
+
+- AWS Bedrock修复（添加缺失的区域，支持跨区域推理，并为新模型不可用的区域提供较旧的Sonnet模型）
+
 ## [2.1.3]
 
 - 增加对 Claude 3.5 Haiku 的支持，比具有类似智能的 Sonnet 便宜 66%

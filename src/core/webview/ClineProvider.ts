@@ -40,6 +40,7 @@ type GlobalStateKey =
 	| "apiProvider"
 	| "apiModelId"
 	| "awsRegion"
+	| "awsUseCrossRegionInference"
 	| "vertexProjectId"
 	| "vertexRegion"
 	| "lastShownAnnouncementId"
@@ -50,6 +51,8 @@ type GlobalStateKey =
 	| "openAiModelId"
 	| "ollamaModelId"
 	| "ollamaBaseUrl"
+	| "lmStudioModelId"
+	| "lmStudioBaseUrl"
 	| "anthropicBaseUrl"
 	| "azureApiVersion"
 	| "openRouterModelId"
@@ -350,6 +353,7 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 								awsSecretKey,
 								awsSessionToken,
 								awsRegion,
+								awsUseCrossRegionInference,
 								vertexProjectId,
 								vertexRegion,
 								openAiBaseUrl,
@@ -357,6 +361,8 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 								openAiModelId,
 								ollamaModelId,
 								ollamaBaseUrl,
+								lmStudioModelId,
+								lmStudioBaseUrl,
 								anthropicBaseUrl,
 								geminiApiKey,
 								openAiNativeApiKey,
@@ -372,6 +378,7 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 							await this.storeSecret("awsSecretKey", awsSecretKey)
 							await this.storeSecret("awsSessionToken", awsSessionToken)
 							await this.updateGlobalState("awsRegion", awsRegion)
+							await this.updateGlobalState("awsUseCrossRegionInference", awsUseCrossRegionInference)
 							await this.updateGlobalState("vertexProjectId", vertexProjectId)
 							await this.updateGlobalState("vertexRegion", vertexRegion)
 							await this.updateGlobalState("openAiBaseUrl", openAiBaseUrl)
@@ -379,6 +386,8 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 							await this.updateGlobalState("openAiModelId", openAiModelId)
 							await this.updateGlobalState("ollamaModelId", ollamaModelId)
 							await this.updateGlobalState("ollamaBaseUrl", ollamaBaseUrl)
+							await this.updateGlobalState("lmStudioModelId", lmStudioModelId)
+							await this.updateGlobalState("lmStudioBaseUrl", lmStudioBaseUrl)
 							await this.updateGlobalState("anthropicBaseUrl", anthropicBaseUrl)
 							await this.storeSecret("geminiApiKey", geminiApiKey)
 							await this.storeSecret("openAiNativeApiKey", openAiNativeApiKey)
@@ -438,6 +447,10 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 					case "requestOllamaModels":
 						const ollamaModels = await this.getOllamaModels(message.text)
 						this.postMessageToWebview({ type: "ollamaModels", ollamaModels })
+						break
+					case "requestLmStudioModels":
+						const lmStudioModels = await this.getLmStudioModels(message.text)
+						this.postMessageToWebview({ type: "lmStudioModels", lmStudioModels })
 						break
 					case "refreshOpenRouterModels":
 						await this.refreshOpenRouterModels()
@@ -499,6 +512,25 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 			}
 			const response = await axios.get(`${baseUrl}/api/tags`)
 			const modelsArray = response.data?.models?.map((model: any) => model.name) || []
+			const models = [...new Set<string>(modelsArray)]
+			return models
+		} catch (error) {
+			return []
+		}
+	}
+
+	// LM Studio
+
+	async getLmStudioModels(baseUrl?: string) {
+		try {
+			if (!baseUrl) {
+				baseUrl = "http://localhost:1234"
+			}
+			if (!URL.canParse(baseUrl)) {
+				return []
+			}
+			const response = await axios.get(`${baseUrl}/v1/models`)
+			const modelsArray = response.data?.data?.map((model: any) => model.id) || []
 			const models = [...new Set<string>(modelsArray)]
 			return models
 		} catch (error) {
@@ -824,6 +856,7 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 			awsSecretKey,
 			awsSessionToken,
 			awsRegion,
+			awsUseCrossRegionInference,
 			vertexProjectId,
 			vertexRegion,
 			openAiBaseUrl,
@@ -831,6 +864,8 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 			openAiModelId,
 			ollamaModelId,
 			ollamaBaseUrl,
+			lmStudioModelId,
+			lmStudioBaseUrl,
 			anthropicBaseUrl,
 			geminiApiKey,
 			openAiNativeApiKey,
@@ -850,6 +885,7 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 			this.getSecret("awsSecretKey") as Promise<string | undefined>,
 			this.getSecret("awsSessionToken") as Promise<string | undefined>,
 			this.getGlobalState("awsRegion") as Promise<string | undefined>,
+			this.getGlobalState("awsUseCrossRegionInference") as Promise<boolean | undefined>,
 			this.getGlobalState("vertexProjectId") as Promise<string | undefined>,
 			this.getGlobalState("vertexRegion") as Promise<string | undefined>,
 			this.getGlobalState("openAiBaseUrl") as Promise<string | undefined>,
@@ -857,6 +893,8 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 			this.getGlobalState("openAiModelId") as Promise<string | undefined>,
 			this.getGlobalState("ollamaModelId") as Promise<string | undefined>,
 			this.getGlobalState("ollamaBaseUrl") as Promise<string | undefined>,
+			this.getGlobalState("lmStudioModelId") as Promise<string | undefined>,
+			this.getGlobalState("lmStudioBaseUrl") as Promise<string | undefined>,
 			this.getGlobalState("anthropicBaseUrl") as Promise<string | undefined>,
 			this.getSecret("geminiApiKey") as Promise<string | undefined>,
 			this.getSecret("openAiNativeApiKey") as Promise<string | undefined>,
@@ -893,6 +931,7 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 				awsSecretKey,
 				awsSessionToken,
 				awsRegion,
+				awsUseCrossRegionInference,
 				vertexProjectId,
 				vertexRegion,
 				openAiBaseUrl,
@@ -900,6 +939,8 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 				openAiModelId,
 				ollamaModelId,
 				ollamaBaseUrl,
+				lmStudioModelId,
+				lmStudioBaseUrl,
 				anthropicBaseUrl,
 				geminiApiKey,
 				openAiNativeApiKey,

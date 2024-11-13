@@ -1,8 +1,9 @@
 # AI Code 代码编程助手 🤖
 
 <p align="center">
-  <img src="https://gitee.com/nulifendou99/ai-code/raw/master/assets/docs/demo2.gif" width="100%" />
+  <img src="assets/docs/demo2.gif" width="100%" />
 </p>
+
 
 <div align="center">
 <table>
@@ -68,13 +69,9 @@ AI code所做的所有更改都记录在你文件的时间轴中，提供了一�
 
 AI code还可以使用无头浏览器检查任何网站，例如localhost，允许他捕获截图和控制台日志。这使他能够自主修复视觉错误和运行时问题，而无需你手动操作和复制粘贴错误日志。
 
-<!-- 透明像素以在浮动图像后创建换行 -->
-
-<img width="2000" height="0" src="https://gitee.com/nulifendou99/ai-code/raw/master/assets/docs/gongnengjieshao.png"><br>
 
 
-
-<img align="right" width="360" src="https://gitee.com/nulifendou99/ai-code/raw/master/assets/docs/gongnengjieshao.png">
+<img width="360" src="https://gitee.com/nulifendou99/ai-code/raw/master/assets/docs/gongnengjieshao.png">
 
 ### 添加上下文
 
