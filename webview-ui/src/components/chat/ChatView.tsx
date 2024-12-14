@@ -79,15 +79,15 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 							setTextAreaDisabled(true)
 							setClineAsk("api_req_failed")
 							setEnableButtons(true)
-							setPrimaryButtonText("é‡è¯•")
-							setSecondaryButtonText("å¼€å§‹æ–°ä»»åŠ¡")
+							setPrimaryButtonText("ÖØÊÔ")
+							setSecondaryButtonText("¿ªÊ¼ÐÂÈÎÎñ")
 							break
 						case "mistake_limit_reached":
 							setTextAreaDisabled(false)
 							setClineAsk("mistake_limit_reached")
 							setEnableButtons(true)
-							setPrimaryButtonText("ä¸ç®¡æ€Žæ ·éƒ½è¦ç»§ç»­")
-							setSecondaryButtonText("å¼€å§‹æ–°ä»»åŠ¡")
+							setPrimaryButtonText("²»¹ÜÔõÑù¶¼Òª¼ÌÐø")
+							setSecondaryButtonText("¿ªÊ¼ÐÂÈÎÎñ")
 							break
 						case "followup":
 							setTextAreaDisabled(isPartial)
@@ -104,12 +104,12 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 							switch (tool.tool) {
 								case "editedExistingFile":
 								case "newFileCreated":
-									setPrimaryButtonText("ä¿å­˜")
-									setSecondaryButtonText("æ‹’ç»")
+									setPrimaryButtonText("±£´æ")
+									setSecondaryButtonText("¾Ü¾ø")
 									break
 								default:
-									setPrimaryButtonText("æ‰¹å‡†")
-									setSecondaryButtonText("æ‹’ç»")
+									setPrimaryButtonText("Åú×¼")
+									setSecondaryButtonText("¾Ü¾ø")
 									break
 							}
 							break
@@ -117,36 +117,43 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 							setTextAreaDisabled(isPartial)
 							setClineAsk("browser_action_launch")
 							setEnableButtons(!isPartial)
-							setPrimaryButtonText("æ‰¹å‡†")
-							setSecondaryButtonText("æ‹’ç»")
+							setPrimaryButtonText("Åú×¼")
+							setSecondaryButtonText("¾Ü¾ø")
 							break
 						case "command":
 							setTextAreaDisabled(isPartial)
 							setClineAsk("command")
 							setEnableButtons(!isPartial)
-							setPrimaryButtonText("è¿è¡Œå‘½ä»¤")
-							setSecondaryButtonText("æ‹’ç»")
+							setPrimaryButtonText("ÔËÐÐÃüÁî")
+							setSecondaryButtonText("¾Ü¾ø")
 							break
 						case "command_output":
 							setTextAreaDisabled(false)
 							setClineAsk("command_output")
 							setEnableButtons(true)
-							setPrimaryButtonText("ç»§ç»­è¿è¡Œ")
+							setPrimaryButtonText("¼ÌÐøÔËÐÐ")
 							setSecondaryButtonText(undefined)
+							break
+						case "use_mcp_server":
+							setTextAreaDisabled(isPartial)
+							setClineAsk("use_mcp_server")
+							setEnableButtons(!isPartial)
+							setPrimaryButtonText("Approve")
+							setSecondaryButtonText("Reject")
 							break
 						case "completion_result":
 							// extension waiting for feedback. but we can just present a new task button
 							setTextAreaDisabled(isPartial)
 							setClineAsk("completion_result")
 							setEnableButtons(!isPartial)
-							setPrimaryButtonText("å¼€å§‹æ–°ä»»åŠ¡")
+							setPrimaryButtonText("¿ªÊ¼ÐÂÈÎÎñ")
 							setSecondaryButtonText(undefined)
 							break
 						case "resume_task":
 							setTextAreaDisabled(false)
 							setClineAsk("resume_task")
 							setEnableButtons(true)
-							setPrimaryButtonText("ç»ˆæ­¢ä»»åŠ¡")
+							setPrimaryButtonText("ÖÕÖ¹ÈÎÎñ")
 							setSecondaryButtonText(undefined)
 							setDidClickCancel(false) // special case where we reset the cancel button state
 							break
@@ -154,7 +161,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 							setTextAreaDisabled(false)
 							setClineAsk("resume_completed_task")
 							setEnableButtons(true)
-							setPrimaryButtonText("å¼€å§‹æ–°ä»»åŠ¡")
+							setPrimaryButtonText("¿ªÊ¼ÐÂÈÎÎñ")
 							setSecondaryButtonText(undefined)
 							setDidClickCancel(false)
 							break
@@ -180,6 +187,8 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 						case "browser_action":
 						case "browser_action_result":
 						case "command_output":
+						case "mcp_server_request_started":
+						case "mcp_server_response":
 						case "completion_result":
 						case "tool":
 							break
@@ -248,6 +257,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 						case "browser_action_launch":
 						case "command": // user can provide feedback to a tool or command use
 						case "command_output": // user can send input to command stdin
+						case "use_mcp_server":
 						case "completion_result": // if this happens then the user has feedback for the completion result
 						case "resume_task":
 						case "resume_completed_task":
@@ -272,7 +282,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 				disableAutoScrollRef.current = false
 			}
 		},
-		[messages.length, clineAsk]
+		[messages.length, clineAsk],
 	)
 
 	const startNewTask = useCallback(() => {
@@ -289,6 +299,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 			case "command_output":
 			case "tool":
 			case "browser_action_launch":
+			case "use_mcp_server":
 			case "resume_task":
 			case "mistake_limit_reached":
 				vscode.postMessage({ type: "askResponse", askResponse: "yesButtonClicked" })
@@ -322,6 +333,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 			case "command":
 			case "tool":
 			case "browser_action_launch":
+			case "use_mcp_server":
 				// responds to the API with a "This operation failed" and lets it try again
 				vscode.postMessage({ type: "askResponse", askResponse: "noButtonClicked" })
 				break
@@ -366,7 +378,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 					const newImages = message.images ?? []
 					if (newImages.length > 0) {
 						setSelectedImages((prevImages) =>
-							[...prevImages, ...newImages].slice(0, MAX_IMAGES_PER_MESSAGE)
+							[...prevImages, ...newImages].slice(0, MAX_IMAGES_PER_MESSAGE),
 						)
 					}
 					break
@@ -392,7 +404,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 			handleSendMessage,
 			handlePrimaryButtonClick,
 			handleSecondaryButtonClick,
-		]
+		],
 	)
 
 	useEvent("message", handleMessage)
@@ -437,6 +449,8 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 						return false
 					}
 					break
+				case "mcp_server_request_started":
+					return false
 			}
 			return true
 		})
@@ -530,9 +544,9 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 					})
 				},
 				10,
-				{ immediate: true }
+				{ immediate: true },
 			),
-		[]
+		[],
 	)
 
 	const scrollToBottomAuto = useCallback(() => {
@@ -594,7 +608,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 				}
 			}
 		},
-		[groupedMessages, expandedRows, scrollToBottomAuto, isAtBottom]
+		[groupedMessages, expandedRows, scrollToBottomAuto, isAtBottom],
 	)
 
 	const handleRowHeightChange = useCallback(
@@ -609,7 +623,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 				}
 			}
 		},
-		[scrollToBottomSmooth, scrollToBottomAuto]
+		[scrollToBottomSmooth, scrollToBottomAuto],
 	)
 
 	useEffect(() => {
@@ -676,7 +690,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 				/>
 			)
 		},
-		[expandedRows, modifiedMessages, groupedMessages.length, toggleRowExpansion, handleRowHeightChange]
+		[expandedRows, modifiedMessages, groupedMessages.length, toggleRowExpansion, handleRowHeightChange],
 	)
 
 	return (
@@ -814,7 +828,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 										marginLeft: isStreaming ? 0 : "6px",
 									}}
 									onClick={handleSecondaryButtonClick}>
-									{isStreaming ? "å–æ¶ˆ" : secondaryButtonText}
+									{isStreaming ? "È¡Ïû" : secondaryButtonText}
 								</VSCodeButton>
 							)}
 						</div>

@@ -276,8 +276,19 @@ const DropdownItem = styled.div<{ isSelected: boolean }>`
 // Markdown
 
 const StyledMarkdown = styled.div`
-	font-family: var(--vscode-font-family), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-		Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+	font-family:
+		var(--vscode-font-family),
+		system-ui,
+		-apple-system,
+		BlinkMacSystemFont,
+		"Segoe UI",
+		Roboto,
+		Oxygen,
+		Ubuntu,
+		Cantarell,
+		"Open Sans",
+		"Helvetica Neue",
+		sans-serif;
 	font-size: 12px;
 	color: var(--vscode-descriptionForeground);
 
@@ -413,5 +424,5 @@ export const ModelDescriptionMarkdown = memo(
 			)} */}
 			</StyledMarkdown>
 		)
-	}
+	},
 )

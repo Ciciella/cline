@@ -1,6 +1,7 @@
 import { Anthropic } from "@anthropic-ai/sdk"
 import axios from "axios"
 import fs from "fs/promises"
+import os from "os"
 import pWaitFor from "p-wait-for"
 import * as path from "path"
 import * as vscode from "vscode"
@@ -10,6 +11,7 @@ import { openFile, openImage } from "../../integrations/misc/open-file"
 import { selectImages } from "../../integrations/misc/process-images"
 import { getTheme } from "../../integrations/theme/getTheme"
 import WorkspaceTracker from "../../integrations/workspace/WorkspaceTracker"
+import { McpHub } from "../../services/mcp/McpHub"
 import { ApiProvider, ModelInfo } from "../../shared/api"
 import { findLast } from "../../shared/array"
 import { ExtensionMessage } from "../../shared/ExtensionMessage"
@@ -62,6 +64,7 @@ export const GlobalFileNames = {
 	apiConversationHistory: "api_conversation_history.json",
 	uiMessages: "ui_messages.json",
 	openRouterModels: "openrouter_models.json",
+	mcpSettings: "cline_mcp_settings.json",
 }
 
 export class ClineProvider implements vscode.WebviewViewProvider {
@@ -72,12 +75,17 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 	private view?: vscode.WebviewView | vscode.WebviewPanel
 	private cline?: Cline
 	private workspaceTracker?: WorkspaceTracker
-	private latestAnnouncementId = "oct-28-2024" // update to some unique identifier when we add a new announcement
+	mcpHub?: McpHub
+	private latestAnnouncementId = "dec-10-2024" // update to some unique identifier when we add a new announcement
 
-	constructor(readonly context: vscode.ExtensionContext, private readonly outputChannel: vscode.OutputChannel) {
+	constructor(
+		readonly context: vscode.ExtensionContext,
+		private readonly outputChannel: vscode.OutputChannel,
+	) {
 		this.outputChannel.appendLine("ClineProvider instantiated")
 		ClineProvider.activeInstances.add(this)
 		this.workspaceTracker = new WorkspaceTracker(this)
+		this.mcpHub = new McpHub(this)
 	}
 
 	/*
@@ -101,6 +109,8 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 		}
 		this.workspaceTracker?.dispose()
 		this.workspaceTracker = undefined
+		this.mcpHub?.dispose()
+		this.mcpHub = undefined
 		this.outputChannel.appendLine("Disposed all disposables")
 		ClineProvider.activeInstances.delete(this)
 	}
@@ -110,7 +120,7 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 	}
 
 	resolveWebviewView(
-		webviewView: vscode.WebviewView | vscode.WebviewPanel
+		webviewView: vscode.WebviewView | vscode.WebviewPanel,
 		//context: vscode.WebviewViewResolveContext<unknown>, used to recreate a deallocated webview, but we don't need this since we use retainContextWhenHidden
 		//token: vscode.CancellationToken
 	): void | Thenable<void> {
@@ -143,7 +153,7 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 					}
 				},
 				null,
-				this.disposables
+				this.disposables,
 			)
 		} else if ("onDidChangeVisibility" in webviewView) {
 			// sidebar
@@ -154,7 +164,7 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 					}
 				},
 				null,
-				this.disposables
+				this.disposables,
 			)
 		}
 
@@ -165,7 +175,7 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 				await this.dispose()
 			},
 			null,
-			this.disposables
+			this.disposables,
 		)
 
 		// Listen for when color changes
@@ -177,7 +187,7 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 				}
 			},
 			null,
-			this.disposables
+			this.disposables,
 		)
 
 		// if the extension is starting a new session, clear previous task state
@@ -202,7 +212,7 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 			alwaysAllowReadOnly,
 			undefined,
 			undefined,
-			historyItem
+			historyItem,
 		)
 	}
 
@@ -306,7 +316,7 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 						this.postStateToWebview()
 						this.workspaceTracker?.initializeFilePaths() // don't await
 						getTheme().then((theme) =>
-							this.postMessageToWebview({ type: "theme", text: JSON.stringify(theme) })
+							this.postMessageToWebview({ type: "theme", text: JSON.stringify(theme) }),
 						)
 						// post last cached models in case the call to endpoint fails
 						this.readOpenRouterModels().then((openRouterModels) => {
@@ -324,7 +334,7 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 								if (apiConfiguration.openRouterModelId) {
 									await this.updateGlobalState(
 										"openRouterModelInfo",
-										openRouterModels[apiConfiguration.openRouterModelId]
+										openRouterModels[apiConfiguration.openRouterModelId],
 									)
 									await this.postStateToWebview()
 								}
@@ -482,12 +492,27 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 						}
 
 						break
+					case "openMcpSettings": {
+						const mcpSettingsFilePath = await this.mcpHub?.getMcpSettingsFilePath()
+						if (mcpSettingsFilePath) {
+							openFile(mcpSettingsFilePath)
+						}
+						break
+					}
+					case "restartMcpServer": {
+						try {
+							await this.mcpHub?.restartConnection(message.text!)
+						} catch (error) {
+							console.error(`Failed to retry connection for ${message.text}:`, error)
+						}
+						break
+					}
 					// Add more switch case statements here as more webview message commands
 					// are created within the webview context (i.e. inside media/main.js)
 				}
 			},
 			null,
-			this.disposables
+			this.disposables,
 		)
 	}
 
@@ -498,6 +523,24 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 			this.cline.customInstructions = instructions || undefined
 		}
 		await this.postStateToWebview()
+	}
+
+	// MCP
+
+	async ensureMcpServersDirectoryExists(): Promise<string> {
+		const mcpServersDir = path.join(os.homedir(), "Documents", "Cline", "MCP")
+		try {
+			await fs.mkdir(mcpServersDir, { recursive: true })
+		} catch (error) {
+			return "~/Documents/Cline/MCP" // in case creating a directory in documents fails for whatever reason (e.g. permissions) - this is fine since this path is only ever used in the system prompt
+		}
+		return mcpServersDir
+	}
+
+	async ensureSettingsDirectoryExists(): Promise<string> {
+		const settingsDir = path.join(this.context.globalStorageUri.fsPath, "settings")
+		await fs.mkdir(settingsDir, { recursive: true })
+		return settingsDir
 	}
 
 	// Ollama
@@ -573,7 +616,7 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 	async readOpenRouterModels(): Promise<Record<string, ModelInfo> | undefined> {
 		const openRouterModelsFilePath = path.join(
 			await this.ensureCacheDirectoryExists(),
-			GlobalFileNames.openRouterModels
+			GlobalFileNames.openRouterModels,
 		)
 		const fileExists = await fileExistsAtPath(openRouterModelsFilePath)
 		if (fileExists) {
@@ -586,7 +629,7 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 	async refreshOpenRouterModels() {
 		const openRouterModelsFilePath = path.join(
 			await this.ensureCacheDirectoryExists(),
-			GlobalFileNames.openRouterModels
+			GlobalFileNames.openRouterModels,
 		)
 
 		let models: Record<string, ModelInfo> = {}

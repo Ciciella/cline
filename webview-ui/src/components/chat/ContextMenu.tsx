@@ -26,7 +26,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
 
 	const filteredOptions = useMemo(
 		() => getContextMenuOptions(searchQuery, selectedType, queryItems),
-		[searchQuery, selectedType, queryItems]
+		[searchQuery, selectedType, queryItems],
 	)
 
 	useEffect(() => {

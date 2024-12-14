@@ -33,7 +33,7 @@ const WelcomeView = () => {
 					style={{ display: "inline" }}>
 					<FormattedMessage id="welcome.capabilities.link" defaultMessage="Claude 3.5 Sonnet's agentic coding capabilities" />
 				</VSCodeLink>{" "}
-				<FormattedMessage id="welcome.tools" defaultMessage="ä»¥åŠè®¿é—®å…è®¸æˆ‘åˆ›å»ºå’Œç¼–è¾‘æ–‡ä»¶ã€æŽ¢ç´¢å¤æ‚é¡¹ç›®ã€ä½¿ç”¨æµè§ˆå™¨å’Œæ‰§è¡Œç»ˆç«¯å‘½ä»¤ï¼ˆå½“ç„¶éœ€è¦æ‚¨çš„è®¸å¯ï¼‰ã€‚" />
+				<FormattedMessage id="welcome.tools" defaultMessage="ÒÔ¼°·ÃÎÊÔÊÐíÎÒ´´½¨ºÍ±à¼­ÎÄ¼þ¡¢Ì½Ë÷¸´ÔÓÏîÄ¿¡¢Ê¹ÓÃä¯ÀÀÆ÷ºÍÖ´ÐÐÖÕ¶ËÃüÁî£¨µ±È»ÐèÒªÄúµÄÐí¿É£©¡£" />
 			</p>
 
 			<b>
@@ -43,7 +43,7 @@ const WelcomeView = () => {
 			<div style={{ marginTop: "10px" }}>
 				<ApiOptions showModelOptions={false} />
 				<VSCodeButton onClick={handleSubmit} disabled={disableLetsGoButton} style={{ marginTop: "3px" }}>
-					<FormattedMessage id="welcome.letsGo" defaultMessage="çŽ°åœ¨å¼€å§‹!" />
+					<FormattedMessage id="welcome.letsGo" defaultMessage="ÏÖÔÚ¿ªÊ¼!" />
 				</VSCodeButton>
 			</div>
 		</div>
