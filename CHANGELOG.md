@@ -2,10 +2,9 @@
 
 
 ## [2.2.0]
-
-- Add support for Model Context Protocol (MCP), enabling Cline to use custom tools like web-search tool or GitHub tool
-- Add MCP server management tab accessible via the server icon in the menu bar
-- Add ability for Cline to dynamically create new MCP servers based on user requests (e.g., "add a tool that gets the latest npm docs")
+- 添加对模型上下文协议（MCP）的支持，允许AI Code使用自定义工具，如web搜索工具或GitHub工具
+- 通过菜单栏中的服务器图标添加MCP服务器管理选项卡
+- 添加AI Code根据用户请求动态创建新MCP服务器的能力（例如，"添加一个获取最新npm文档的工具"）
 
 ## [2.1.6]
 
