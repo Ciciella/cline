@@ -111,3 +111,9 @@ webview-ui/
 
 ## 总结
 本项目结构清晰，组件划分合理，便于维护和扩展。通过使用 React 和 TypeScript，确保了代码的可读性和可维护性。
+
+## 相关文档
+- [VS Code Webview API 文档](https://code.visualstudio.com/api/extension-guides/webview)
+
+- [VS Code 1.95 版本更新日志](https://code.visualstudio.com/updates/v1_95)
+- [VS Code 1.94 版本更新日志](https://code.visualstudio.com/updates/v1_94)

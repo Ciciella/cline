@@ -5,32 +5,32 @@ export function validateApiConfiguration(apiConfiguration?: ApiConfiguration): s
 		switch (apiConfiguration.apiProvider) {
 			case "anthropic":
 				if (!apiConfiguration.apiKey) {
-					return "You must provide a valid API key or choose a different provider."
+					return "您必须提供有效的API密钥或选择不同的提供商。"
 				}
 				break
 			case "bedrock":
 				if (!apiConfiguration.awsRegion) {
-					return "You must choose a region to use with AWS Bedrock."
+					return "您必须选择一个用于AWS Bedrock的区域。"
 				}
 				break
 			case "openrouter":
 				if (!apiConfiguration.openRouterApiKey) {
-					return "You must provide a valid API key or choose a different provider."
+					return "您必须提供有效的API密钥或选择不同的提供商。"
 				}
 				break
 			case "vertex":
 				if (!apiConfiguration.vertexProjectId || !apiConfiguration.vertexRegion) {
-					return "You must provide a valid Google Cloud Project ID and Region."
+					return "您必须提供有效的Google Cloud项目ID和区域。"
 				}
 				break
 			case "gemini":
 				if (!apiConfiguration.geminiApiKey) {
-					return "You must provide a valid API key or choose a different provider."
+					return "您必须提供有效的API密钥或选择不同的提供商。"
 				}
 				break
 			case "openai-native":
 				if (!apiConfiguration.openAiNativeApiKey) {
-					return "You must provide a valid API key or choose a different provider."
+					return "您必须提供有效的API密钥或选择不同的提供商。"
 				}
 				break
 			case "openai":
@@ -39,7 +39,7 @@ export function validateApiConfiguration(apiConfiguration?: ApiConfiguration): s
 					!apiConfiguration.openAiApiKey ||
 					!apiConfiguration.openAiModelId
 				) {
-					return "You must provide a valid base URL, API key, and model ID."
+					return "您必须提供有效的基础URL、API密钥和模型ID。"
 				}
 				break
 			case "ollama":
@@ -64,13 +64,13 @@ export function validateModelId(
 	if (apiConfiguration) {
 		switch (apiConfiguration.apiProvider) {
 			case "openrouter":
-				const modelId = apiConfiguration.openRouterModelId || openRouterDefaultModelId // in case the user hasn't changed the model id, it will be undefined by default
+				const modelId = apiConfiguration.openRouterModelId || openRouterDefaultModelId // 如果用户没有更改模型ID，默认情况下它将是未定义的
 				if (!modelId) {
-					return "You must provide a model ID."
+					return "您必须提供一个模型ID。"
 				}
 				if (openRouterModels && !Object.keys(openRouterModels).includes(modelId)) {
-					// even if the model list endpoint failed, extensionstatecontext will always have the default model info
-					return "The model ID you provided is not available. Please choose a different model."
+					// 即使模型列表端点失败了，extensionstatecontext总是会有默认模型信息
+					return "您提供的模型ID不可用。请选择不同的模型。"
 				}
 				break
 		}

@@ -33,35 +33,31 @@ const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 			<h3 style={{ margin: "0 0 8px" }}>
 				<FormattedMessage id="announcement.newVersion" defaultMessage="🎉 New in v{minorVersion}" values={{ minorVersion }} />
 			</h3>
-			<p style={{ margin: "5px 0px", fontWeight: "bold" }}>Add custom tools to Cline using MCP!</p>
+			<p style={{ margin: "5px 0px", fontWeight: "bold" }}>使用MCP添加自定义工具向渐变!</p>
 			<p style={{ margin: "5px 0px" }}>
-				The Model Context Protocol allows agents like Cline to plug and play custom tools,{" "}
+			模型上下文协议允许像AI Code这样的代理插入和播放自定义工具,{" "}
 				<VSCodeLink href="https://github.com/modelcontextprotocol/servers" style={{ display: "inline" }}>
-					e.g. a web-search tool or GitHub tool.
+				例如，web搜索工具或GitHub工具。
 				</VSCodeLink>
 			</p>
 			<p style={{ margin: "5px 0px" }}>
-				You can add and configure MCP servers by clicking the new{" "}
-				<span className="codicon codicon-server" style={{ fontSize: "10px" }}></span> icon in the menu bar.
+			单击“新建”，可以添加和配置MCP服务器{" "}
+				<span className="codicon codicon-server" style={{ fontSize: "10px" }}></span> 菜单栏中的图标。
 			</p>
 			<p style={{ margin: "5px 0px" }}>
-				To take things a step further, Cline also has the ability to create custom tools for himself. Just say
-				"add a tool that..." and watch as he builds and installs new capabilities specific to{" "}
-				<i>your workflow</i>. For example:
+			为了更进一步，AI Code还能够为自己创建定制工具。只是说
+			“添加一个工具……”，并观察他如何构建和安装特定于的新功能{" "}
+				<i>你的工作流</i>。例如：
 				<ul style={{ margin: "4px 0 6px 20px", padding: 0 }}>
-					<li>"...fetches Jira tickets": Get ticket ACs and put Cline to work</li>
-					<li>"...manages AWS EC2s": Check server metrics and scale up or down</li>
-					<li>"...pulls PagerDuty incidents": Pulls details to help Cline fix bugs</li>
+					<li>"...获取Jira票据": 获取票据AC并让AI Code开始工作</li>
+					<li>"...管理AWS EC2s": 检查服务器指标并上下调整</li>
+					<li>"...拉取PagerDuty事件": 拉取详细信息以帮助AI Code修复错误</li>
 				</ul>
-				Cline handles everything from creating the MCP server to installing it in the extension, ready to use in
-				future tasks. The servers are saved to <code>~/Documents/Cline/MCP</code> so you can easily share them
-				with others too.{" "}
+				Cline处理从创建MCP服务器到在扩展中安装它的一切，准备在
+未来的任务。服务器被保存到 <code>~/Documents/AI Code/MCP</code> 所以你可以很容易地与其他人分享它们
 			</p>
 			<p style={{ margin: "5px 0px" }}>
-				Try it yourself by asking Cline to "add a tool that gets the latest npm docs", or
-				<VSCodeLink href="https://x.com/sdrzn/status/1867271665086074969" style={{ display: "inline" }}>
-					see a demo of MCP in action here.
-				</VSCodeLink>
+				通过让AI Code "添加一个获取最新npm文档的工具
 			</p>
 			{/*<ul style={{ margin: "0 0 8px", paddingLeft: "12px" }}>
 				 <li>
