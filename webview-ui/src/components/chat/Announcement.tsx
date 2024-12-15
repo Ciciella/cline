@@ -53,7 +53,7 @@ const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 					<li>"...管理AWS EC2s": 检查服务器指标并上下调整</li>
 					<li>"...拉取PagerDuty事件": 拉取详细信息以帮助AI Code修复错误</li>
 				</ul>
-				Cline处理从创建MCP服务器到在扩展中安装它的一切，准备在
+				AI Code处理从创建MCP服务器到在扩展中安装它的一切，准备在
 未来的任务。服务器被保存到 <code>~/Documents/AI Code/MCP</code> 所以你可以很容易地与其他人分享它们
 			</p>
 			<p style={{ margin: "5px 0px" }}>
