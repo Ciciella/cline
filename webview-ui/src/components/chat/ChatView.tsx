@@ -53,8 +53,8 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 	// we need to hold on to the ask because useEffect > lastMessage will always let us know when an ask comes in and handle it, but by the time handleMessage is called, the last message might not be the ask anymore (it could be a say that followed)
 	const [clineAsk, setClineAsk] = useState<ClineAsk | undefined>(undefined)
 	const [enableButtons, setEnableButtons] = useState<boolean>(false)
-	const [primaryButtonText, setPrimaryButtonText] = useState<string | undefined>("Approve")
-	const [secondaryButtonText, setSecondaryButtonText] = useState<string | undefined>("Reject")
+	const [primaryButtonText, setPrimaryButtonText] = useState<string | undefined>("批准")
+	const [secondaryButtonText, setSecondaryButtonText] = useState<string | undefined>("拒绝")
 	const [didClickCancel, setDidClickCancel] = useState(false)
 	const virtuosoRef = useRef<VirtuosoHandle>(null)
 	const [expandedRows, setExpandedRows] = useState<Record<number, boolean>>({})
@@ -146,8 +146,8 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 							setTextAreaDisabled(isPartial)
 							setClineAsk("use_mcp_server")
 							setEnableButtons(!isPartial)
-							setPrimaryButtonText("Approve")
-							setSecondaryButtonText("Reject")
+							setPrimaryButtonText("批准")
+							setSecondaryButtonText("拒绝")
 							break
 						case "completion_result":
 							// extension waiting for feedback. but we can just present a new task button
@@ -221,8 +221,8 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 			setTextAreaDisabled(false)
 			setClineAsk(undefined)
 			setEnableButtons(false)
-			setPrimaryButtonText("Approve")
-			setSecondaryButtonText("Reject")
+			setPrimaryButtonText("批准")
+			setSecondaryButtonText("拒绝")
 		}
 	}, [messages.length])
 
