@@ -24,6 +24,7 @@ import BrowserSessionRow from "./BrowserSessionRow"
 import ChatRow from "./ChatRow"
 import ChatTextArea from "./ChatTextArea"
 import TaskHeader from "./TaskHeader"
+import AutoApproveMenu from "./AutoApproveMenu"
 import { FormattedMessage, useIntl } from 'react-intl';
 
 interface ChatViewProps {
@@ -79,15 +80,15 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 							setTextAreaDisabled(true)
 							setClineAsk("api_req_failed")
 							setEnableButtons(true)
-							setPrimaryButtonText("ÖØÊÔ")
-							setSecondaryButtonText("¿ªÊ¼ÐÂÈÎÎñ")
+							setPrimaryButtonText("ï¿½ï¿½ï¿½ï¿½")
+							setSecondaryButtonText("ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")
 							break
 						case "mistake_limit_reached":
 							setTextAreaDisabled(false)
 							setClineAsk("mistake_limit_reached")
 							setEnableButtons(true)
-							setPrimaryButtonText("²»¹ÜÔõÑù¶¼Òª¼ÌÐø")
-							setSecondaryButtonText("¿ªÊ¼ÐÂÈÎÎñ")
+							setPrimaryButtonText("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½")
+							setSecondaryButtonText("ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")
 							break
 						case "auto_approval_max_req_reached":
 							setTextAreaDisabled(true)
@@ -111,12 +112,12 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 							switch (tool.tool) {
 								case "editedExistingFile":
 								case "newFileCreated":
-									setPrimaryButtonText("±£´æ")
-									setSecondaryButtonText("¾Ü¾ø")
+									setPrimaryButtonText("ï¿½ï¿½ï¿½ï¿½")
+									setSecondaryButtonText("ï¿½Ü¾ï¿½")
 									break
 								default:
-									setPrimaryButtonText("Åú×¼")
-									setSecondaryButtonText("¾Ü¾ø")
+									setPrimaryButtonText("ï¿½ï¿½×¼")
+									setSecondaryButtonText("ï¿½Ü¾ï¿½")
 									break
 							}
 							break
@@ -124,21 +125,21 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 							setTextAreaDisabled(isPartial)
 							setClineAsk("browser_action_launch")
 							setEnableButtons(!isPartial)
-							setPrimaryButtonText("Åú×¼")
-							setSecondaryButtonText("¾Ü¾ø")
+							setPrimaryButtonText("ï¿½ï¿½×¼")
+							setSecondaryButtonText("ï¿½Ü¾ï¿½")
 							break
 						case "command":
 							setTextAreaDisabled(isPartial)
 							setClineAsk("command")
 							setEnableButtons(!isPartial)
-							setPrimaryButtonText("ÔËÐÐÃüÁî")
-							setSecondaryButtonText("¾Ü¾ø")
+							setPrimaryButtonText("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")
+							setSecondaryButtonText("ï¿½Ü¾ï¿½")
 							break
 						case "command_output":
 							setTextAreaDisabled(false)
 							setClineAsk("command_output")
 							setEnableButtons(true)
-							setPrimaryButtonText("¼ÌÐøÔËÐÐ")
+							setPrimaryButtonText("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")
 							setSecondaryButtonText(undefined)
 							break
 						case "use_mcp_server":
@@ -153,14 +154,14 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 							setTextAreaDisabled(isPartial)
 							setClineAsk("completion_result")
 							setEnableButtons(!isPartial)
-							setPrimaryButtonText("¿ªÊ¼ÐÂÈÎÎñ")
+							setPrimaryButtonText("ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")
 							setSecondaryButtonText(undefined)
 							break
 						case "resume_task":
 							setTextAreaDisabled(false)
 							setClineAsk("resume_task")
 							setEnableButtons(true)
-							setPrimaryButtonText("ÖÕÖ¹ÈÎÎñ")
+							setPrimaryButtonText("ï¿½ï¿½Ö¹ï¿½ï¿½ï¿½ï¿½")
 							setSecondaryButtonText(undefined)
 							setDidClickCancel(false) // special case where we reset the cancel button state
 							break
@@ -168,7 +169,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 							setTextAreaDisabled(false)
 							setClineAsk("resume_completed_task")
 							setEnableButtons(true)
-							setPrimaryButtonText("¿ªÊ¼ÐÂÈÎÎñ")
+							setPrimaryButtonText("ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")
 							setSecondaryButtonText(undefined)
 							setDidClickCancel(false)
 							break
@@ -750,7 +751,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 							<FormattedMessage id="chatView.whatCanIDo" defaultMessage="What can I do for you?" />
 						</h2>
 						<p>
-							{/* <FormattedMessage id="chatView.thanksTo" defaultMessage="Thanks to" />{" "}
+							<FormattedMessage id="chatView.thanksTo" defaultMessage="Thanks to" />{" "}
 							<VSCodeLink
 								href="https://www-cdn.anthropic.com/fed9cc193a14b84131812372d8d5857f8f304c52/Model_Card_Claude_3_Addendum.pdf"
 								style={{ display: "inline" }}>
@@ -758,7 +759,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 									id="chatView.agenticCodingCapabilities"
 									defaultMessage="Claude 3.5 Sonnet's agentic coding capabilities"
 								/>
-							</VSCodeLink>{" "} */}
+							</VSCodeLink>{" "}
 
 							<FormattedMessage
 								id="chatView.complexTasks"
@@ -875,7 +876,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 										marginLeft: isStreaming ? 0 : "6px",
 									}}
 									onClick={handleSecondaryButtonClick}>
-									{isStreaming ? "È¡Ïû" : secondaryButtonText}
+									{isStreaming ? "È¡ï¿½ï¿½" : secondaryButtonText}
 								</VSCodeButton>
 							)}
 						</div>
