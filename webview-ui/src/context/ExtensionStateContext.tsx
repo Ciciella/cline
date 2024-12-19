@@ -1,5 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useState } from "react"
 import { useEvent } from "react-use"
+import { DEFAULT_AUTO_APPROVAL_SETTINGS } from "../../../src/shared/AutoApprovalSettings"
 import { ExtensionMessage, ExtensionState } from "../../../src/shared/ExtensionMessage"
 import {
 	ApiConfiguration,
@@ -7,10 +8,10 @@ import {
 	openRouterDefaultModelId,
 	openRouterDefaultModelInfo,
 } from "../../../src/shared/api"
-import { vscode } from "../utils/vscode"
-import { convertTextMateToHljs } from "../utils/textMateToHljs"
 import { findLastIndex } from "../../../src/shared/array"
 import { McpServer } from "../../../src/shared/mcp"
+import { convertTextMateToHljs } from "../utils/textMateToHljs"
+import { vscode } from "../utils/vscode"
 
 interface ExtensionStateContextType extends ExtensionState {
 	didHydrateState: boolean
@@ -21,7 +22,6 @@ interface ExtensionStateContextType extends ExtensionState {
 	filePaths: string[]
 	setApiConfiguration: (config: ApiConfiguration) => void
 	setCustomInstructions: (value?: string) => void
-	setAlwaysAllowReadOnly: (value: boolean) => void
 	setShowAnnouncement: (value: boolean) => void
 }
 
@@ -33,6 +33,7 @@ export const ExtensionStateContextProvider: React.FC<{ children: React.ReactNode
 		clineMessages: [],
 		taskHistory: [],
 		shouldShowAnnouncement: false,
+		autoApprovalSettings: DEFAULT_AUTO_APPROVAL_SETTINGS,
 	})
 	const [didHydrateState, setDidHydrateState] = useState(false)
 	const [showWelcome, setShowWelcome] = useState(false)
@@ -121,7 +122,6 @@ export const ExtensionStateContextProvider: React.FC<{ children: React.ReactNode
 		filePaths,
 		setApiConfiguration: (value) => setState((prevState) => ({ ...prevState, apiConfiguration: value })),
 		setCustomInstructions: (value) => setState((prevState) => ({ ...prevState, customInstructions: value })),
-		setAlwaysAllowReadOnly: (value) => setState((prevState) => ({ ...prevState, alwaysAllowReadOnly: value })),
 		setShowAnnouncement: (value) => setState((prevState) => ({ ...prevState, shouldShowAnnouncement: value })),
 	}
 

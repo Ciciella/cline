@@ -1,6 +1,13 @@
 # 更新日志
 
 
+## [3.0.0]
+
+- Cline now uses a search & replace diff based approach when editing large files to prevent code deletion issues.
+- Adds support for a more comprehensive auto-approve configuration, allowing you to specify which tools require approval and which don't.
+- Adds ability to enable system notifications for when Cline needs approval or completes a task.
+- Adds support for a root-level `.clinerules` file that can be used to specify custom instructions for the project.
+
 ## [2.2.0]
 - 添加对模型上下文协议（MCP）的支持，允许AI Code使用自定义工具，如web搜索工具或GitHub工具
 - 通过菜单栏中的服务器图标添加MCP服务器管理选项卡

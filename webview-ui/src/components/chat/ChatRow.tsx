@@ -8,7 +8,7 @@ import {
 	ClineMessage,
 	ClineSayTool,
 } from "../../../../src/shared/ExtensionMessage"
-import { COMMAND_OUTPUT_STRING } from "../../../../src/shared/combineCommandSequences"
+import { COMMAND_OUTPUT_STRING, COMMAND_REQ_APP_STRING } from "../../../../src/shared/combineCommandSequences"
 import { useExtensionState } from "../../context/ExtensionStateContext"
 import { findMatchingResourceOrTemplate } from "../../utils/mcp"
 import { vscode } from "../../utils/vscode"
@@ -91,7 +91,9 @@ export const ChatRowContent = ({
 			? lastModifiedMessage?.text
 			: undefined
 	const isCommandExecuting =
-		isLast && lastModifiedMessage?.ask === "command" && lastModifiedMessage?.text?.includes(COMMAND_OUTPUT_STRING)
+		isLast &&
+		(lastModifiedMessage?.ask === "command" || lastModifiedMessage?.say === "command") &&
+		lastModifiedMessage?.text?.includes(COMMAND_OUTPUT_STRING)
 
 	const isMcpServerResponding = isLast && lastModifiedMessage?.say === "mcp_server_request_started"
 
@@ -122,6 +124,15 @@ export const ChatRowContent = ({
 						<FormattedMessage id="chatRow.clineHavingTrouble" defaultMessage="AI Code is having trouble..." />
 					</span>,
 				]
+			case "auto_approval_max_req_reached":
+				return [
+					<span
+						className="codicon codicon-warning"
+						style={{ color: errorColor, marginBottom: "-1.5px" }}></span>,
+					<span style={{ color: errorColor, fontWeight: "bold" }}>
+						<FormattedMessage id="chatRow.maximumRequestsReached" defaultMessage="最大请求已达到" />
+					</span>,
+				]
 			case "command":
 				return [
 					isCommandExecuting ? (
@@ -132,7 +143,9 @@ export const ChatRowContent = ({
 							style={{ color: normalColor, marginBottom: "-1.5px" }}></span>
 					),
 					<span style={{ color: normalColor, fontWeight: "bold" }}>
-						<FormattedMessage id="chatRow.clineExecuteCommand" defaultMessage="AI Code wants to execute this command:" />
+						{message.type === "ask"
+							? "AI Code想执行这个命令:"
+							: "AI Code执行了这个命令:"}
 					</span>,
 				]
 			case "use_mcp_server":
@@ -146,8 +159,19 @@ export const ChatRowContent = ({
 							style={{ color: normalColor, marginBottom: "-1.5px" }}></span>
 					),
 					<span style={{ color: normalColor, fontWeight: "bold" }}>
-						Cline wants to {mcpServerUse.type === "use_mcp_tool" ? "use a tool" : "access a resource"} on
-						the <code>{mcpServerUse.serverName}</code> MCP server:
+						{message.type === "ask" ? (
+							<>
+								Ai Code想在
+								<code>{mcpServerUse.serverName}</code> MCP服务器上
+								{mcpServerUse.type === "use_mcp_tool" ? "使用一个工具" : "访问一个资源"}：
+							</>
+						) : (
+							<>
+								Ai Code在
+								<code>{mcpServerUse.serverName}</code> MCP服务器上
+								{mcpServerUse.type === "use_mcp_tool" ? "使用了一个工具" : "访问了一个资源"}：
+							</>
+						)}
 					</span>,
 				]
 			case "completion_result":
@@ -236,6 +260,7 @@ export const ChatRowContent = ({
 		apiReqCancelReason,
 		isMcpServerResponding,
 		message.text,
+		message.type,
 	])
 
 	const headerStyle: React.CSSProperties = {
@@ -273,12 +298,12 @@ export const ChatRowContent = ({
 						<div style={headerStyle}>
 							{toolIcon("edit")}
 							<span style={{ fontWeight: "bold" }}>
-								<FormattedMessage id="chatRow.editFile" defaultMessage="AI Code wants to edit this file:" />
+								{message.type === "ask" ? "AI Code想编辑这个文件：" : "AI Code编辑了这个文件："}
 							</span>
 						</div>
 						<CodeAccordian
-							isLoading={message.partial}
-							diff={tool.diff!}
+							// isLoading={message.partial}
+							code={tool.content}
 							path={tool.path!}
 							isExpanded={isExpanded}
 							onToggleExpand={onToggleExpand}
@@ -291,7 +316,9 @@ export const ChatRowContent = ({
 						<div style={headerStyle}>
 							{toolIcon("new-file")}
 							<span style={{ fontWeight: "bold" }}>
-								<FormattedMessage id="chatRow.createFile" defaultMessage="AI Code wants to create a new file:" />
+								{message.type === "ask"
+									? "AI Code想创建一个新文件："
+									: "AI Code创建了一个新文件："}
 							</span>
 						</div>
 						<CodeAccordian
@@ -482,6 +509,169 @@ export const ChatRowContent = ({
 		}
 	}
 
+	if (message.ask === "command" || message.say === "command") {
+		const splitMessage = (text: string) => {
+			const outputIndex = text.indexOf(COMMAND_OUTPUT_STRING)
+			if (outputIndex === -1) {
+				return { command: text, output: "" }
+			}
+			return {
+				command: text.slice(0, outputIndex).trim(),
+				output: text
+					.slice(outputIndex + COMMAND_OUTPUT_STRING.length)
+					.trim()
+					.split("")
+					.map((char) => {
+						switch (char) {
+							case "\t":
+								return "→   "
+							case "\b":
+								return "⌫"
+							case "\f":
+								return "⏏"
+							case "\v":
+								return "⇳"
+							default:
+								return char
+						}
+					})
+					.join(""),
+			}
+		}
+
+		const { command: rawCommand, output } = splitMessage(message.text || "")
+
+		const requestsApproval = rawCommand.endsWith(COMMAND_REQ_APP_STRING)
+		const command = requestsApproval ? rawCommand.slice(0, -COMMAND_REQ_APP_STRING.length) : rawCommand
+
+		return (
+			<>
+				<div style={headerStyle}>
+					{icon}
+					{title}
+				</div>
+				{/* <Terminal
+					rawOutput={command + (output ? "\n" + output : "")}
+					shouldAllowInput={!!isCommandExecuting && output.length > 0}
+				/> */}
+				<div
+					style={{
+						borderRadius: 3,
+						border: "1px solid var(--vscode-editorGroup-border)",
+						overflow: "hidden",
+						backgroundColor: CODE_BLOCK_BG_COLOR,
+					}}>
+					<CodeBlock source={`${"```"}shell\n${command}\n${"```"}`} forceWrap={true} />
+					{output.length > 0 && (
+						<div style={{ width: "100%" }}>
+							<div
+								onClick={onToggleExpand}
+								style={{
+									display: "flex",
+									alignItems: "center",
+									gap: "4px",
+									width: "100%",
+									justifyContent: "flex-start",
+									cursor: "pointer",
+									padding: `2px 8px ${isExpanded ? 0 : 8}px 8px`,
+								}}>
+								<span className={`codicon codicon-chevron-${isExpanded ? "down" : "right"}`}></span>
+								<span style={{ fontSize: "0.8em" }}>Command Output</span>
+							</div>
+							{isExpanded && <CodeBlock source={`${"```"}shell\n${output}\n${"```"}`} />}
+						</div>
+					)}
+				</div>
+				{requestsApproval && (
+					<div
+						style={{
+							display: "flex",
+							alignItems: "center",
+							gap: 10,
+							padding: 8,
+							fontSize: "12px",
+							color: "var(--vscode-errorForeground)",
+						}}>
+						<i className="codicon codicon-warning"></i>
+						<span>模型已确定此命令需要明确批准。</span>
+					</div>
+				)}
+			</>
+		)
+	}
+
+	if (message.ask === "use_mcp_server" || message.say === "use_mcp_server") {
+		const useMcpServer = JSON.parse(message.text || "{}") as ClineAskUseMcpServer
+		const server = mcpServers.find((server) => server.name === useMcpServer.serverName)
+		return (
+			<>
+				<div style={headerStyle}>
+					{icon}
+					{title}
+				</div>
+
+				<div
+					style={{
+						background: "var(--vscode-textCodeBlock-background)",
+						borderRadius: "3px",
+						padding: "8px 10px",
+						marginTop: "8px",
+					}}>
+					{useMcpServer.type === "access_mcp_resource" && (
+						<McpResourceRow
+							item={{
+								// Use the matched resource/template details, with fallbacks
+								...(findMatchingResourceOrTemplate(
+									useMcpServer.uri || "",
+									server?.resources,
+									server?.resourceTemplates,
+								) || {
+									name: "",
+									mimeType: "",
+									description: "",
+								}),
+								// Always use the actual URI from the request
+								uri: useMcpServer.uri || "",
+							}}
+						/>
+					)}
+
+					{useMcpServer.type === "use_mcp_tool" && (
+						<>
+							<McpToolRow
+								tool={{
+									name: useMcpServer.toolName || "",
+									description:
+										server?.tools?.find((tool) => tool.name === useMcpServer.toolName)
+											?.description || "",
+								}}
+							/>
+							{useMcpServer.arguments && useMcpServer.arguments !== "{}" && (
+								<div style={{ marginTop: "8px" }}>
+									<div
+										style={{
+											marginBottom: "4px",
+											opacity: 0.8,
+											fontSize: "12px",
+											textTransform: "uppercase",
+										}}>
+										Arguments
+									</div>
+									<CodeAccordian
+										code={useMcpServer.arguments}
+										language="json"
+										isExpanded={true}
+										onToggleExpand={onToggleExpand}
+									/>
+								</div>
+							)}
+						</>
+					)}
+				</div>
+			</>
+		)
+	}
+
 	switch (message.type) {
 		case "say":
 			switch (message.say) {
@@ -521,12 +711,13 @@ export const ChatRowContent = ({
 											<>
 												<br />
 												<br />
-												It seems like you're having Windows PowerShell issues, please see this{" "}
-												<a
+												看起来你遇到了Windows PowerShell问题
+												{/* please see this{" "} */}
+												{/* <a
 													href="https://github.com/cline/cline/wiki/TroubleShooting-%E2%80%90-%22PowerShell-is-not-recognized-as-an-internal-or-external-command%22"
 													style={{ color: "inherit", textDecoration: "underline" }}>
 													troubleshooting guide
-												</a>
+												</a> */}
 												.
 											</>
 										)}
@@ -678,14 +869,14 @@ export const ChatRowContent = ({
 										}}
 									/>
 									{" "}
-									<a
+									{/* <a
 										href="https://github.com/cline/cline/wiki/Troubleshooting-%E2%80%90-Shell-Integration-Unavailable"
 										style={{ color: "inherit", textDecoration: "underline" }}>
 										<FormattedMessage
 											id="chatRow.shellIntegrationWarningTroubleshooting"
 											defaultMessage="Still having trouble?"
 										/>
-									</a>
+									</a> */}
 								</div>
 							</div>
 						</>
@@ -739,148 +930,14 @@ export const ChatRowContent = ({
 							<p style={{ ...pStyle, color: "var(--vscode-errorForeground)" }}>{message.text}</p>
 						</>
 					)
-				case "command":
-					const splitMessage = (text: string) => {
-						const outputIndex = text.indexOf(COMMAND_OUTPUT_STRING)
-						if (outputIndex === -1) {
-							return { command: text, output: "" }
-						}
-						return {
-							command: text.slice(0, outputIndex).trim(),
-							output: text
-								.slice(outputIndex + COMMAND_OUTPUT_STRING.length)
-								.trim()
-								.split("")
-								.map((char) => {
-									switch (char) {
-										case "\t":
-											return "→   "
-										case "\b":
-											return "⌫"
-										case "\f":
-											return "⏏"
-										case "\v":
-											return "⇳"
-										default:
-											return char
-									}
-								})
-								.join(""),
-						}
-					}
-
-					const { command, output } = splitMessage(message.text || "")
+				case "auto_approval_max_req_reached":
 					return (
 						<>
 							<div style={headerStyle}>
 								{icon}
 								{title}
 							</div>
-							{/* <Terminal
-								rawOutput={command + (output ? "\n" + output : "")}
-								shouldAllowInput={!!isCommandExecuting && output.length > 0}
-							/> */}
-							<div
-								style={{
-									borderRadius: 3,
-									border: "1px solid var(--vscode-editorGroup-border)",
-									overflow: "hidden",
-									backgroundColor: CODE_BLOCK_BG_COLOR,
-								}}>
-								<CodeBlock source={`${"```"}shell\n${command}\n${"```"}`} forceWrap={true} />
-								{output.length > 0 && (
-									<div style={{ width: "100%" }}>
-										<div
-											onClick={onToggleExpand}
-											style={{
-												display: "flex",
-												alignItems: "center",
-												gap: "4px",
-												width: "100%",
-												justifyContent: "flex-start",
-												cursor: "pointer",
-												padding: `2px 8px ${isExpanded ? 0 : 8}px 8px`,
-											}}>
-											<span
-												className={`codicon codicon-chevron-${isExpanded ? "down" : "right"}`}></span>
-											<span style={{ fontSize: "0.8em" }}>
-												<FormattedMessage id="chatRow.commandOutput" defaultMessage="Command Output" />
-											</span>
-										</div>
-										{isExpanded && <CodeBlock source={`${"```"}shell\n${output}\n${"```"}`} />}
-									</div>
-								)}
-							</div>
-						</>
-					)
-				case "use_mcp_server":
-					const useMcpServer = JSON.parse(message.text || "{}") as ClineAskUseMcpServer
-					const server = mcpServers.find((server) => server.name === useMcpServer.serverName)
-					return (
-						<>
-							<div style={headerStyle}>
-								{icon}
-								{title}
-							</div>
-
-							<div
-								style={{
-									background: "var(--vscode-textCodeBlock-background)",
-									borderRadius: "3px",
-									padding: "8px 10px",
-									marginTop: "8px",
-								}}>
-								{useMcpServer.type === "access_mcp_resource" && (
-									<McpResourceRow
-										item={{
-											// Use the matched resource/template details, with fallbacks
-											...(findMatchingResourceOrTemplate(
-												useMcpServer.uri || "",
-												server?.resources,
-												server?.resourceTemplates,
-											) || {
-												name: "",
-												mimeType: "",
-												description: "",
-											}),
-											// Always use the actual URI from the request
-											uri: useMcpServer.uri || "",
-										}}
-									/>
-								)}
-
-								{useMcpServer.type === "use_mcp_tool" && (
-									<>
-										<McpToolRow
-											tool={{
-												name: useMcpServer.toolName || "",
-												description:
-													server?.tools?.find((tool) => tool.name === useMcpServer.toolName)
-														?.description || "",
-											}}
-										/>
-										{useMcpServer.arguments && useMcpServer.arguments !== "{}" && (
-											<div style={{ marginTop: "8px" }}>
-												<div
-													style={{
-														marginBottom: "4px",
-														opacity: 0.8,
-														fontSize: "12px",
-														textTransform: "uppercase",
-													}}>
-													Arguments
-												</div>
-												<CodeAccordian
-													code={useMcpServer.arguments}
-													language="json"
-													isExpanded={true}
-													onToggleExpand={onToggleExpand}
-												/>
-											</div>
-										)}
-									</>
-								)}
-							</div>
+							<p style={{ ...pStyle, color: "var(--vscode-errorForeground)" }}>{message.text}</p>
 						</>
 					)
 				case "completion_result":

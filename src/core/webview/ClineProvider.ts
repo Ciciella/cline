@@ -22,6 +22,7 @@ import { Cline } from "../Cline"
 import { openMention } from "../mentions"
 import { getNonce } from "./getNonce"
 import { getUri } from "./getUri"
+import { AutoApprovalSettings, DEFAULT_AUTO_APPROVAL_SETTINGS } from "../../shared/AutoApprovalSettings"
 
 /*
 https://github.com/microsoft/vscode-webview-ui-toolkit-samples/blob/main/default/weather-webview/src/providers/WeatherViewProvider.ts
@@ -47,7 +48,6 @@ type GlobalStateKey =
 	| "vertexRegion"
 	| "lastShownAnnouncementId"
 	| "customInstructions"
-	| "alwaysAllowReadOnly"
 	| "taskHistory"
 	| "openAiBaseUrl"
 	| "openAiModelId"
@@ -59,12 +59,14 @@ type GlobalStateKey =
 	| "azureApiVersion"
 	| "openRouterModelId"
 	| "openRouterModelInfo"
+	| "autoApprovalSettings"
 
 export const GlobalFileNames = {
 	apiConversationHistory: "api_conversation_history.json",
 	uiMessages: "ui_messages.json",
 	openRouterModels: "openrouter_models.json",
 	mcpSettings: "cline_mcp_settings.json",
+	clineRules: ".clinerules",
 }
 
 export class ClineProvider implements vscode.WebviewViewProvider {
@@ -76,7 +78,7 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 	private cline?: Cline
 	private workspaceTracker?: WorkspaceTracker
 	mcpHub?: McpHub
-	private latestAnnouncementId = "dec-10-2024" // update to some unique identifier when we add a new announcement
+	private latestAnnouncementId = "dec-17-2024" // update to some unique identifier when we add a new announcement
 
 	constructor(
 		readonly context: vscode.ExtensionContext,
@@ -198,18 +200,18 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 
 	async initClineWithTask(task?: string, images?: string[]) {
 		await this.clearTask() // ensures that an exising task doesn't exist before starting a new one, although this shouldn't be possible since user must clear task before starting a new one
-		const { apiConfiguration, customInstructions, alwaysAllowReadOnly } = await this.getState()
-		this.cline = new Cline(this, apiConfiguration, customInstructions, alwaysAllowReadOnly, task, images)
+		const { apiConfiguration, customInstructions, autoApprovalSettings } = await this.getState()
+		this.cline = new Cline(this, apiConfiguration, autoApprovalSettings, customInstructions, task, images)
 	}
 
 	async initClineWithHistoryItem(historyItem: HistoryItem) {
 		await this.clearTask()
-		const { apiConfiguration, customInstructions, alwaysAllowReadOnly } = await this.getState()
+		const { apiConfiguration, customInstructions, autoApprovalSettings } = await this.getState()
 		this.cline = new Cline(
 			this,
 			apiConfiguration,
+			autoApprovalSettings,
 			customInstructions,
-			alwaysAllowReadOnly,
 			undefined,
 			undefined,
 			historyItem,
@@ -413,12 +415,14 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 					case "customInstructions":
 						await this.updateCustomInstructions(message.text)
 						break
-					case "alwaysAllowReadOnly":
-						await this.updateGlobalState("alwaysAllowReadOnly", message.bool ?? undefined)
-						if (this.cline) {
-							this.cline.alwaysAllowReadOnly = message.bool ?? false
+					case "autoApprovalSettings":
+						if (message.autoApprovalSettings) {
+							await this.updateGlobalState("autoApprovalSettings", message.autoApprovalSettings)
+							if (this.cline) {
+								this.cline.autoApprovalSettings = message.autoApprovalSettings
+							}
+							await this.postStateToWebview()
 						}
-						await this.postStateToWebview()
 						break
 					case "askResponse":
 						this.cline?.handleWebviewAskResponse(message.askResponse!, message.text, message.images)
@@ -824,17 +828,17 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 	}
 
 	async getStateToPostToWebview() {
-		const { apiConfiguration, lastShownAnnouncementId, customInstructions, alwaysAllowReadOnly, taskHistory } =
+		const { apiConfiguration, lastShownAnnouncementId, customInstructions, taskHistory, autoApprovalSettings } =
 			await this.getState()
 		return {
 			version: this.context.extension?.packageJSON?.version ?? "",
 			apiConfiguration,
 			customInstructions,
-			alwaysAllowReadOnly,
 			uriScheme: vscode.env.uriScheme,
 			clineMessages: this.cline?.clineMessages || [],
 			taskHistory: (taskHistory || []).filter((item) => item.ts && item.task).sort((a, b) => b.ts - a.ts),
 			shouldShowAnnouncement: lastShownAnnouncementId !== this.latestAnnouncementId,
+			autoApprovalSettings,
 		}
 	}
 
@@ -917,8 +921,8 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 			openRouterModelInfo,
 			lastShownAnnouncementId,
 			customInstructions,
-			alwaysAllowReadOnly,
 			taskHistory,
+			autoApprovalSettings,
 		] = await Promise.all([
 			this.getGlobalState("apiProvider") as Promise<ApiProvider | undefined>,
 			this.getGlobalState("apiModelId") as Promise<string | undefined>,
@@ -946,8 +950,8 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 			this.getGlobalState("openRouterModelInfo") as Promise<ModelInfo | undefined>,
 			this.getGlobalState("lastShownAnnouncementId") as Promise<string | undefined>,
 			this.getGlobalState("customInstructions") as Promise<string | undefined>,
-			this.getGlobalState("alwaysAllowReadOnly") as Promise<boolean | undefined>,
 			this.getGlobalState("taskHistory") as Promise<HistoryItem[] | undefined>,
+			this.getGlobalState("autoApprovalSettings") as Promise<AutoApprovalSettings | undefined>,
 		])
 
 		let apiProvider: ApiProvider
@@ -993,8 +997,8 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 			},
 			lastShownAnnouncementId,
 			customInstructions,
-			alwaysAllowReadOnly: alwaysAllowReadOnly ?? false,
 			taskHistory,
+			autoApprovalSettings: autoApprovalSettings || DEFAULT_AUTO_APPROVAL_SETTINGS, // default value can be 0 or empty string
 		}
 	}
 

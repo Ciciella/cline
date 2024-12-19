@@ -1,4 +1,4 @@
-import { VSCodeButton, VSCodeCheckbox, VSCodeLink, VSCodeTextArea } from "@vscode/webview-ui-toolkit/react"
+import { VSCodeButton, VSCodeLink, VSCodeTextArea } from "@vscode/webview-ui-toolkit/react"
 import { memo, useEffect, useState } from "react"
 import { useExtensionState } from "../../context/ExtensionStateContext"
 import { validateApiConfiguration, validateModelId } from "../../utils/validate"
@@ -19,8 +19,6 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
 		version,
 		customInstructions,
 		setCustomInstructions,
-		alwaysAllowReadOnly,
-		setAlwaysAllowReadOnly,
 		openRouterModels,
 	} = useExtensionState()
 	const [apiErrorMessage, setApiErrorMessage] = useState<string | undefined>(undefined)
@@ -34,7 +32,6 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
 		if (!apiValidationResult && !modelIdValidationResult) {
 			vscode.postMessage({ type: "apiConfiguration", apiConfiguration })
 			vscode.postMessage({ type: "customInstructions", text: customInstructions })
-			vscode.postMessage({ type: "alwaysAllowReadOnly", bool: alwaysAllowReadOnly })
 			onDone()
 		}
 	}
@@ -121,30 +118,6 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
 						<FormattedMessage 
 							id="settings.instructionsInfo" 
 							defaultMessage="These instructions are added to the end of the system prompt sent with every request." 
-						/>
-					</p>
-				</div>
-
-				<div style={{ marginBottom: 5 }}>
-					<VSCodeCheckbox
-						checked={alwaysAllowReadOnly}
-						onChange={(e: any) => setAlwaysAllowReadOnly(e.target.checked)}>
-						<span style={{ fontWeight: "500" }}>
-							<FormattedMessage
-								id="settingsView.alwaysApproveReadOnly"
-								defaultMessage="Always approve read-only operations"
-							/>
-						</span>
-					</VSCodeCheckbox>
-					<p
-						style={{
-							fontSize: "12px",
-							marginTop: "5px",
-							color: "var(--vscode-descriptionForeground)",
-						}}>
-						<FormattedMessage
-							id="settingsView.autoReadFiles"
-							defaultMessage="启用后，AI Code将自动读取文件、查看目录和检查站点，而无需单击“批准”按钮。"
 						/>
 					</p>
 				</div>

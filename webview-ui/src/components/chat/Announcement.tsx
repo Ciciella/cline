@@ -33,32 +33,38 @@ const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 			<h3 style={{ margin: "0 0 8px" }}>
 				<FormattedMessage id="announcement.newVersion" defaultMessage="🎉 New in v{minorVersion}" values={{ minorVersion }} />
 			</h3>
-			<p style={{ margin: "5px 0px", fontWeight: "bold" }}>使用MCP添加自定义工具向渐变!</p>
-			<p style={{ margin: "5px 0px" }}>
-			模型上下文协议允许像AI Code这样的代理插入和播放自定义工具,{" "}
-				<VSCodeLink href="https://github.com/modelcontextprotocol/servers" style={{ display: "inline" }}>
-				例如web搜索工具或GitHub工具。
-				</VSCodeLink>
-			</p>
-			<p style={{ margin: "5px 0px" }}>
-			单击“新建”，可以添加和配置MCP服务器{" "}
-				<span className="codicon codicon-server" style={{ fontSize: "10px" }}></span> 菜单栏中的图标。
-			</p>
-			<p style={{ margin: "5px 0px" }}>
-			为了更进一步，AI Code还能够为自己创建定制工具。只是说
-			“添加一个工具……”，并观察他如何构建和安装特定于的新功能{" "}
-				<i>你的工作流</i>。例如：
-				<ul style={{ margin: "4px 0 6px 20px", padding: 0 }}>
-					<li>"...获取Jira票据": 获取票据AC并让AI Code开始工作</li>
-					<li>"...管理AWS EC2s": 检查服务器指标并上下调整</li>
-					<li>"...拉取PagerDuty事件": 拉取详细信息以帮助AI Code修复错误</li>
-				</ul>
-				AI Code处理从创建MCP服务器到在扩展中安装它的一切，准备在
-未来的任务。服务器被保存到 <code>~/Documents/AI Code/MCP</code> 所以你可以很容易地与其他人分享它们
-			</p>
-			<p style={{ margin: "5px 0px" }}>
-				通过让AI Code "添加一个获取最新npm文档的工具
-			</p>
+			<ul style={{ margin: "0 0 8px", paddingLeft: "12px" }}>
+				<li>
+					<b>自动批准菜单:</b> 现在您可以指定哪些工具需要批准，设置最大数量的自动批准API请求，并为AI Code完成任务时启用系统通知。
+				</li>
+				<li>
+					<b>大文件差异编辑:</b> AI Code现在使用高效的搜索和替换方法来修改大文件，以实现更快、更可靠的编辑（不再有"
+					<code>{"// 代码删除"}</code>"）。
+				</li>
+				<li>
+					<b>.aicoderules:</b> 添加根级别的<code>.aicoderules</code>文件，以指定项目的自定义指令。
+				</li>
+			</ul>
+			<p style={{ margin: "5px 0px", fontWeight: "bold" }}>v2.2 更新:</p>
+			<ul style={{ margin: "0 0 8px", paddingLeft: "12px" }}>
+				<li>
+					通过点击菜单栏中的新 <span className="codicon codicon-server" style={{ fontSize: "10px" }}></span> 图标，添加和配置
+					<VSCodeLink href="https://github.com/modelcontextprotocol/servers" style={{ display: "inline" }}>
+						MCP服务器
+					</VSCodeLink>
+					。
+				</li>
+				<li>
+					AI Code还可以创建自定义工具–只需说"添加一个工具，用于...",然后观察他创建MCP服务器并在扩展中安装，准备好在未来任务中使用。
+				</li>
+				<li>
+					通过问AI Code"添加一个获取最新npm文档的工具"
+					{/* ，或
+					<VSCodeLink href="https://x.com/sdrzn/status/1867271665086074969" style={{ display: "inline" }}>
+						查看MCP在行动的演示。
+					</VSCodeLink> */}
+				</li>
+			</ul>
 			{/*<ul style={{ margin: "0 0 8px", paddingLeft: "12px" }}>
 				 <li>
 					OpenRouter now supports prompt caching! They also have much higher rate limits than other providers,

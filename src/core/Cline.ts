@@ -13,14 +13,16 @@ import { DiffViewProvider } from "../integrations/editor/DiffViewProvider"
 import { findToolName, formatContentBlockToMarkdown } from "../integrations/misc/export-markdown"
 import { extractTextFromFile } from "../integrations/misc/extract-text"
 import { TerminalManager } from "../integrations/terminal/TerminalManager"
+import { BrowserSession } from "../services/browser/BrowserSession"
 import { UrlContentFetcher } from "../services/browser/UrlContentFetcher"
 import { listFiles } from "../services/glob/list-files"
 import { regexSearchFiles } from "../services/ripgrep"
 import { parseSourceCodeForDefinitionsTopLevel } from "../services/tree-sitter"
 import { ApiConfiguration } from "../shared/api"
 import { findLastIndex } from "../shared/array"
+import { AutoApprovalSettings } from "../shared/AutoApprovalSettings"
 import { combineApiRequests } from "../shared/combineApiRequests"
-import { combineCommandSequences } from "../shared/combineCommandSequences"
+import { combineCommandSequences, COMMAND_REQ_APP_STRING } from "../shared/combineCommandSequences"
 import {
 	BrowserAction,
 	BrowserActionResult,
@@ -40,14 +42,14 @@ import { ClineAskResponse } from "../shared/WebviewMessage"
 import { calculateApiCost } from "../utils/cost"
 import { fileExistsAtPath } from "../utils/fs"
 import { arePathsEqual, getReadablePath } from "../utils/path"
-import { parseMentions } from "./mentions"
 import { AssistantMessageContent, parseAssistantMessage, ToolParamName, ToolUseName } from "./assistant-message"
+import { constructNewFileContent } from "./assistant-message/diff"
+import { parseMentions } from "./mentions"
 import { formatResponse } from "./prompts/responses"
-import { addCustomInstructions, SYSTEM_PROMPT } from "./prompts/system"
+import { addUserInstructions, SYSTEM_PROMPT } from "./prompts/system"
 import { truncateHalfConversation } from "./sliding-window"
 import { ClineProvider, GlobalFileNames } from "./webview/ClineProvider"
-import { showOmissionWarning } from "../integrations/editor/detect-omission"
-import { BrowserSession } from "../services/browser/BrowserSession"
+import { showSystemNotification } from "../integrations/notifications"
 
 const cwd =
 	vscode.workspace.workspaceFolders?.map((folder) => folder.uri.fsPath).at(0) ?? path.join(os.homedir(), "Desktop") // may or may not exist but fs checking existence would immediately ask for permission which would be bad UX, need to come up with a better solution
@@ -65,13 +67,14 @@ export class Cline {
 	private browserSession: BrowserSession
 	private didEditFile: boolean = false
 	customInstructions?: string
-	alwaysAllowReadOnly: boolean
+	autoApprovalSettings: AutoApprovalSettings
 	apiConversationHistory: Anthropic.MessageParam[] = []
 	clineMessages: ClineMessage[] = []
 	private askResponse?: ClineAskResponse
 	private askResponseText?: string
 	private askResponseImages?: string[]
 	private lastMessageTs?: number
+	private consecutiveAutoApprovedRequestsCount: number = 0
 	private consecutiveMistakeCount: number = 0
 	private providerRef: WeakRef<ClineProvider>
 	private abort: boolean = false
@@ -93,8 +96,8 @@ export class Cline {
 	constructor(
 		provider: ClineProvider,
 		apiConfiguration: ApiConfiguration,
+		autoApprovalSettings: AutoApprovalSettings,
 		customInstructions?: string,
-		alwaysAllowReadOnly?: boolean,
 		task?: string,
 		images?: string[],
 		historyItem?: HistoryItem,
@@ -106,8 +109,7 @@ export class Cline {
 		this.browserSession = new BrowserSession(provider.context)
 		this.diffViewProvider = new DiffViewProvider(cwd)
 		this.customInstructions = customInstructions
-		this.alwaysAllowReadOnly = alwaysAllowReadOnly ?? false
-
+		this.autoApprovalSettings = autoApprovalSettings
 		if (historyItem) {
 			this.taskId = historyItem.id
 			this.resumeTaskFromHistory()
@@ -618,7 +620,7 @@ export class Cline {
 			text:
 				`[TASK RESUMPTION] This task was interrupted ${agoText}. It may or may not be complete, so please reassess the task context. Be aware that the project state may have changed since then. The current working directory is now '${cwd.toPosix()}'. If the task has not been completed, retry the last step before interruption and proceed with completing the task.\n\nNote: If you previously attempted a tool use that the user did not provide a result for, you should assume the tool use was not successful and assess whether you should retry. If the last tool was a browser_action, the browser has been closed and you must launch a new browser if needed.${
 					wasRecent
-						? "\n\nIMPORTANT: If the last tool use was a write_to_file that was interrupted, the file was reverted back to its original state before the interrupted edit, and you do NOT need to re-read the file as you already have its up-to-date contents."
+						? "\n\nIMPORTANT: If the last tool use was a replace_in_file or write_to_file that was interrupted, the file was reverted back to its original state before the interrupted edit, and you do NOT need to re-read the file as you already have its up-to-date contents."
 						: ""
 				}` +
 				(responseText
@@ -751,6 +753,29 @@ export class Cline {
 		}
 	}
 
+	shouldAutoApproveTool(toolName: ToolUseName): boolean {
+		if (this.autoApprovalSettings.enabled) {
+			switch (toolName) {
+				case "read_file":
+				case "list_files":
+				case "list_code_definition_names":
+				case "search_files":
+					return this.autoApprovalSettings.actions.readFiles
+				case "write_to_file":
+				case "replace_in_file":
+					return this.autoApprovalSettings.actions.editFiles
+				case "execute_command":
+					return this.autoApprovalSettings.actions.executeCommands
+				case "browser_action":
+					return this.autoApprovalSettings.actions.useBrowser
+				case "access_mcp_resource":
+				case "use_mcp_tool":
+					return this.autoApprovalSettings.actions.useMcp
+			}
+		}
+		return false
+	}
+
 	async *attemptApiRequest(previousApiReqIndex: number): ApiStream {
 		// Wait for MCP servers to be connected before generating system prompt
 		await pWaitFor(() => this.providerRef.deref()?.mcpHub?.isConnecting !== true, { timeout: 10_000 }).catch(() => {
@@ -763,9 +788,23 @@ export class Cline {
 		}
 
 		let systemPrompt = await SYSTEM_PROMPT(cwd, this.api.getModel().info.supportsComputerUse ?? false, mcpHub)
-		if (this.customInstructions && this.customInstructions.trim()) {
+		let settingsCustomInstructions = this.customInstructions?.trim()
+		const clineRulesFilePath = path.resolve(cwd, GlobalFileNames.clineRules)
+		let clineRulesFileInstructions: string | undefined
+		if (await fileExistsAtPath(clineRulesFilePath)) {
+			try {
+				const ruleFileContent = (await fs.readFile(clineRulesFilePath, "utf8")).trim()
+				if (ruleFileContent) {
+					clineRulesFileInstructions = `# .clinerules\n\nThe following is provided by a root-level .clinerules file where the user has specified instructions for this working directory (${cwd.toPosix()})\n\n${ruleFileContent}`
+				}
+			} catch {
+				console.error(`Failed to read .clinerules file at ${clineRulesFilePath}`)
+			}
+		}
+
+		if (settingsCustomInstructions || clineRulesFileInstructions) {
 			// altering the system prompt mid-task will break the prompt cache, but in the grand scheme this will not change often so it's better to not pollute user messages with it the way we have to with <potentially relevant details>
-			systemPrompt += addCustomInstructions(this.customInstructions)
+			systemPrompt += addUserInstructions(settingsCustomInstructions, clineRulesFileInstructions)
 		}
 
 		// If the previous API request's total token usage is close to the context window, truncate the conversation history to free up space for the new request
@@ -893,6 +932,8 @@ export class Cline {
 							return `[${block.name} for '${block.params.path}']`
 						case "write_to_file":
 							return `[${block.name} for '${block.params.path}']`
+						case "replace_in_file":
+							return `[${block.name} for '${block.params.path}']`
 						case "search_files":
 							return `[${block.name} for '${block.params.regex}'${
 								block.params.file_pattern ? ` in '${block.params.file_pattern}'` : ""
@@ -992,6 +1033,15 @@ export class Cline {
 					return true
 				}
 
+				const showNotificationForApprovalIfAutoApprovalEnabled = (message: string) => {
+					if (this.autoApprovalSettings.enabled && this.autoApprovalSettings.enableNotifications) {
+						showSystemNotification({
+							subtitle: "Approval Required",
+							message,
+						})
+					}
+				}
+
 				const handleError = async (action: string, error: Error) => {
 					const errorString = `Error ${action}: ${JSON.stringify(serializeError(error))}`
 					await this.say(
@@ -1032,11 +1082,13 @@ export class Cline {
 				}
 
 				switch (block.name) {
-					case "write_to_file": {
+					case "write_to_file":
+					case "replace_in_file": {
 						const relPath: string | undefined = block.params.path
-						let newContent: string | undefined = block.params.content
-						if (!relPath || !newContent) {
-							// checking for newContent ensure relPath is complete
+						let content: string | undefined = block.params.content // for write_to_file
+						let diff: string | undefined = block.params.diff // for replace_in_file
+						if (!relPath || (!content && !diff)) {
+							// checking for content/diff ensures relPath is complete
 							// wait so we can determine if it's a new file or editing an existing file
 							break
 						}
@@ -1050,38 +1102,76 @@ export class Cline {
 							this.diffViewProvider.editType = fileExists ? "modify" : "create"
 						}
 
-						// pre-processing newContent for cases where weaker models might add artifacts like markdown codeblock markers (deepseek/llama) or extra escape characters (gemini)
-						if (newContent.startsWith("```")) {
-							// this handles cases where it includes language specifiers like ```python ```js
-							newContent = newContent.split("\n").slice(1).join("\n").trim()
-						}
-						if (newContent.endsWith("```")) {
-							newContent = newContent.split("\n").slice(0, -1).join("\n").trim()
-						}
-
-						if (!this.api.getModel().id.includes("claude")) {
-							// it seems not just llama models are doing this, but also gemini and potentially others
-							if (
-								newContent.includes("&gt;") ||
-								newContent.includes("&lt;") ||
-								newContent.includes("&quot;")
-							) {
-								newContent = newContent
-									.replace(/&gt;/g, ">")
-									.replace(/&lt;/g, "<")
-									.replace(/&quot;/g, '"')
-							}
-						}
-
-						const sharedMessageProps: ClineSayTool = {
-							tool: fileExists ? "editedExistingFile" : "newFileCreated",
-							path: getReadablePath(cwd, removeClosingTag("path", relPath)),
-						}
 						try {
+							// Construct newContent from diff
+							let newContent: string
+							if (diff) {
+								try {
+									newContent = await constructNewFileContent(
+										diff,
+										this.diffViewProvider.originalContent || "",
+										!block.partial,
+									)
+								} catch (error) {
+									await this.say(
+										"error",
+										`Failed to apply changes to ${relPath}. The model's diff instructions could not be processed correctly. This usually happens when the search patterns don't match the file content exactly.`,
+									)
+									pushToolResult(
+										formatResponse.toolError(
+											`Error writing file: ${JSON.stringify(serializeError(error))}`,
+										),
+									)
+									await this.diffViewProvider.revertChanges()
+									await this.diffViewProvider.reset()
+									break
+								}
+							} else if (content) {
+								newContent = content
+
+								// pre-processing newContent for cases where weaker models might add artifacts like markdown codeblock markers (deepseek/llama) or extra escape characters (gemini)
+								if (newContent.startsWith("```")) {
+									// this handles cases where it includes language specifiers like ```python ```js
+									newContent = newContent.split("\n").slice(1).join("\n").trim()
+								}
+								if (newContent.endsWith("```")) {
+									newContent = newContent.split("\n").slice(0, -1).join("\n").trim()
+								}
+							} else {
+								// can't happen, since we already checked for content/diff above. but need to do this for type error
+								break
+							}
+
+							if (!this.api.getModel().id.includes("claude")) {
+								// it seems not just llama models are doing this, but also gemini and potentially others
+								if (
+									newContent.includes("&gt;") ||
+									newContent.includes("&lt;") ||
+									newContent.includes("&quot;")
+								) {
+									newContent = newContent
+										.replace(/&gt;/g, ">")
+										.replace(/&lt;/g, "<")
+										.replace(/&quot;/g, '"')
+								}
+							}
+
+							newContent = newContent.trimEnd() // remove any trailing newlines, since it's automatically inserted by the editor
+
+							const sharedMessageProps: ClineSayTool = {
+								tool: fileExists ? "editedExistingFile" : "newFileCreated",
+								path: getReadablePath(cwd, removeClosingTag("path", relPath)),
+								content: diff || content,
+							}
+
 							if (block.partial) {
 								// update gui message
 								const partialMessage = JSON.stringify(sharedMessageProps)
-								await this.ask("tool", partialMessage, block.partial).catch(() => {})
+								if (this.shouldAutoApproveTool(block.name)) {
+									await this.say("tool", partialMessage, undefined, block.partial)
+								} else {
+									await this.ask("tool", partialMessage, block.partial).catch(() => {})
+								}
 								// update editor
 								if (!this.diffViewProvider.isEditing) {
 									// open the editor and prepare to stream content in
@@ -1093,11 +1183,17 @@ export class Cline {
 							} else {
 								if (!relPath) {
 									this.consecutiveMistakeCount++
-									pushToolResult(await this.sayAndCreateMissingParamError("write_to_file", "path"))
+									pushToolResult(await this.sayAndCreateMissingParamError(block.name, "path"))
 									await this.diffViewProvider.reset()
 									break
 								}
-								if (!newContent) {
+								if (block.name === "replace_in_file" && !diff) {
+									this.consecutiveMistakeCount++
+									pushToolResult(await this.sayAndCreateMissingParamError("replace_in_file", "diff"))
+									await this.diffViewProvider.reset()
+									break
+								}
+								if (block.name === "write_to_file" && !content) {
 									this.consecutiveMistakeCount++
 									pushToolResult(await this.sayAndCreateMissingParamError("write_to_file", "content"))
 									await this.diffViewProvider.reset()
@@ -1117,24 +1213,37 @@ export class Cline {
 								await this.diffViewProvider.update(newContent, true)
 								await delay(300) // wait for diff view to update
 								this.diffViewProvider.scrollToFirstDiff()
-								showOmissionWarning(this.diffViewProvider.originalContent || "", newContent)
+								// showOmissionWarning(this.diffViewProvider.originalContent || "", newContent)
 
 								const completeMessage = JSON.stringify({
 									...sharedMessageProps,
-									content: fileExists ? undefined : newContent,
-									diff: fileExists
-										? formatResponse.createPrettyPatch(
-												relPath,
-												this.diffViewProvider.originalContent,
-												newContent,
-											)
-										: undefined,
+									content: diff || content,
+									// ? formatResponse.createPrettyPatch(
+									// 		relPath,
+									// 		this.diffViewProvider.originalContent,
+									// 		newContent,
+									// 	)
+									// : undefined,
 								} satisfies ClineSayTool)
-								const didApprove = await askApproval("tool", completeMessage)
-								if (!didApprove) {
-									await this.diffViewProvider.revertChanges()
-									break
+
+								if (this.shouldAutoApproveTool(block.name)) {
+									await this.say("tool", completeMessage, undefined, false)
+									this.consecutiveAutoApprovedRequestsCount++
+
+									// we need an artificial delay to let the diagnostics catch up to the changes
+									await delay(3_500)
+								} else {
+									// If auto-approval is enabled but this tool wasn't auto-approved, send notification
+									showNotificationForApprovalIfAutoApprovalEnabled(
+										`Cline wants to ${fileExists ? "edit" : "create"} ${path.basename(relPath)}`,
+									)
+									const didApprove = await askApproval("tool", completeMessage)
+									if (!didApprove) {
+										await this.diffViewProvider.revertChanges()
+										break
+									}
 								}
+
 								const { newProblemsMessage, userEdits, finalContent } =
 									await this.diffViewProvider.saveChanges()
 								this.didEditFile = true // used to determine if we should wait for busy terminal to update before sending api request
@@ -1155,11 +1264,16 @@ export class Cline {
 											`1. You do not need to re-write the file with these changes, as they have already been applied.\n` +
 											`2. Proceed with the task using this updated file content as the new baseline.\n` +
 											`3. If the user's edits have addressed part of the task or changed the requirements, adjust your approach accordingly.` +
+											`4. If you need to make further changes to this file, use this final_file_content as the new reference for your SEARCH/REPLACE operations, as it is now the current state of the file (including the user's edits and any auto-formatting done by the system).\n` +
 											`${newProblemsMessage}`,
 									)
 								} else {
 									pushToolResult(
-										`The content was successfully saved to ${relPath.toPosix()}.${newProblemsMessage}`,
+										`The content was successfully saved to ${relPath.toPosix()}.\n\n` +
+											`Here is the full, updated content of the file:\n\n` +
+											`<final_file_content path="${relPath.toPosix()}">\n${finalContent}\n</final_file_content>\n\n` +
+											`Please note: If you need to make further changes to this file, use this final_file_content as the new reference for your SEARCH/REPLACE operations, as it is now the current state of the file (including any auto-formatting done by the system).\n\n` +
+											`${newProblemsMessage}`,
 									)
 								}
 								await this.diffViewProvider.reset()
@@ -1167,6 +1281,7 @@ export class Cline {
 							}
 						} catch (error) {
 							await handleError("writing file", error)
+							await this.diffViewProvider.revertChanges()
 							await this.diffViewProvider.reset()
 							break
 						}
@@ -1183,7 +1298,7 @@ export class Cline {
 									...sharedMessageProps,
 									content: undefined,
 								} satisfies ClineSayTool)
-								if (this.alwaysAllowReadOnly) {
+								if (this.shouldAutoApproveTool(block.name)) {
 									await this.say("tool", partialMessage, undefined, block.partial)
 								} else {
 									await this.ask("tool", partialMessage, block.partial).catch(() => {})
@@ -1201,9 +1316,13 @@ export class Cline {
 									...sharedMessageProps,
 									content: absolutePath,
 								} satisfies ClineSayTool)
-								if (this.alwaysAllowReadOnly) {
+								if (this.shouldAutoApproveTool(block.name)) {
 									await this.say("tool", completeMessage, undefined, false) // need to be sending partialValue bool, since undefined has its own purpose in that the message is treated neither as a partial or completion of a partial, but as a single complete message
+									this.consecutiveAutoApprovedRequestsCount++
 								} else {
+									showNotificationForApprovalIfAutoApprovalEnabled(
+										`Cline wants to read ${path.basename(absolutePath)}`,
+									)
 									const didApprove = await askApproval("tool", completeMessage)
 									if (!didApprove) {
 										break
@@ -1233,7 +1352,7 @@ export class Cline {
 									...sharedMessageProps,
 									content: "",
 								} satisfies ClineSayTool)
-								if (this.alwaysAllowReadOnly) {
+								if (this.shouldAutoApproveTool(block.name)) {
 									await this.say("tool", partialMessage, undefined, block.partial)
 								} else {
 									await this.ask("tool", partialMessage, block.partial).catch(() => {})
@@ -1253,9 +1372,13 @@ export class Cline {
 									...sharedMessageProps,
 									content: result,
 								} satisfies ClineSayTool)
-								if (this.alwaysAllowReadOnly) {
+								if (this.shouldAutoApproveTool(block.name)) {
 									await this.say("tool", completeMessage, undefined, false)
+									this.consecutiveAutoApprovedRequestsCount++
 								} else {
+									showNotificationForApprovalIfAutoApprovalEnabled(
+										`Cline wants to view directory ${path.basename(absolutePath)}/`,
+									)
 									const didApprove = await askApproval("tool", completeMessage)
 									if (!didApprove) {
 										break
@@ -1281,7 +1404,7 @@ export class Cline {
 									...sharedMessageProps,
 									content: "",
 								} satisfies ClineSayTool)
-								if (this.alwaysAllowReadOnly) {
+								if (this.shouldAutoApproveTool(block.name)) {
 									await this.say("tool", partialMessage, undefined, block.partial)
 								} else {
 									await this.ask("tool", partialMessage, block.partial).catch(() => {})
@@ -1302,9 +1425,13 @@ export class Cline {
 									...sharedMessageProps,
 									content: result,
 								} satisfies ClineSayTool)
-								if (this.alwaysAllowReadOnly) {
+								if (this.shouldAutoApproveTool(block.name)) {
 									await this.say("tool", completeMessage, undefined, false)
+									this.consecutiveAutoApprovedRequestsCount++
 								} else {
+									showNotificationForApprovalIfAutoApprovalEnabled(
+										`Cline wants to view source code definitions in ${path.basename(absolutePath)}/`,
+									)
 									const didApprove = await askApproval("tool", completeMessage)
 									if (!didApprove) {
 										break
@@ -1334,7 +1461,7 @@ export class Cline {
 									...sharedMessageProps,
 									content: "",
 								} satisfies ClineSayTool)
-								if (this.alwaysAllowReadOnly) {
+								if (this.shouldAutoApproveTool(block.name)) {
 									await this.say("tool", partialMessage, undefined, block.partial)
 								} else {
 									await this.ask("tool", partialMessage, block.partial).catch(() => {})
@@ -1358,9 +1485,13 @@ export class Cline {
 									...sharedMessageProps,
 									content: results,
 								} satisfies ClineSayTool)
-								if (this.alwaysAllowReadOnly) {
+								if (this.shouldAutoApproveTool(block.name)) {
 									await this.say("tool", completeMessage, undefined, false)
+									this.consecutiveAutoApprovedRequestsCount++
 								} else {
+									showNotificationForApprovalIfAutoApprovalEnabled(
+										`Cline wants to search files in ${path.basename(absolutePath)}/`,
+									)
 									const didApprove = await askApproval("tool", completeMessage)
 									if (!didApprove) {
 										break
@@ -1393,11 +1524,20 @@ export class Cline {
 						try {
 							if (block.partial) {
 								if (action === "launch") {
-									await this.ask(
-										"browser_action_launch",
-										removeClosingTag("url", url),
-										block.partial,
-									).catch(() => {})
+									if (this.shouldAutoApproveTool(block.name)) {
+										await this.say(
+											"browser_action_launch",
+											removeClosingTag("url", url),
+											undefined,
+											block.partial,
+										)
+									} else {
+										await this.ask(
+											"browser_action_launch",
+											removeClosingTag("url", url),
+											block.partial,
+										).catch(() => {})
+									}
 								} else {
 									await this.say(
 										"browser_action",
@@ -1423,9 +1563,18 @@ export class Cline {
 										break
 									}
 									this.consecutiveMistakeCount = 0
-									const didApprove = await askApproval("browser_action_launch", url)
-									if (!didApprove) {
-										break
+
+									if (this.shouldAutoApproveTool(block.name)) {
+										await this.say("browser_action_launch", url, undefined, false)
+										this.consecutiveAutoApprovedRequestsCount++
+									} else {
+										showNotificationForApprovalIfAutoApprovalEnabled(
+											`Cline wants to use a browser and launch ${url}`,
+										)
+										const didApprove = await askApproval("browser_action_launch", url)
+										if (!didApprove) {
+											break
+										}
 									}
 
 									// NOTE: it's okay that we call this message since the partial inspect_site is finished streaming. The only scenario we have to avoid is sending messages WHILE a partial message exists at the end of the messages array. For example the api_req_finished message would interfere with the partial message, so we needed to remove that.
@@ -1522,11 +1671,26 @@ export class Cline {
 					}
 					case "execute_command": {
 						const command: string | undefined = block.params.command
+						const requiresApprovalRaw: string | undefined = block.params.requires_approval
+						const requiresApproval = requiresApprovalRaw?.toLowerCase() === "true"
+
 						try {
 							if (block.partial) {
-								await this.ask("command", removeClosingTag("command", command), block.partial).catch(
-									() => {},
-								)
+								if (this.shouldAutoApproveTool(block.name)) {
+									// since depending on an upcoming parameter, requiresApproval this may become an ask - we cant partially stream a say prematurely. So in this particular case we have to wait for the requiresApproval parameter to be completed before presenting it.
+									// await this.say(
+									// 	"command",
+									// 	removeClosingTag("command", command),
+									// 	undefined,
+									// 	block.partial,
+									// ).catch(() => {})
+								} else {
+									await this.ask(
+										"command",
+										removeClosingTag("command", command),
+										block.partial,
+									).catch(() => {})
+								}
 								break
 							} else {
 								if (!command) {
@@ -1536,12 +1700,54 @@ export class Cline {
 									)
 									break
 								}
-								this.consecutiveMistakeCount = 0
-								const didApprove = await askApproval("command", command)
-								if (!didApprove) {
+								if (!requiresApprovalRaw) {
+									this.consecutiveMistakeCount++
+									pushToolResult(
+										await this.sayAndCreateMissingParamError(
+											"execute_command",
+											"requires_approval",
+										),
+									)
 									break
 								}
+								this.consecutiveMistakeCount = 0
+
+								let didAutoApprove = false
+
+								if (!requiresApproval && this.shouldAutoApproveTool(block.name)) {
+									await this.say("command", command, undefined, false)
+									this.consecutiveAutoApprovedRequestsCount++
+									didAutoApprove = true
+								} else {
+									showNotificationForApprovalIfAutoApprovalEnabled(
+										`Cline wants to execute a command: ${command}`,
+									)
+									const didApprove = await askApproval(
+										"command",
+										command +
+											`${this.shouldAutoApproveTool(block.name) && requiresApproval ? COMMAND_REQ_APP_STRING : ""}`, // ugly hack until we refactor combineCommandSequences
+									)
+									if (!didApprove) {
+										break
+									}
+								}
+
+								let timeoutId: NodeJS.Timeout | undefined
+								if (didAutoApprove && this.autoApprovalSettings.enableNotifications) {
+									// if the command was auto-approved, and it's long running we need to notify the user after some time has passed without proceeding
+									timeoutId = setTimeout(() => {
+										showSystemNotification({
+											subtitle: "Command is still running",
+											message:
+												"An auto-approved command has been running for 30s, and may need your attention.",
+										})
+									}, 30_000)
+								}
+
 								const [userRejected, result] = await this.executeCommandTool(command)
+								if (timeoutId) {
+									clearTimeout(timeoutId)
+								}
 								if (userRejected) {
 									this.didRejectTool = true
 								}
@@ -1565,7 +1771,13 @@ export class Cline {
 									toolName: removeClosingTag("tool_name", tool_name),
 									arguments: removeClosingTag("arguments", mcp_arguments),
 								} satisfies ClineAskUseMcpServer)
-								await this.ask("use_mcp_server", partialMessage, block.partial).catch(() => {})
+
+								if (this.shouldAutoApproveTool(block.name)) {
+									await this.say("use_mcp_server", partialMessage, undefined, block.partial)
+								} else {
+									await this.ask("use_mcp_server", partialMessage, block.partial).catch(() => {})
+								}
+
 								break
 							} else {
 								if (!server_name) {
@@ -1613,10 +1825,20 @@ export class Cline {
 									toolName: tool_name,
 									arguments: mcp_arguments,
 								} satisfies ClineAskUseMcpServer)
-								const didApprove = await askApproval("use_mcp_server", completeMessage)
-								if (!didApprove) {
-									break
+
+								if (this.shouldAutoApproveTool(block.name)) {
+									await this.say("use_mcp_server", completeMessage, undefined, false)
+									this.consecutiveAutoApprovedRequestsCount++
+								} else {
+									showNotificationForApprovalIfAutoApprovalEnabled(
+										`Cline wants to use ${tool_name} on ${server_name}`,
+									)
+									const didApprove = await askApproval("use_mcp_server", completeMessage)
+									if (!didApprove) {
+										break
+									}
 								}
+
 								// now execute the tool
 								await this.say("mcp_server_request_started") // same as browser_action_result
 								const toolResult = await this.providerRef
@@ -1658,7 +1880,13 @@ export class Cline {
 									serverName: removeClosingTag("server_name", server_name),
 									uri: removeClosingTag("uri", uri),
 								} satisfies ClineAskUseMcpServer)
-								await this.ask("use_mcp_server", partialMessage, block.partial).catch(() => {})
+
+								if (this.shouldAutoApproveTool(block.name)) {
+									await this.say("use_mcp_server", partialMessage, undefined, block.partial)
+								} else {
+									await this.ask("use_mcp_server", partialMessage, block.partial).catch(() => {})
+								}
+
 								break
 							} else {
 								if (!server_name) {
@@ -1681,10 +1909,20 @@ export class Cline {
 									serverName: server_name,
 									uri,
 								} satisfies ClineAskUseMcpServer)
-								const didApprove = await askApproval("use_mcp_server", completeMessage)
-								if (!didApprove) {
-									break
+
+								if (this.shouldAutoApproveTool(block.name)) {
+									await this.say("use_mcp_server", completeMessage, undefined, false)
+									this.consecutiveAutoApprovedRequestsCount++
+								} else {
+									showNotificationForApprovalIfAutoApprovalEnabled(
+										`Cline wants to access ${uri} on ${server_name}`,
+									)
+									const didApprove = await askApproval("use_mcp_server", completeMessage)
+									if (!didApprove) {
+										break
+									}
 								}
+
 								// now execute the tool
 								await this.say("mcp_server_request_started")
 								const resourceResult = await this.providerRef
@@ -1726,6 +1964,17 @@ export class Cline {
 									break
 								}
 								this.consecutiveMistakeCount = 0
+
+								if (
+									this.autoApprovalSettings.enabled &&
+									this.autoApprovalSettings.enableNotifications
+								) {
+									showSystemNotification({
+										subtitle: "Cline has a question...",
+										message: question.replace(/\n/g, " "),
+									})
+								}
+
 								const { text, images } = await this.ask("followup", question, false)
 								await this.say("user_feedback", text ?? "", images)
 								pushToolResult(formatResponse.toolResult(`<answer>\n${text}\n</answer>`, images))
@@ -1767,6 +2016,7 @@ export class Cline {
 									// remove the previous partial attempt_completion ask, replace with say, post state to webview, then stream command
 
 									// const secondLastMessage = this.clineMessages.at(-2)
+									// NOTE: we do not want to auto approve a command run as part of the attempt_completion tool
 									if (lastMessage && lastMessage.ask === "command") {
 										// update command
 										await this.ask(
@@ -1808,6 +2058,16 @@ export class Cline {
 									break
 								}
 								this.consecutiveMistakeCount = 0
+
+								if (
+									this.autoApprovalSettings.enabled &&
+									this.autoApprovalSettings.enableNotifications
+								) {
+									showSystemNotification({
+										subtitle: "Task Completed",
+										message: result.replace(/\n/g, " "),
+									})
+								}
 
 								let commandResult: ToolResponse | undefined
 								if (command) {
@@ -1863,7 +2123,7 @@ export class Cline {
 								break
 							}
 						} catch (error) {
-							await handleError("inspecting site", error)
+							await handleError("attempting completion", error)
 							break
 						}
 					}
@@ -1911,6 +2171,12 @@ export class Cline {
 		}
 
 		if (this.consecutiveMistakeCount >= 3) {
+			if (this.autoApprovalSettings.enabled && this.autoApprovalSettings.enableNotifications) {
+				showSystemNotification({
+					subtitle: "Error",
+					message: "Cline is having trouble. Would you like to continue the task?",
+				})
+			}
 			const { response, text, images } = await this.ask(
 				"mistake_limit_reached",
 				this.api.getModel().id.includes("claude")
@@ -1929,6 +2195,24 @@ export class Cline {
 				)
 			}
 			this.consecutiveMistakeCount = 0
+		}
+
+		if (
+			this.autoApprovalSettings.enabled &&
+			this.consecutiveAutoApprovedRequestsCount >= this.autoApprovalSettings.maxRequests
+		) {
+			if (this.autoApprovalSettings.enableNotifications) {
+				showSystemNotification({
+					subtitle: "Max Requests Reached",
+					message: `Cline has auto-approved ${this.autoApprovalSettings.maxRequests.toString()} API requests.`,
+				})
+			}
+			await this.ask(
+				"auto_approval_max_req_reached",
+				`Cline has auto-approved ${this.autoApprovalSettings.maxRequests.toString()} API requests. Would you like to reset the count and proceed with the task?`,
+			)
+			// if we get past the promise it means the user approved and did not start a new task
+			this.consecutiveAutoApprovedRequestsCount = 0
 		}
 
 		// get previous api req's index to check token usage and determine if we need to truncate conversation history
