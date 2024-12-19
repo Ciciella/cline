@@ -17,34 +17,33 @@ const ACTION_METADATA: {
 }[] = [
 	{
 		id: "readFiles",
-		label: "Read files and directories",
-		shortName: "Read",
-		description: "Allows access to read any file on your computer.",
+		label: "读取文件和目录",
+		shortName: "读取",
+		description: "允许访问并读取您计算机上的任何文件。",
 	},
 	{
 		id: "editFiles",
-		label: "Edit files",
-		shortName: "Edit",
-		description: "Allows modification of any files on your computer.",
+		label: "编辑文件",
+		shortName: "编辑",
+		description: "允许修改您计算机上的任何文件。",
 	},
 	{
 		id: "executeCommands",
-		label: "Execute safe commands",
-		shortName: "Commands",
-		description:
-			"Allows execution of safe terminal commands. If the model determines a command is potentially destructive, it will still require approval.",
+		label: "执行安全命令",
+		shortName: "命令",
+		description: "允许执行安全的终端命令。如果模型判断某个命令可能具有破坏性，仍将需要审批。",
 	},
 	{
 		id: "useBrowser",
-		label: "Use the browser",
-		shortName: "Browser",
-		description: "Allows ability to launch and interact with any website in a headless browser.",
+		label: "使用浏览器",
+		shortName: "浏览器",
+		description: "允许在无头浏览器中启动并与任何网站进行交互。",
 	},
 	{
 		id: "useMcp",
-		label: "Use MCP servers",
+		label: "使用 MCP 服务器",
 		shortName: "MCP",
-		description: "Allows use of configured MCP servers which may modify filesystem or interact with APIs.",
+		description: "允许使用配置的 MCP 服务器，这些服务器可能会修改文件系统或与 API 交互。",
 	},
 ]
 
@@ -182,14 +181,14 @@ const AutoApproveMenu = ({ style }: AutoApproveMenuProps) => {
 							setIsExpanded((prev) => !prev)
 						}
 					}}>
-					<span style={{ color: "var(--vscode-foreground)", whiteSpace: "nowrap" }}>Auto-approve:</span>
+					<span style={{ color: "var(--vscode-foreground)", whiteSpace: "nowrap" }}>自动审批：</span>
 					<span
 						style={{
 							whiteSpace: "nowrap",
 							overflow: "hidden",
 							textOverflow: "ellipsis",
 						}}>
-						{enabledActions.length === 0 ? "None" : enabledActionsList}
+						{enabledActions.length === 0 ? "无" : enabledActionsList}
 					</span>
 					<span
 						className={`codicon codicon-chevron-${isExpanded ? "down" : "right"}`}
@@ -208,8 +207,7 @@ const AutoApproveMenu = ({ style }: AutoApproveMenuProps) => {
 							color: "var(--vscode-descriptionForeground)",
 							fontSize: "12px",
 						}}>
-						Auto-approve allows Cline to perform the following actions without asking for permission. Please
-						use with caution and only enable if you understand the risks.
+						自动审批允许 AI Code 在不需要请求许可的情况下执行以下操作。请谨慎使用，并确保您了解相关风险。
 					</div>
 					{ACTION_METADATA.map((action) => (
 						<div key={action.id} style={{ margin: "6px 0" }}>
@@ -248,7 +246,7 @@ const AutoApproveMenu = ({ style }: AutoApproveMenuProps) => {
 							marginBottom: "8px",
 							color: "var(--vscode-foreground)",
 						}}>
-						<span style={{ flexShrink: 1, minWidth: 0 }}>Max Requests:</span>
+						<span style={{ flexShrink: 1, minWidth: 0 }}>最大请求数:</span>
 						<VSCodeTextField
 							// placeholder={DEFAULT_AUTO_APPROVAL_SETTINGS.maxRequests.toString()}
 							value={autoApprovalSettings.maxRequests.toString()}
@@ -279,8 +277,7 @@ const AutoApproveMenu = ({ style }: AutoApproveMenuProps) => {
 							fontSize: "12px",
 							marginBottom: "10px",
 						}}>
-						Cline will automatically make this many API requests before asking for approval to proceed with
-						the task.
+						AI Code 将自动发出这么多次 API 请求，然后才会请求审批以继续执行任务。
 					</div>
 					<div style={{ margin: "6px 0" }}>
 						<VSCodeCheckbox
@@ -289,7 +286,7 @@ const AutoApproveMenu = ({ style }: AutoApproveMenuProps) => {
 								const checked = (e.target as HTMLInputElement).checked
 								updateNotifications(checked)
 							}}>
-							Enable Notifications
+							启用通知
 						</VSCodeCheckbox>
 						<div
 							style={{
@@ -297,8 +294,7 @@ const AutoApproveMenu = ({ style }: AutoApproveMenuProps) => {
 								color: "var(--vscode-descriptionForeground)",
 								fontSize: "12px",
 							}}>
-							Receive system notifications when Cline requires approval to proceed or when a task is
-							completed.
+							当 AI Code 需要审批才能继续执行或任务完成时接收系统通知。
 						</div>
 					</div>
 				</div>

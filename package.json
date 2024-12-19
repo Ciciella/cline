@@ -42,7 +42,7 @@
 		"sonnet",
 		"ai",
 		"llama",
-    "deepseek"
+    	"deepseek"
 	],
 	"activationEvents": [],
 	"main": "./dist/extension.js",
@@ -68,32 +68,32 @@
 		"commands": [
 			{
 				"command": "cline.plusButtonClicked",
-				"title": "New Task",
+				"title": "新任务",
 				"icon": "$(add)"
 			},
 			{
 				"command": "cline.mcpButtonClicked",
-				"title": "MCP Servers",
+				"title": "MCP服务器",
 				"icon": "$(server)"
 			},
       {
         "command": "cline.historyButtonClicked",
-        "title": "History",
+        "title": "历史记录",
         "icon": "$(history)"
       },
       {
         "command": "cline.popoutButtonClicked",
-        "title": "Open in Editor",
+        "title": "在编辑器中打开",
         "icon": "$(link-external)"
       },
       {
         "command": "cline.settingsButtonClicked",
-        "title": "Settings",
+        "title": "设置",
         "icon": "$(settings-gear)"
       },
       {
         "command": "cline.openInNewTab",
-        "title": "Open In New Tab",
+        "title": "在新标签页中打开",
         "category": "AI Code"
       }
     ],

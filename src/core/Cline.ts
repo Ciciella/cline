@@ -213,7 +213,7 @@ export class Cline {
 				totalCost: apiMetrics.totalCost,
 			})
 		} catch (error) {
-			console.error("Failed to save cline messages:", error)
+			console.error("Failed to save aicode messages:", error)
 		}
 	}
 
@@ -382,9 +382,9 @@ export class Cline {
 	async sayAndCreateMissingParamError(toolName: ToolUseName, paramName: string, relPath?: string) {
 		await this.say(
 			"error",
-			`Cline tried to use ${toolName}${
-				relPath ? ` for '${relPath.toPosix()}'` : ""
-			} without value for required parameter '${paramName}'. Retrying...`,
+			`AI Code尝试使用${toolName}${
+				relPath ? ` 对 '${relPath.toPosix()}'` : ""
+			}时缺少必需参数'${paramName}'。正在重试...`,
 		)
 		return formatResponse.toolError(formatResponse.missingToolParameterError(paramName))
 	}
@@ -1235,7 +1235,7 @@ export class Cline {
 								} else {
 									// If auto-approval is enabled but this tool wasn't auto-approved, send notification
 									showNotificationForApprovalIfAutoApprovalEnabled(
-										`Cline wants to ${fileExists ? "edit" : "create"} ${path.basename(relPath)}`,
+										`AI Code wants to ${fileExists ? "edit" : "create"} ${path.basename(relPath)}`,
 									)
 									const didApprove = await askApproval("tool", completeMessage)
 									if (!didApprove) {
@@ -1321,7 +1321,7 @@ export class Cline {
 									this.consecutiveAutoApprovedRequestsCount++
 								} else {
 									showNotificationForApprovalIfAutoApprovalEnabled(
-										`Cline wants to read ${path.basename(absolutePath)}`,
+										`AI Code wants to read ${path.basename(absolutePath)}`,
 									)
 									const didApprove = await askApproval("tool", completeMessage)
 									if (!didApprove) {
@@ -1377,7 +1377,7 @@ export class Cline {
 									this.consecutiveAutoApprovedRequestsCount++
 								} else {
 									showNotificationForApprovalIfAutoApprovalEnabled(
-										`Cline wants to view directory ${path.basename(absolutePath)}/`,
+										`AI Code wants to view directory ${path.basename(absolutePath)}/`,
 									)
 									const didApprove = await askApproval("tool", completeMessage)
 									if (!didApprove) {
@@ -1430,7 +1430,7 @@ export class Cline {
 									this.consecutiveAutoApprovedRequestsCount++
 								} else {
 									showNotificationForApprovalIfAutoApprovalEnabled(
-										`Cline wants to view source code definitions in ${path.basename(absolutePath)}/`,
+										`AI Code wants to view source code definitions in ${path.basename(absolutePath)}/`,
 									)
 									const didApprove = await askApproval("tool", completeMessage)
 									if (!didApprove) {
@@ -1490,7 +1490,7 @@ export class Cline {
 									this.consecutiveAutoApprovedRequestsCount++
 								} else {
 									showNotificationForApprovalIfAutoApprovalEnabled(
-										`Cline wants to search files in ${path.basename(absolutePath)}/`,
+										`AI Code wants to search files in ${path.basename(absolutePath)}/`,
 									)
 									const didApprove = await askApproval("tool", completeMessage)
 									if (!didApprove) {
@@ -1569,7 +1569,7 @@ export class Cline {
 										this.consecutiveAutoApprovedRequestsCount++
 									} else {
 										showNotificationForApprovalIfAutoApprovalEnabled(
-											`Cline wants to use a browser and launch ${url}`,
+											`AI Code wants to use a browser and launch ${url}`,
 										)
 										const didApprove = await askApproval("browser_action_launch", url)
 										if (!didApprove) {
@@ -1720,7 +1720,7 @@ export class Cline {
 									didAutoApprove = true
 								} else {
 									showNotificationForApprovalIfAutoApprovalEnabled(
-										`Cline wants to execute a command: ${command}`,
+										`AI Code wants to execute a command: ${command}`,
 									)
 									const didApprove = await askApproval(
 										"command",
@@ -1737,9 +1737,8 @@ export class Cline {
 									// if the command was auto-approved, and it's long running we need to notify the user after some time has passed without proceeding
 									timeoutId = setTimeout(() => {
 										showSystemNotification({
-											subtitle: "Command is still running",
-											message:
-												"An auto-approved command has been running for 30s, and may need your attention.",
+											subtitle: "命令仍在运行",
+											message: "一个自动批准的命令已经运行了30秒,可能需要您的注意。"
 										})
 									}, 30_000)
 								}
@@ -1808,7 +1807,7 @@ export class Cline {
 										this.consecutiveMistakeCount++
 										await this.say(
 											"error",
-											`Cline tried to use ${tool_name} with an invalid JSON argument. Retrying...`,
+											`AI Code tried to use ${tool_name} with an invalid JSON argument. Retrying...`,
 										)
 										pushToolResult(
 											formatResponse.toolError(
@@ -1831,7 +1830,7 @@ export class Cline {
 									this.consecutiveAutoApprovedRequestsCount++
 								} else {
 									showNotificationForApprovalIfAutoApprovalEnabled(
-										`Cline wants to use ${tool_name} on ${server_name}`,
+										`AI Code wants to use ${tool_name} on ${server_name}`,
 									)
 									const didApprove = await askApproval("use_mcp_server", completeMessage)
 									if (!didApprove) {
@@ -1915,7 +1914,7 @@ export class Cline {
 									this.consecutiveAutoApprovedRequestsCount++
 								} else {
 									showNotificationForApprovalIfAutoApprovalEnabled(
-										`Cline wants to access ${uri} on ${server_name}`,
+										`AI Code wants to access ${uri} on ${server_name}`,
 									)
 									const didApprove = await askApproval("use_mcp_server", completeMessage)
 									if (!didApprove) {
@@ -1970,7 +1969,7 @@ export class Cline {
 									this.autoApprovalSettings.enableNotifications
 								) {
 									showSystemNotification({
-										subtitle: "Cline has a question...",
+										subtitle: "AI Code has a question...",
 										message: question.replace(/\n/g, " "),
 									})
 								}
@@ -2064,7 +2063,7 @@ export class Cline {
 									this.autoApprovalSettings.enableNotifications
 								) {
 									showSystemNotification({
-										subtitle: "Task Completed",
+										subtitle: "任务完成",
 										message: result.replace(/\n/g, " "),
 									})
 								}
@@ -2173,15 +2172,15 @@ export class Cline {
 		if (this.consecutiveMistakeCount >= 3) {
 			if (this.autoApprovalSettings.enabled && this.autoApprovalSettings.enableNotifications) {
 				showSystemNotification({
-					subtitle: "Error",
-					message: "Cline is having trouble. Would you like to continue the task?",
+					subtitle: "错误",
+					message: "AI Code遇到了一些问题。您想继续任务吗？",
 				})
 			}
 			const { response, text, images } = await this.ask(
 				"mistake_limit_reached",
 				this.api.getModel().id.includes("claude")
-					? `This may indicate a failure in his thought process or inability to use a tool properly, which can be mitigated with some user guidance (e.g. "Try breaking down the task into smaller steps").`
-					: "AI Code uses complex prompts and iterative task execution that may be challenging for less capable models. For best results, it's recommended to use Claude 3.5 Sonnet for its advanced agentic coding capabilities.",
+					? `这可能表明其思维过程出现故障或无法正确使用工具（例如"尝试将任务分解为更小的步骤"）。`
+					: "AI Code使用复杂的提示和迭代任务执行，这可能对较弱的模型具有挑战性。为获得最佳结果，建议使用Claude 3.5 Sonnet，它具有高级的代理编码能力。",
 			)
 			if (response === "messageResponse") {
 				userContent.push(
@@ -2203,13 +2202,13 @@ export class Cline {
 		) {
 			if (this.autoApprovalSettings.enableNotifications) {
 				showSystemNotification({
-					subtitle: "Max Requests Reached",
-					message: `Cline has auto-approved ${this.autoApprovalSettings.maxRequests.toString()} API requests.`,
+					subtitle: "已达到最大请求数",
+					message: `AI Code已自动批准 ${this.autoApprovalSettings.maxRequests.toString()} 个API请求。`,
 				})
 			}
 			await this.ask(
 				"auto_approval_max_req_reached",
-				`Cline has auto-approved ${this.autoApprovalSettings.maxRequests.toString()} API requests. Would you like to reset the count and proceed with the task?`,
+				`AI Code已自动批准 ${this.autoApprovalSettings.maxRequests.toString()} 个API请求。您要重置计数并继续任务吗？`,
 			)
 			// if we get past the promise it means the user approved and did not start a new task
 			this.consecutiveAutoApprovedRequestsCount = 0
@@ -2299,8 +2298,8 @@ export class Cline {
 								assistantMessage +
 								`\n\n[${
 									cancelReason === "streaming_failed"
-										? "Response interrupted by API Error"
-										: "Response interrupted by user"
+										? "响应中断由于API错误"
+										: "响应中断由用户"
 								}]`,
 						},
 					],
@@ -2362,7 +2361,7 @@ export class Cline {
 
 					if (this.didRejectTool) {
 						// userContent has a tool rejection, so interrupt the assistant's response to present the user's feedback
-						assistantMessage += "\n\n[Response interrupted by user feedback]"
+						assistantMessage += "\n\n[响应中断由用户反馈]"
 						// this.userMessageContentReady = true // instead of setting this premptively, we allow the present iterator to finish and set userMessageContentReady when its ready
 						break
 					}
@@ -2371,7 +2370,7 @@ export class Cline {
 					// UPDATE: it's better UX to interrupt the request at the cost of the api cost not being retrieved
 					if (this.didAlreadyUseTool) {
 						assistantMessage +=
-							"\n\n[Response interrupted by a tool use result. Only one tool may be used at a time and should be placed at the end of the message.]"
+							"\n\n[响应中断由工具使用结果。一次只能使用一个工具，并且应放置在消息末尾。]"
 						break
 					}
 				}
@@ -2448,11 +2447,11 @@ export class Cline {
 				// if there's no assistant_responses, that means we got no text or tool_use content blocks from API which we should assume is an error
 				await this.say(
 					"error",
-					"Unexpected API Response: The language model did not provide any assistant messages. This may indicate an issue with the API or the model's output.",
+					"意外的API响应:语言模型没有提供任何助手消息。这可能表明API或模型输出存在问题。",
 				)
 				await this.addToApiConversationHistory({
 					role: "assistant",
-					content: [{ type: "text", text: "Failure: I did not provide a response." }],
+					content: [{ type: "text", text: "失败:我没有提供响应。" }],
 				})
 			}
 
@@ -2513,7 +2512,7 @@ export class Cline {
 		let details = ""
 
 		// It could be useful for cline to know if the user went from one or no file to another between messages, so we always include this context
-		details += "\n\n# VSCode Visible Files"
+		details += "\n\n# VSCode可见文件"
 		const visibleFiles = vscode.window.visibleTextEditors
 			?.map((editor) => editor.document?.uri?.fsPath)
 			.filter(Boolean)
@@ -2522,10 +2521,10 @@ export class Cline {
 		if (visibleFiles) {
 			details += `\n${visibleFiles}`
 		} else {
-			details += "\n(No visible files)"
+			details += "\n(没有可见文件)"
 		}
 
-		details += "\n\n# VSCode Open Tabs"
+		details += "\n\n# VSCode打开的标签页"
 		const openTabs = vscode.window.tabGroups.all
 			.flatMap((group) => group.tabs)
 			.map((tab) => (tab.input as vscode.TabInputText)?.uri?.fsPath)
@@ -2535,7 +2534,7 @@ export class Cline {
 		if (openTabs) {
 			details += `\n${openTabs}`
 		} else {
-			details += "\n(No open tabs)"
+			details += "\n(没有打开的标签页)"
 		}
 
 		const busyTerminals = this.terminalManager.getTerminals(true)
@@ -2580,12 +2579,12 @@ export class Cline {
 		let terminalDetails = ""
 		if (busyTerminals.length > 0) {
 			// terminals are cool, let's retrieve their output
-			terminalDetails += "\n\n# Actively Running Terminals"
+			terminalDetails += "\n\n# 活动运行的终端"
 			for (const busyTerminal of busyTerminals) {
-				terminalDetails += `\n## Original command: \`${busyTerminal.lastCommand}\``
+				terminalDetails += `\n## 原始命令: \`${busyTerminal.lastCommand}\``
 				const newOutput = this.terminalManager.getUnretrievedOutput(busyTerminal.id)
 				if (newOutput) {
-					terminalDetails += `\n### New Output\n${newOutput}`
+					terminalDetails += `\n### 新输出\n${newOutput}`
 				} else {
 					// details += `\n(Still running, no new output)` // don't want to show this right after running the command
 				}
@@ -2601,12 +2600,12 @@ export class Cline {
 				}
 			}
 			if (inactiveTerminalOutputs.size > 0) {
-				terminalDetails += "\n\n# Inactive Terminals"
+				terminalDetails += "\n\n# 非活动终端"
 				for (const [terminalId, newOutput] of inactiveTerminalOutputs) {
 					const inactiveTerminal = inactiveTerminals.find((t) => t.id === terminalId)
 					if (inactiveTerminal) {
 						terminalDetails += `\n## ${inactiveTerminal.lastCommand}`
-						terminalDetails += `\n### New Output\n${newOutput}`
+						terminalDetails += `\n### 新输出\n${newOutput}`
 					}
 				}
 			}
@@ -2624,11 +2623,11 @@ export class Cline {
 		}
 
 		if (includeFileDetails) {
-			details += `\n\n# Current Working Directory (${cwd.toPosix()}) Files\n`
+			details += `\n\n# 当前工作目录 (${cwd.toPosix()}) 文件\n`
 			const isDesktop = arePathsEqual(cwd, path.join(os.homedir(), "Desktop"))
 			if (isDesktop) {
 				// don't want to immediately access desktop since it would show permission popup
-				details += "(Desktop files not shown automatically. Use list_files to explore if needed.)"
+				details += "(桌面文件不会自动显示。如有需要请使用 list_files 来浏览。)"
 			} else {
 				const [files, didHitLimit] = await listFiles(cwd, true, 200)
 				const result = formatResponse.formatFilesList(cwd, files, didHitLimit)
