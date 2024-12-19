@@ -75,7 +75,7 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 	private static activeInstances: Set<ClineProvider> = new Set()
 	private disposables: vscode.Disposable[] = []
 	private view?: vscode.WebviewView | vscode.WebviewPanel
-	private cline?: Cline
+	private aicode?: Cline
 	private workspaceTracker?: WorkspaceTracker
 	mcpHub?: McpHub
 	private latestAnnouncementId = "dec-17-2024" // update to some unique identifier when we add a new announcement
@@ -201,13 +201,13 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 	async initClineWithTask(task?: string, images?: string[]) {
 		await this.clearTask() // ensures that an exising task doesn't exist before starting a new one, although this shouldn't be possible since user must clear task before starting a new one
 		const { apiConfiguration, customInstructions, autoApprovalSettings } = await this.getState()
-		this.cline = new Cline(this, apiConfiguration, autoApprovalSettings, customInstructions, task, images)
+		this.aicode = new Cline(this, apiConfiguration, autoApprovalSettings, customInstructions, task, images)
 	}
 
 	async initClineWithHistoryItem(historyItem: HistoryItem) {
 		await this.clearTask()
 		const { apiConfiguration, customInstructions, autoApprovalSettings } = await this.getState()
-		this.cline = new Cline(
+		this.aicode = new Cline(
 			this,
 			apiConfiguration,
 			autoApprovalSettings,
@@ -406,8 +406,8 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 							await this.updateGlobalState("azureApiVersion", azureApiVersion)
 							await this.updateGlobalState("openRouterModelId", openRouterModelId)
 							await this.updateGlobalState("openRouterModelInfo", openRouterModelInfo)
-							if (this.cline) {
-								this.cline.api = buildApiHandler(message.apiConfiguration)
+							if (this.aicode) {
+								this.aicode.api = buildApiHandler(message.apiConfiguration)
 							}
 						}
 						await this.postStateToWebview()
@@ -418,14 +418,14 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 					case "autoApprovalSettings":
 						if (message.autoApprovalSettings) {
 							await this.updateGlobalState("autoApprovalSettings", message.autoApprovalSettings)
-							if (this.cline) {
-								this.cline.autoApprovalSettings = message.autoApprovalSettings
+							if (this.aicode) {
+								this.aicode.autoApprovalSettings = message.autoApprovalSettings
 							}
 							await this.postStateToWebview()
 						}
 						break
 					case "askResponse":
-						this.cline?.handleWebviewAskResponse(message.askResponse!, message.text, message.images)
+						this.aicode?.handleWebviewAskResponse(message.askResponse!, message.text, message.images)
 						break
 					case "clearTask":
 						// newTask will start a new task with a given task text, while clear task resets the current session and allows for a new task to be started
@@ -441,7 +441,7 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 						await this.postMessageToWebview({ type: "selectedImages", images })
 						break
 					case "exportCurrentTask":
-						const currentTaskId = this.cline?.taskId
+						const currentTaskId = this.aicode?.taskId
 						if (currentTaskId) {
 							this.exportTaskWithId(currentTaskId)
 						}
@@ -479,17 +479,17 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 						openMention(message.text)
 						break
 					case "cancelTask":
-						if (this.cline) {
-							const { historyItem } = await this.getTaskWithId(this.cline.taskId)
-							this.cline.abortTask()
-							await pWaitFor(() => this.cline === undefined || this.cline.didFinishAborting, {
+						if (this.aicode) {
+							const { historyItem } = await this.getTaskWithId(this.aicode.taskId)
+							this.aicode.abortTask()
+							await pWaitFor(() => this.aicode === undefined || this.aicode.didFinishAborting, {
 								timeout: 3_000,
 							}).catch(() => {
 								console.error("Failed to abort task")
 							})
-							if (this.cline) {
-								// 'abandoned' will prevent this cline instance from affecting future cline instance gui. this may happen if its hanging on a streaming request
-								this.cline.abandoned = true
+							if (this.aicode) {
+								// 'abandoned' will prevent this aicode instance from affecting future aicode instance gui. this may happen if its hanging on a streaming request
+								this.aicode.abandoned = true
 							}
 							await this.initClineWithHistoryItem(historyItem) // clears task again, so we need to abortTask manually above
 							// await this.postStateToWebview() // new Cline instance will post state when it's ready. having this here sent an empty messages array to webview leading to virtuoso having to reload the entire list
@@ -523,8 +523,8 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 	async updateCustomInstructions(instructions?: string) {
 		// User may be clearing the field
 		await this.updateGlobalState("customInstructions", instructions || undefined)
-		if (this.cline) {
-			this.cline.customInstructions = instructions || undefined
+		if (this.aicode) {
+			this.aicode.customInstructions = instructions || undefined
 		}
 		await this.postStateToWebview()
 	}
@@ -605,8 +605,8 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 		await this.updateGlobalState("apiProvider", openrouter)
 		await this.storeSecret("openRouterApiKey", apiKey)
 		await this.postStateToWebview()
-		if (this.cline) {
-			this.cline.api = buildApiHandler({ apiProvider: openrouter, openRouterApiKey: apiKey })
+		if (this.aicode) {
+			this.aicode.api = buildApiHandler({ apiProvider: openrouter, openRouterApiKey: apiKey })
 		}
 		// await this.postMessageToWebview({ type: "action", action: "settingsButtonClicked" }) // bad ux if user is on welcome
 	}
@@ -774,7 +774,7 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 	}
 
 	async showTaskWithId(id: string) {
-		if (id !== this.cline?.taskId) {
+		if (id !== this.aicode?.taskId) {
 			// non-current task
 			const { historyItem } = await this.getTaskWithId(id)
 			await this.initClineWithHistoryItem(historyItem) // clears existing task
@@ -788,7 +788,7 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 	}
 
 	async deleteTaskWithId(id: string) {
-		if (id === this.cline?.taskId) {
+		if (id === this.aicode?.taskId) {
 			await this.clearTask()
 		}
 
@@ -835,7 +835,7 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 			apiConfiguration,
 			customInstructions,
 			uriScheme: vscode.env.uriScheme,
-			clineMessages: this.cline?.clineMessages || [],
+			clineMessages: this.aicode?.clineMessages || [],
 			taskHistory: (taskHistory || []).filter((item) => item.ts && item.task).sort((a, b) => b.ts - a.ts),
 			shouldShowAnnouncement: lastShownAnnouncementId !== this.latestAnnouncementId,
 			autoApprovalSettings,
@@ -843,16 +843,16 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 	}
 
 	async clearTask() {
-		this.cline?.abortTask()
-		this.cline = undefined // removes reference to it, so once promises end it will be garbage collected
+		this.aicode?.abortTask()
+		this.aicode = undefined // removes reference to it, so once promises end it will be garbage collected
 	}
 
 	// Caching mechanism to keep track of webview messages + API conversation history per provider instance
 
 	/*
-	Now that we use retainContextWhenHidden, we don't have to store a cache of cline messages in the user's state, but we could to reduce memory footprint in long conversations.
+	Now that we use retainContextWhenHidden, we don't have to store a cache of aicode messages in the user's state, but we could to reduce memory footprint in long conversations.
 
-	- We have to be careful of what state is shared between ClineProvider instances since there could be multiple instances of the extension running at once. For example when we cached cline messages using the same key, two instances of the extension could end up using the same key and overwriting each other's messages.
+	- We have to be careful of what state is shared between ClineProvider instances since there could be multiple instances of the extension running at once. For example when we cached aicode messages using the same key, two instances of the extension could end up using the same key and overwriting each other's messages.
 	- Some state does need to be shared between the instances, i.e. the API key--however there doesn't seem to be a good way to notfy the other instances that the API key has changed.
 
 	We need to use a unique identifier for each ClineProvider instance's message cache since we could be running several instances of the extension outside of just the sidebar i.e. in editor panels.
@@ -1078,9 +1078,9 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 		for (const key of secretKeys) {
 			await this.storeSecret(key, undefined)
 		}
-		if (this.cline) {
-			this.cline.abortTask()
-			this.cline = undefined
+		if (this.aicode) {
+			this.aicode.abortTask()
+			this.aicode = undefined
 		}
 		vscode.window.showInformationMessage("State reset")
 		await this.postStateToWebview()
