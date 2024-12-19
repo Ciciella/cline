@@ -80,22 +80,22 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 							setTextAreaDisabled(true)
 							setClineAsk("api_req_failed")
 							setEnableButtons(true)
-							setPrimaryButtonText("����")
-							setSecondaryButtonText("��ʼ������")
+							setPrimaryButtonText("重试")
+							setSecondaryButtonText("开始新任务")
 							break
 						case "mistake_limit_reached":
 							setTextAreaDisabled(false)
 							setClineAsk("mistake_limit_reached")
 							setEnableButtons(true)
-							setPrimaryButtonText("����������Ҫ����")
-							setSecondaryButtonText("��ʼ������")
+							setPrimaryButtonText("不管怎样都要继续")
+							setSecondaryButtonText("开始新任务")
 							break
 						case "auto_approval_max_req_reached":
 							setTextAreaDisabled(true)
 							setClineAsk("auto_approval_max_req_reached")
 							setEnableButtons(true)
 							setPrimaryButtonText("Proceed")
-							setSecondaryButtonText("Start New Task")
+							setSecondaryButtonText("开始新任务")
 							break
 						case "followup":
 							setTextAreaDisabled(isPartial)
@@ -112,12 +112,12 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 							switch (tool.tool) {
 								case "editedExistingFile":
 								case "newFileCreated":
-									setPrimaryButtonText("����")
-									setSecondaryButtonText("�ܾ�")
+									setPrimaryButtonText("保存")
+									setSecondaryButtonText("拒绝")
 									break
 								default:
-									setPrimaryButtonText("��׼")
-									setSecondaryButtonText("�ܾ�")
+									setPrimaryButtonText("批准")
+									setSecondaryButtonText("拒绝")
 									break
 							}
 							break
@@ -125,21 +125,21 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 							setTextAreaDisabled(isPartial)
 							setClineAsk("browser_action_launch")
 							setEnableButtons(!isPartial)
-							setPrimaryButtonText("��׼")
-							setSecondaryButtonText("�ܾ�")
+							setPrimaryButtonText("批准")
+							setSecondaryButtonText("拒绝")
 							break
 						case "command":
 							setTextAreaDisabled(isPartial)
 							setClineAsk("command")
 							setEnableButtons(!isPartial)
-							setPrimaryButtonText("��������")
-							setSecondaryButtonText("�ܾ�")
+							setPrimaryButtonText("运行命令")
+							setSecondaryButtonText("拒绝")
 							break
 						case "command_output":
 							setTextAreaDisabled(false)
 							setClineAsk("command_output")
 							setEnableButtons(true)
-							setPrimaryButtonText("��������")
+							setPrimaryButtonText("继续运行")
 							setSecondaryButtonText(undefined)
 							break
 						case "use_mcp_server":
@@ -154,14 +154,14 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 							setTextAreaDisabled(isPartial)
 							setClineAsk("completion_result")
 							setEnableButtons(!isPartial)
-							setPrimaryButtonText("��ʼ������")
+							setPrimaryButtonText("开始新任务")
 							setSecondaryButtonText(undefined)
 							break
 						case "resume_task":
 							setTextAreaDisabled(false)
 							setClineAsk("resume_task")
 							setEnableButtons(true)
-							setPrimaryButtonText("��ֹ����")
+							setPrimaryButtonText("终止任务")
 							setSecondaryButtonText(undefined)
 							setDidClickCancel(false) // special case where we reset the cancel button state
 							break
@@ -169,7 +169,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 							setTextAreaDisabled(false)
 							setClineAsk("resume_completed_task")
 							setEnableButtons(true)
-							setPrimaryButtonText("��ʼ������")
+							setPrimaryButtonText("开始新任务")
 							setSecondaryButtonText(undefined)
 							setDidClickCancel(false)
 							break
@@ -876,7 +876,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 										marginLeft: isStreaming ? 0 : "6px",
 									}}
 									onClick={handleSecondaryButtonClick}>
-									{isStreaming ? "ȡ��" : secondaryButtonText}
+									{isStreaming ? "取消" : secondaryButtonText}
 								</VSCodeButton>
 							)}
 						</div>
