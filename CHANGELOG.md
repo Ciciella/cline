@@ -3,10 +3,10 @@
 
 ## [3.0.0]
 
-- Cline now uses a search & replace diff based approach when editing large files to prevent code deletion issues.
-- Adds support for a more comprehensive auto-approve configuration, allowing you to specify which tools require approval and which don't.
-- Adds ability to enable system notifications for when Cline needs approval or completes a task.
-- Adds support for a root-level `.clinerules` file that can be used to specify custom instructions for the project.
+- AI Code现在使用基于搜索和替换的差异方法来编辑大文件，以防止代码删除问题。
+- 增加了对更全面的自动批准配置的支持，允许您指定哪些工具需要批准，哪些不需要。
+- 增加了启用系统通知的功能，当AI Code需要批准或完成任务时通知您。
+- 增加了对根级别`.aicoderules`文件的支持，该文件可用于为项目指定自定义指令。
 
 ## [2.2.0]
 - 添加对模型上下文协议（MCP）的支持，允许AI Code使用自定义工具，如web搜索工具或GitHub工具

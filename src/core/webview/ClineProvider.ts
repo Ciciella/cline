@@ -66,7 +66,7 @@ export const GlobalFileNames = {
 	uiMessages: "ui_messages.json",
 	openRouterModels: "openrouter_models.json",
 	mcpSettings: "cline_mcp_settings.json",
-	clineRules: ".clinerules",
+	clineRules: ".aicoderules",
 }
 
 export class ClineProvider implements vscode.WebviewViewProvider {
