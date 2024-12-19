@@ -79,15 +79,15 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 							setTextAreaDisabled(true)
 							setClineAsk("api_req_failed")
 							setEnableButtons(true)
-							setPrimaryButtonText("ÖØÊÔ")
-							setSecondaryButtonText("¿ªÊ¼ÐÂÈÎÎñ")
+							setPrimaryButtonText("é‡è¯•")
+							setSecondaryButtonText("å¼€å§‹æ–°ä»»åŠ¡")
 							break
 						case "mistake_limit_reached":
 							setTextAreaDisabled(false)
 							setClineAsk("mistake_limit_reached")
 							setEnableButtons(true)
-							setPrimaryButtonText("²»¹ÜÔõÑù¶¼Òª¼ÌÐø")
-							setSecondaryButtonText("¿ªÊ¼ÐÂÈÎÎñ")
+							setPrimaryButtonText("ä¸ç®¡æ€Žæ ·éƒ½è¦ç»§ç»­")
+							setSecondaryButtonText("å¼€å§‹æ–°ä»»åŠ¡")
 							break
 						case "followup":
 							setTextAreaDisabled(isPartial)
@@ -104,12 +104,12 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 							switch (tool.tool) {
 								case "editedExistingFile":
 								case "newFileCreated":
-									setPrimaryButtonText("±£´æ")
-									setSecondaryButtonText("¾Ü¾ø")
+									setPrimaryButtonText("ä¿å­˜")
+									setSecondaryButtonText("æ‹’ç»")
 									break
 								default:
-									setPrimaryButtonText("Åú×¼")
-									setSecondaryButtonText("¾Ü¾ø")
+									setPrimaryButtonText("æ‰¹å‡†")
+									setSecondaryButtonText("æ‹’ç»")
 									break
 							}
 							break
@@ -117,21 +117,21 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 							setTextAreaDisabled(isPartial)
 							setClineAsk("browser_action_launch")
 							setEnableButtons(!isPartial)
-							setPrimaryButtonText("Åú×¼")
-							setSecondaryButtonText("¾Ü¾ø")
+							setPrimaryButtonText("æ‰¹å‡†")
+							setSecondaryButtonText("æ‹’ç»")
 							break
 						case "command":
 							setTextAreaDisabled(isPartial)
 							setClineAsk("command")
 							setEnableButtons(!isPartial)
-							setPrimaryButtonText("ÔËÐÐÃüÁî")
-							setSecondaryButtonText("¾Ü¾ø")
+							setPrimaryButtonText("è¿è¡Œå‘½ä»¤")
+							setSecondaryButtonText("æ‹’ç»")
 							break
 						case "command_output":
 							setTextAreaDisabled(false)
 							setClineAsk("command_output")
 							setEnableButtons(true)
-							setPrimaryButtonText("¼ÌÐøÔËÐÐ")
+							setPrimaryButtonText("ç»§ç»­è¿è¡Œ")
 							setSecondaryButtonText(undefined)
 							break
 						case "use_mcp_server":
@@ -146,14 +146,14 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 							setTextAreaDisabled(isPartial)
 							setClineAsk("completion_result")
 							setEnableButtons(!isPartial)
-							setPrimaryButtonText("¿ªÊ¼ÐÂÈÎÎñ")
+							setPrimaryButtonText("å¼€å§‹æ–°ä»»åŠ¡")
 							setSecondaryButtonText(undefined)
 							break
 						case "resume_task":
 							setTextAreaDisabled(false)
 							setClineAsk("resume_task")
 							setEnableButtons(true)
-							setPrimaryButtonText("ÖÕÖ¹ÈÎÎñ")
+							setPrimaryButtonText("ç»ˆæ­¢ä»»åŠ¡")
 							setSecondaryButtonText(undefined)
 							setDidClickCancel(false) // special case where we reset the cancel button state
 							break
@@ -161,7 +161,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 							setTextAreaDisabled(false)
 							setClineAsk("resume_completed_task")
 							setEnableButtons(true)
-							setPrimaryButtonText("¿ªÊ¼ÐÂÈÎÎñ")
+							setPrimaryButtonText("å¼€å§‹æ–°ä»»åŠ¡")
 							setSecondaryButtonText(undefined)
 							setDidClickCancel(false)
 							break
@@ -828,7 +828,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 										marginLeft: isStreaming ? 0 : "6px",
 									}}
 									onClick={handleSecondaryButtonClick}>
-									{isStreaming ? "È¡Ïû" : secondaryButtonText}
+									{isStreaming ? "å–æ¶ˆ" : secondaryButtonText}
 								</VSCodeButton>
 							)}
 						</div>

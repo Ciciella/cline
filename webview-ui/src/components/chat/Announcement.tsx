@@ -37,7 +37,7 @@ const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 			<p style={{ margin: "5px 0px" }}>
 			模型上下文协议允许像AI Code这样的代理插入和播放自定义工具,{" "}
 				<VSCodeLink href="https://github.com/modelcontextprotocol/servers" style={{ display: "inline" }}>
-				例如，web搜索工具或GitHub工具。
+				例如web搜索工具或GitHub工具。
 				</VSCodeLink>
 			</p>
 			<p style={{ margin: "5px 0px" }}>
