@@ -843,11 +843,10 @@ export const ChatRowContent = ({
 											fontSize: 18,
 											color: "#FFA500",
 										}}></i>
-									<span style={{ fontWeight: 500, color: "#FFA500" }}>Diff Edit Failed</span>
+									<span style={{ fontWeight: 500, color: "#FFA500" }}>差异编辑失败</span>
 								</div>
 								<div>
-									This usually happens when the model uses search patterns that don't match anything
-									in the file. Retrying...
+									这通常发生在模型使用的搜索模式与文件中的内容不匹配时。正在重试...
 								</div>
 							</div>
 						</>

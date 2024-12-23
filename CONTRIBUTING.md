@@ -1,69 +1,69 @@
-# 🤖 Contributing to Cline
+# 🤖 贡献到 Cline
 
-Welcome, human! We're thrilled you're interested in contributing to Cline. Whether you're fixing a bug, adding a feature, or improving our docs, every contribution makes Cline smarter!
+欢迎，人类！我们很高兴您有兴趣为 Cline 做出贡献。无论您是修复错误、添加功能还是改进我们的文档，每一份贡献都让 Cline 变得更智能！
 
-## ✌️ Being Part of the Community
+## ✌️ 成为社区的一员
 
-We have an awesome, diverse, and inclusive community of humans (and friendly AI assistants). To keep our community vibrant and welcoming, all members must adhere to our [Code of Conduct](CODE_OF_CONDUCT.md).
+我们有一个很棒的、多样化的、包容的社区，包括人类和友好的 AI 助手。为了保持我们的社区充满活力和欢迎，所有成员必须遵守我们的[行为准则](CODE_OF_CONDUCT.md)。
 
-## 🐛 Reporting Bugs or Issues
+## 🐛 报告错误或问题
 
-Bug reports help make Cline better for everyone! Before creating a new issue, please [search existing ones](https://github.com/cline/cline/issues) to avoid duplicates. When you're ready to report a bug, head over to our [issues page](https://github.com/cline/cline/issues/new/choose) where you'll find a template to help you with filling out the relevant information.
+错误报告有助于让 Cline 对每个人都更好！在创建新问题之前，请先[搜索现有问题](https://github.com/cline/cline/issues)以避免重复。当您准备好报告错误时，请前往我们的[问题页面](https://github.com/cline/cline/issues/new/choose)，在那里您会找到一个模板来帮助您填写相关信息。
 
 <blockquote class='warning-note'>
-     🔐 <b>Important:</b> If you discover a security vulnerability, please use the <a href="https://github.com/cline/cline/security/advisories/new">Github security tool to report it privately</a>.
+   🔐 <b>重要：</b> 如果您发现安全漏洞，请使用<a href="https://github.com/cline/cline/security/advisories/new">Github 安全工具私下报告</a>。
 </blockquote>
 
-## 🎯 Deciding What to Work On
+## 🎯 决定要做什么
 
-See something that could be improved? Feel free to create a pull request directly! Whether it's fixing a typo or adding a cool new AI feature, we love surprises (the good kind, not the "undefined is not a function" kind).
+看到可以改进的地方了吗？请随时直接创建一个拉取请求！无论是修正一个错字还是添加一个很酷的新 AI 功能，我们都喜欢惊喜（好的那种，不是“undefined is not a function”那种）。
 
-If you're planning to work on a bigger feature, please create an issue first so we can discuss whether it aligns with Cline's vision.
+如果您计划开发一个更大的功能，请先创建一个问题，以便我们讨论它是否符合 Cline 的愿景。
 
-## 💻 Writing and Submitting Code
+## 💻 编写和提交代码
 
-Anyone can contribute code to Cline, but we ask that you follow these guidelines to ensure your contributions can be smoothly integrated:
+任何人都可以为 Cline 贡献代码，但我们要求您遵循以下指南，以确保您的贡献能够顺利集成：
 
-1. **Keep Pull Requests Focused**
-   - Limit PRs to a single feature or bug fix
-   - Split larger changes into smaller, related PRs
-   - Try and limit the PR to a single commit
+1. **保持拉取请求的专注**
+   - 将 PR 限制为单个功能或错误修复
+   - 将较大的更改拆分为较小的相关 PR
+   - 尽量将 PR 限制为单个提交
 
-2. **Code Quality**
-   - Run `npm run lint` to ensure code follows our style guidelines
-   - Run `npm run format` to format your code with Prettier
-   - Address any ESLint warnings or errors before submitting
-   - Follow TypeScript best practices and maintain type safety
+2. **代码质量**
+   - 运行 `npm run lint` 以确保代码遵循我们的样式指南
+   - 运行 `npm run format` 以使用 Prettier 格式化您的代码
+   - 在提交之前解决所有 ESLint 警告或错误
+   - 遵循 TypeScript 最佳实践并保持类型安全
 
-3. **Testing**
-   - Add tests for new features
-   - Run `npm test` to ensure all tests pass
-   - Update existing tests if your changes affect them
-   - Include both unit tests and integration tests where appropriate
+3. **测试**
+   - 为新功能添加测试
+   - 运行 `npm test` 以确保所有测试通过
+   - 如果您的更改影响现有测试，请更新它们
+   - 在适当的地方包括单元测试和集成测试
 
-4. **Documentation**
-   - Update documentation for any changed functionality
-   - Update the README if your changes affect usage or setup
+4. **文档**
+   - 更新任何更改功能的文档
+   - 如果您的更改影响使用或设置，请更新 README
 
-5. **Commit Guidelines**
-   - Write clear, descriptive commit messages
-   - Use conventional commit format (e.g., "feat:", "fix:", "docs:")
-   - Reference relevant issues in commits using #issue-number
+5. **提交指南**
+   - 编写清晰、描述性的提交消息
+   - 使用常规提交格式（例如，“feat:”，“fix:”，“docs:”）
+   - 在提交中引用相关问题，使用 #issue-number
 
-6. **Before Submitting**
-   - Rebase your branch on the latest main
-   - Ensure your branch builds successfully
-   - Double-check all tests are passing
-   - Review your changes for any debugging code or console logs
+6. **提交之前**
+   - 在最新的 main 上重新基准您的分支
+   - 确保您的分支成功构建
+   - 仔细检查所有测试是否通过
+   - 检查您的更改是否有任何调试代码或控制台日志
 
-7. **Pull Request Description**
-   - Clearly describe what your changes do
-   - Include steps to test the changes
-   - List any breaking changes
-   - Add screenshots for UI changes
+7. **拉取请求描述**
+   - 清楚描述您的更改内容
+   - 包括测试更改的步骤
+   - 列出任何重大更改
+   - 对于 UI 更改，添加截图
 
-## Contribution Agreement
+## 贡献协议
 
-By submitting a pull request, you agree that your contributions will be licensed under the same license as the project ([Apache 2.0](LICENSE)).
+通过提交拉取请求，您同意您的贡献将根据与项目相同的许可证（[Apache 2.0](LICENSE)）进行许可。
 
-Remember: Contributing to Cline isn't just about writing code - it's about being part of a community that's shaping the future of AI-assisted development. Let's build something amazing together! 🚀
+记住：为 Cline 做贡献不仅仅是编写代码 - 这也是成为一个塑造 AI 辅助开发未来的社区的一部分。让我们一起构建一些惊人的东西！🚀
