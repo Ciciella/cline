@@ -6,6 +6,8 @@ import { ClineProvider } from "./core/webview/ClineProvider"
 import { createClineAPI } from "./exports"
 import "./utils/path" // necessary to have access to String.prototype.toPosix
 import { DIFF_VIEW_URI_SCHEME } from "./integrations/editor/DiffViewProvider"
+import { ChatProvider } from './chat/ChatProvider';
+import { registerCommands } from './commands/registerCommands';
 
 /*
 Built using https://github.com/microsoft/vscode-webview-ui-toolkit
@@ -135,6 +137,12 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	}
 	context.subscriptions.push(vscode.window.registerUriHandler({ handleUri }))
+
+	context.subscriptions.push(
+		vscode.window.registerWebviewViewProvider(ChatProvider.viewType, new ChatProvider(context.extensionUri))
+	);
+
+	registerCommands(context);
 
 	return createClineAPI(outputChannel, sidebarProvider)
 }

@@ -63,6 +63,12 @@
 					"id": "claude-dev.SidebarProvider",
 					"name": ""
 				}
+			],
+			"explorer": [
+				{
+					"id": "chatView",
+					"name": "Chat"
+				}
 			]
 		},
 		"commands": [
@@ -95,6 +101,14 @@
         "command": "aicode.openInNewTab",
         "title": "在新标签页中打开",
         "category": "AI Code"
+      },
+      {
+        "command": "extension.openChat",
+        "title": "Open Chat"
+      },
+      {
+        "command": "extension.editSelectedText",
+        "title": "Edit Selected Text"
       }
     ],
 		"menus": {
@@ -124,6 +138,12 @@
 					"group": "navigation@5",
 					"when": "view == claude-dev.SidebarProvider"
 				}
+      ],
+      "editor/context": [
+        {
+          "command": "extension.editSelectedText",
+          "when": "editorHasSelection"
+        }
       ]
     }
   },
