@@ -4,8 +4,6 @@
 	"recommendations": [
 		"dbaeumer.vscode-eslint",
 		"connor4312.esbuild-problem-matchers",
-		"ms-vscode.extension-test-runner",
-		"tianguaduizhang.claude-dev-china",
-		"tencent-cloud.coding-copilot"
+		"ms-vscode.extension-test-runner"
 	]
 }
