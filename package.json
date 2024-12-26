@@ -1,5 +1,5 @@
 {
-	"name": "claude-dev-china",
+	"name": "ai-code-dev-china",
 	"displayName": "AI Code: Chat, Deepseek, 中文版",
 	"description": "在您的IDE中自动编码代理，能够在您的许可下创建/编辑文件、执行命令等等。支持deepseek模型",
 	"version": "3.0.4",
@@ -50,17 +50,17 @@
 		"viewsContainers": {
 			"activitybar": [
 				{
-					"id": "claude-dev-ActivityBar",
+					"id": "ai-code-dev-ActivityBar",
 					"title": "AI Code",
 					"icon": "$(robot)"
 				}
 			]
 		},
 		"views": {
-			"claude-dev-ActivityBar": [
+			"ai-code-dev-ActivityBar": [
 				{
 					"type": "webview",
-					"id": "claude-dev.SidebarProvider",
+					"id": "ai-code-dev.SidebarProvider",
 					"name": ""
 				}
 			]
@@ -102,27 +102,27 @@
 				{
 					"command": "aicode.plusButtonClicked",
 					"group": "navigation@1",
-					"when": "view == claude-dev.SidebarProvider"
+					"when": "view == ai-code-dev.SidebarProvider"
 				},
 				{
 					"command": "aicode.mcpButtonClicked",
 					"group": "navigation@2",
-					"when": "view == claude-dev.SidebarProvider"
+					"when": "view == ai-code-dev.SidebarProvider"
 				},
 				{
 					"command": "aicode.historyButtonClicked",
 					"group": "navigation@3",
-					"when": "view == claude-dev.SidebarProvider"
+					"when": "view == ai-code-devvv.SidebarProvider"
 				},
 				{
 					"command": "aicode.popoutButtonClicked",
 					"group": "navigation@4",
-					"when": "view == claude-dev.SidebarProvider"
+					"when": "view == ai-code-devv.SidebarProvider"
 				},
 				{
 					"command": "aicode.settingsButtonClicked",
 					"group": "navigation@5",
-					"when": "view == claude-dev.SidebarProvider"
+					"when": "view == ai-code-dev.SidebarProvider"
 				}
       ]
     }
