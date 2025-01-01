@@ -150,7 +150,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 								flexGrow: 1,
 								minWidth: 0, // This allows the div to shrink below its content size
 							}}>
-							<span style={{ fontWeight: "bold" }}>Task{!isTaskExpanded && ":"}</span>
+							<span style={{ fontWeight: "bold" }}>任务{!isTaskExpanded && ":"}</span>
 							{!isTaskExpanded && (
 								<span style={{ marginLeft: 4 }}>{highlightMentions(task.text, false)}</span>
 							)}

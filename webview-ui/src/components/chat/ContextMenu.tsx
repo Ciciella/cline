@@ -99,7 +99,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
 							<FormattedMessage
 								id="contextMenu.addFileOrFolder"
 								defaultMessage={`Add {type}`}
-								values={{ type: option.type === ContextMenuOptionType.File ? "File" : "Folder" }}
+								values={{ type: option.type === ContextMenuOptionType.File ? "文件" : "文件夹" }}
 							/>
 						</span>
 					)
