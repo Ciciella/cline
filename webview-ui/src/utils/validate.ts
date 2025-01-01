@@ -33,6 +33,11 @@ export function validateApiConfiguration(apiConfiguration?: ApiConfiguration): s
 					return "您必须提供有效的API密钥或选择不同的提供商。"
 				}
 				break
+			case "deepseek":
+				if (!apiConfiguration.deepSeekApiKey) {
+					return "您必须提供有效的API密钥或选择不同的提供商。"
+				}
+				break
 			case "openai":
 				if (
 					!apiConfiguration.openAiBaseUrl ||
