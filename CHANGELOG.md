@@ -3,15 +3,15 @@
 
 ## [3.1.2]
 
-- Fix issue where LFS files would be not be ignored when creating checkpoints
+- 修复在创建检查点时 LFS 文件未被忽略的问题
 
 ## [3.1.0]
 
-- Added checkpoints: Snapshots of workspace are automatically created whenever Cline uses a tool
-  - Compare changes: Hover over any tool use to see a diff between the snapshot and current workspace state
-  - Restore options: Choose to restore just the task state, just the workspace files, or both
-- New 'See new changes' button appears after task completion, providing an overview of all workspace changes
-- Task header now shows disk space usage with a delete button to help manage snapshot storage
+- 添加检查点：每当 AI Code 使用工具时，工作区的快照会自动创建
+  - 比较更改：悬停在任何工具使用上以查看快照和当前工作区状态之间的差异
+  - 恢复选项：选择仅恢复任务状态、仅恢复工作区文件或两者都恢复
+- 新的“查看新更改”按钮在任务完成后出现，提供所有工作区更改的概述
+- 任务标题现在显示磁盘空间使用情况，并带有删除按钮以帮助管理快照存储
 
 ## [3.0.12]
 
@@ -92,11 +92,11 @@
 
 ## [2.1.1]
 
-- 添加更严格的提示，防止 Cline 在浏览器会话期间在未关闭浏览器的情况下编辑文件
+- 添加更严格的提示，防止 AI Code 在浏览器会话期间在未关闭浏览器的情况下编辑文件
 
 ## [2.1.0]
 
-- Cline 现在使用 Anthropic 的新"计算机使用"功能来启动浏览器、点击、输入和滚动。这使他在运行时调试、端到端测试，甚至一般网络使用方面有了更多自主权。试试问"查看科罗拉多州的天气"来体验这个功能！（适用于 Claude 3.5 Sonnet v2）
+- AI Code 现在使用 Anthropic 的新"计算机使用"功能来启动浏览器、点击、输入和滚动。这使他在运行时调试、端到端测试，甚至一般网络使用方面有了更多自主权。试试问"查看科罗拉多州的天气"来体验这个功能！（适用于 Claude 3.5 Sonnet v2）
 
 ## [2.0.19]
 
@@ -116,7 +116,7 @@
 
 ## [2.0.15]
 
-- 修复修改 Cline 的编辑会导致他尝试重新应用编辑的 bug
+- 修复修改 AI Code 的编辑会导致他尝试重新应用编辑的 bug
 - 修复较弱的模型在使用 write_to_file 工具之前显示文件内容的 bug
 - 修复使用原生 OpenAI 时的 o1-mini 和 o1-preview 错误
 
@@ -142,7 +142,7 @@
 
 ## [2.0.9]
 
-- 更新系统提示以试图防止 Cline 懒惰编码（`// rest of code here...`）
+- 更新系统提示以试图防止 AI Code 懒惰编码（`// rest of code here...`）
 
 ## [2.0.8]
 
@@ -159,15 +159,15 @@
 
 ## [2.0.5]
 
-- 修复在 write_to_file 期间切换标签页时 Cline 的编辑会流入活动标签页的 bug
+- 修复在 write_to_file 期间切换标签页时 AI Code 的编辑会流入活动标签页的 bug
 - 在任务继续提示中添加说明，说明中断的 write_to_file 会将文件恢复到原始内容，避免不必要的重新读取
 - 修复流在中途失败时非第一块的错误处理
 
 ## [2.0.0]
 
-- 新名字！认识 Cline，一个可以使用您的 CLI 和编辑器的 AI 助手
-- 响应现在以黄色文本装饰动画流式显示，以跟踪 Cline 编辑文件的进度
-- 新的取消按钮，让您在 Cline 走错方向时给予反馈，让您对任务有更多控制
+- 新名字！认识 AI Code，一个可以使用您的 CLI 和编辑器的 AI 助手
+- 响应现在以黄色文本装饰动画流式显示，以跟踪 AI Code 编辑文件的进度
+- 新的取消按钮，让您在 AI Code 走错方向时给予反馈，让您对任务有更多控制
 - 重新设计的工具调用提示，导致完成任务的请求减少约 40%，并提高了与其他模型的性能
 - 使用 OpenRouter 搜索和使用任何模型
 
