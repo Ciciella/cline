@@ -156,7 +156,9 @@ const AutoApproveMenu = ({ style }: AutoApproveMenuProps) => {
 					}
 				}}>
 				<VSCodeCheckbox
-					style={{ pointerEvents: hasEnabledActions ? "auto" : "none" }}
+					style={{
+						pointerEvents: hasEnabledActions ? "auto" : "none",
+					}}
 					checked={hasEnabledActions && autoApprovalSettings.enabled}
 					disabled={!hasEnabledActions}
 					// onChange={(e) => {
@@ -261,10 +263,7 @@ const AutoApproveMenu = ({ style }: AutoApproveMenuProps) => {
 							}}
 							onKeyDown={(e) => {
 								// Prevent non-numeric keys (except for backspace, delete, arrows)
-								if (
-									!/^\d$/.test(e.key) &&
-									!["Backspace", "Delete", "ArrowLeft", "ArrowRight"].includes(e.key)
-								) {
+								if (!/^\d$/.test(e.key) && !["Backspace", "Delete", "ArrowLeft", "ArrowRight"].includes(e.key)) {
 									e.preventDefault()
 								}
 							}}

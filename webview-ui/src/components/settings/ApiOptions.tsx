@@ -54,7 +54,10 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 	const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
 
 	const handleInputChange = (field: keyof ApiConfiguration) => (event: any) => {
-		setApiConfiguration({ ...apiConfiguration, [field]: event.target.value })
+		setApiConfiguration({
+			...apiConfiguration,
+			[field]: event.target.value,
+		})
 	}
 
 	const { selectedProvider, selectedModelId, selectedModelInfo } = useMemo(() => {
@@ -64,9 +67,15 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 	// Poll ollama/lmstudio models
 	const requestLocalModels = useCallback(() => {
 		if (selectedProvider === "ollama") {
-			vscode.postMessage({ type: "requestOllamaModels", text: apiConfiguration?.ollamaBaseUrl })
+			vscode.postMessage({
+				type: "requestOllamaModels",
+				text: apiConfiguration?.ollamaBaseUrl,
+			})
 		} else if (selectedProvider === "lmstudio") {
-			vscode.postMessage({ type: "requestLmStudioModels", text: apiConfiguration?.lmStudioBaseUrl })
+			vscode.postMessage({
+				type: "requestLmStudioModels",
+				text: apiConfiguration?.lmStudioBaseUrl,
+			})
 		}
 	}, [selectedProvider, apiConfiguration?.ollamaBaseUrl, apiConfiguration?.lmStudioBaseUrl])
 	useEffect(() => {
@@ -130,7 +139,11 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 					id="api-provider"
 					value={selectedProvider}
 					onChange={handleInputChange("apiProvider")}
-					style={{ minWidth: 130, position: "relative", zIndex: OPENROUTER_MODEL_PICKER_Z_INDEX + 1 }}>
+					style={{
+						minWidth: 130,
+						position: "relative",
+						zIndex: OPENROUTER_MODEL_PICKER_Z_INDEX + 1,
+					}}>
 					<VSCodeOption value="openrouter">OpenRouter</VSCodeOption>
 					<VSCodeOption value="anthropic">Anthropic</VSCodeOption>
 					<VSCodeOption value="gemini">Google Gemini</VSCodeOption>
@@ -165,7 +178,10 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 							const isChecked = e.target.checked === true
 							setAnthropicBaseUrlSelected(isChecked)
 							if (!isChecked) {
-								setApiConfiguration({ ...apiConfiguration, anthropicBaseUrl: "" })
+								setApiConfiguration({
+									...apiConfiguration,
+									anthropicBaseUrl: "",
+								})
 							}
 						}}>
 						使用自定义基础URL
@@ -289,7 +305,12 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 			)}
 
 			{selectedProvider === "bedrock" && (
-				<div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+				<div
+					style={{
+						display: "flex",
+						flexDirection: "column",
+						gap: 5,
+					}}>
 					<VSCodeTextField
 						value={apiConfiguration?.awsAccessKey || ""}
 						style={{ width: "100%" }}
@@ -355,7 +376,10 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 						checked={apiConfiguration?.awsUseCrossRegionInference || false}
 						onChange={(e: any) => {
 							const isChecked = e.target.checked === true
-							setApiConfiguration({ ...apiConfiguration, awsUseCrossRegionInference: isChecked })
+							setApiConfiguration({
+								...apiConfiguration,
+								awsUseCrossRegionInference: isChecked,
+							})
 						}}>
 						Use cross-region inference
 					</VSCodeCheckbox>
@@ -374,7 +398,12 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 			)}
 
 			{apiConfiguration?.apiProvider === "vertex" && (
-				<div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+				<div
+					style={{
+						display: "flex",
+						flexDirection: "column",
+						gap: 5,
+					}}>
 					<VSCodeTextField
 						value={apiConfiguration?.vertexProjectId || ""}
 						style={{ width: "100%" }}
@@ -409,9 +438,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 						<VSCodeLink
 							href="https://cloud.google.com/vertex-ai/generative-ai/docs/partner-models/use-claude#before_you_begin"
 							style={{ display: "inline", fontSize: "inherit" }}>
-							{
-								"1) create a Google Cloud account › enable the Vertex AI API › enable the desired Claude models,"
-							}
+							{"1) create a Google Cloud account › enable the Vertex AI API › enable the desired Claude models,"}
 						</VSCodeLink>{" "}
 						<VSCodeLink
 							href="https://cloud.google.com/docs/authentication/provide-credentials-adc#google-idp"
@@ -439,11 +466,13 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 							color: "var(--vscode-descriptionForeground)",
 						}}>
 						<FormattedMessage id="apiOptions.apiKeyStorage" defaultMessage="This key is stored locally and only used to make API requests from this extension." />
+						{!apiConfiguration?.geminiApiKey && (
 						<VSCodeLink
 							href="https://ai.google.dev/"
 							style={{ display: "inline", fontSize: "inherit" }}>
 							<FormattedMessage id="apiOptions.geminiApiKeyInfo" defaultMessage="You can get a Gemini API key by signing up here." />
 						</VSCodeLink>
+						)}
 					</p>
 				</div>
 			)}
@@ -484,7 +513,10 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 							const isChecked = e.target.checked === true
 							setAzureApiVersionSelected(isChecked)
 							if (!isChecked) {
-								setApiConfiguration({ ...apiConfiguration, azureApiVersion: "" })
+								setApiConfiguration({
+									...apiConfiguration,
+									azureApiVersion: "",
+								})
 							}
 						}}>
 						<FormattedMessage
@@ -553,10 +585,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 								}
 							}}>
 							{lmStudioModels.map((model) => (
-								<VSCodeRadio
-									key={model}
-									value={model}
-									checked={apiConfiguration?.lmStudioModelId === model}>
+								<VSCodeRadio key={model} value={model} checked={apiConfiguration?.lmStudioModelId === model}>
 									{model}
 								</VSCodeRadio>
 							))}
@@ -625,10 +654,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 								}
 							}}>
 							{ollamaModels.map((model) => (
-								<VSCodeRadio
-									key={model}
-									value={model}
-									checked={apiConfiguration?.ollamaModelId === model}>
+								<VSCodeRadio key={model} value={model} checked={apiConfiguration?.ollamaModelId === model}>
 									{model}
 								</VSCodeRadio>
 							))}
@@ -647,10 +673,11 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 							<FormattedMessage id="apiOptions.quickstartGuide" defaultMessage="quickstart guide." />
 						</VSCodeLink>
 						<span style={{ color: "var(--vscode-errorForeground)" }}>
-							<FormattedMessage
+							
+							(<span style={{ fontWeight: 500 }}>注意:</span> <FormattedMessage
 								id="apiOptions.note2"
-								defaultMessage="(Note: AI Code uses complex prompts and works best with Claude models. Less capable models may not work as expected.)"
-							/>
+								defaultMessage="AI Code uses complex prompts and works best with Claude models. Less capable models may not work as expected."
+							/>)
 						</span>
 					</p>
 				</div>
@@ -816,7 +843,12 @@ export const ModelInfoView = ({
 	].filter(Boolean)
 
 	return (
-		<p style={{ fontSize: "12px", marginTop: "2px", color: "var(--vscode-descriptionForeground)" }}>
+		<p
+			style={{
+				fontSize: "12px",
+				marginTop: "2px",
+				color: "var(--vscode-descriptionForeground)",
+			}}>
 			{infoItems.map((item, index) => (
 				<Fragment key={index}>
 					{item}
@@ -869,7 +901,11 @@ export function normalizeApiConfiguration(apiConfiguration?: ApiConfiguration) {
 			selectedModelId = defaultId
 			selectedModelInfo = models[defaultId]
 		}
-		return { selectedProvider: provider, selectedModelId, selectedModelInfo }
+		return {
+			selectedProvider: provider,
+			selectedModelId,
+			selectedModelInfo,
+		}
 	}
 	switch (provider) {
 		case "anthropic":

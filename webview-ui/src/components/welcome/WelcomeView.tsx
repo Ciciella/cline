@@ -22,7 +22,15 @@ const WelcomeView = () => {
 	}, [apiConfiguration])
 
 	return (
-		<div style={{ padding: "20px", paddingTop: "40px" }}>
+		<div
+		style={{
+			position: "fixed",
+			top: 0,
+			left: 0,
+			right: 0,
+			bottom: 0,
+			padding: "0 20px",
+		}}>
 			<h2>
 				<FormattedMessage id="welcome.title" defaultMessage="Hi, I'm AI Code" />
 			</h2>
@@ -33,7 +41,7 @@ const WelcomeView = () => {
 					style={{ display: "inline" }}>
 					<FormattedMessage id="welcome.capabilities.link" defaultMessage="Claude 3.5 Sonnet's agentic coding capabilities" />
 				</VSCodeLink>{" "}
-				<FormattedMessage id="welcome.tools" defaultMessage="ÒÔ¼°·ÃÎÊÔÊÐíÎÒ´´½¨ºÍ±à¼­ÎÄ¼þ¡¢Ì½Ë÷¸´ÔÓÏîÄ¿¡¢Ê¹ÓÃä¯ÀÀÆ÷ºÍÖ´ÐÐÖÕ¶ËÃüÁî£¨µ±È»ÐèÒªÄúµÄÐí¿É£©¡£" />
+				<FormattedMessage id="welcome.tools" defaultMessage="ä»¥åŠä½¿ç”¨å·¥å…·æ¥åˆ›å»ºå’Œç¼–è¾‘æ–‡ä»¶ï¼ŒæŽ¢ç´¢å¤æ‚çš„é¡¹ç›®ï¼Œä½¿ç”¨æµè§ˆå™¨å’Œæ‰§è¡Œç»ˆç«¯å‘½ä»¤ï¼ˆå½“ç„¶ï¼Œéœ€è¦æ‚¨çš„è®¸å¯ï¼‰ã€‚æˆ‘ç”šè‡³å¯ä»¥ä½¿ç”¨MCPæ¥åˆ›å»ºæ–°çš„å·¥å…·å¹¶æ‰©å±•æˆ‘è‡ªå·±çš„å·¥å…·åŠŸèƒ½ã€‚" />
 			</p>
 
 			<b>
@@ -43,7 +51,7 @@ const WelcomeView = () => {
 			<div style={{ marginTop: "10px" }}>
 				<ApiOptions showModelOptions={false} />
 				<VSCodeButton onClick={handleSubmit} disabled={disableLetsGoButton} style={{ marginTop: "3px" }}>
-					<FormattedMessage id="welcome.letsGo" defaultMessage="ÏÖÔÚ¿ªÊ¼!" />
+					<FormattedMessage id="welcome.letsGo" defaultMessage="ï¿½ï¿½ï¿½Ú¿ï¿½Ê¼!" />
 				</VSCodeButton>
 			</div>
 		</div>

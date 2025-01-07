@@ -14,13 +14,7 @@ type SettingsViewProps = {
 
 const SettingsView = ({ onDone }: SettingsViewProps) => {
 	const intl = useIntl()
-	const {
-		apiConfiguration,
-		version,
-		customInstructions,
-		setCustomInstructions,
-		openRouterModels,
-	} = useExtensionState()
+	const { apiConfiguration, version, customInstructions, setCustomInstructions, openRouterModels } = useExtensionState()
 	const [apiErrorMessage, setApiErrorMessage] = useState<string | undefined>(undefined)
 	const [modelIdErrorMessage, setModelIdErrorMessage] = useState<string | undefined>(undefined)
 	const handleSubmit = () => {
@@ -31,7 +25,10 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
 		setModelIdErrorMessage(modelIdValidationResult)
 		if (!apiValidationResult && !modelIdValidationResult) {
 			vscode.postMessage({ type: "apiConfiguration", apiConfiguration })
-			vscode.postMessage({ type: "customInstructions", text: customInstructions })
+			vscode.postMessage({
+				type: "customInstructions",
+				text: customInstructions,
+			})
 			onDone()
 		}
 	}
@@ -86,7 +83,13 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
 				</VSCodeButton>
 			</div>
 			<div
-				style={{ flexGrow: 1, overflowY: "scroll", paddingRight: 8, display: "flex", flexDirection: "column" }}>
+				style={{
+					flexGrow: 1,
+					overflowY: "scroll",
+					paddingRight: 8,
+					display: "flex",
+					flexDirection: "column",
+				}}>
 				<div style={{ marginBottom: 5 }}>
 					<ApiOptions
 						showModelOptions={true}
@@ -100,9 +103,10 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
 						value={customInstructions ?? ""}
 						style={{ width: "100%" }}
 						rows={4}
-						placeholder={intl.formatMessage({ 
-							id: "settings.placeholder", 
-							defaultMessage: 'e.g. "Run unit tests at the end", "Use TypeScript with async/await", "Speak in Spanish"' 
+						placeholder={intl.formatMessage({
+							id: "settings.placeholder",
+							defaultMessage:
+								'e.g. "Run unit tests at the end", "Use TypeScript with async/await", "Speak in Spanish"',
 						})}
 						onInput={(e: any) => setCustomInstructions(e.target?.value ?? "")}>
 						<span style={{ fontWeight: "500" }}>
@@ -115,9 +119,9 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
 							marginTop: "5px",
 							color: "var(--vscode-descriptionForeground)",
 						}}>
-						<FormattedMessage 
-							id="settings.instructionsInfo" 
-							defaultMessage="These instructions are added to the end of the system prompt sent with every request." 
+						<FormattedMessage
+							id="settings.instructionsInfo"
+							defaultMessage="These instructions are added to the end of the system prompt sent with every request."
 						/>
 					</p>
 				</div>
@@ -162,7 +166,14 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
 							https://github.com/Ciciella/AIcoder
 						</VSCodeLink>
 					</p>
-					<p style={{ fontStyle: "italic", margin: "10px 0 0 0", padding: 0 }}>v{version}</p>
+					<p
+						style={{
+							fontStyle: "italic",
+							margin: "10px 0 0 0",
+							padding: 0,
+						}}>
+						v{version}
+					</p>
 				</div>
 			</div>
 		</div>

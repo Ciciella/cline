@@ -1,25 +1,39 @@
 import { VSCodeBadge, VSCodeProgressRing } from "@vscode/webview-ui-toolkit/react"
 import deepEqual from "fast-deep-equal"
-import React, { memo, useEffect, useMemo, useRef } from "react"
-import { useSize } from "react-use"
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { useEvent, useSize } from "react-use"
+import styled from "styled-components"
 import {
 	ClineApiReqInfo,
 	ClineAskUseMcpServer,
 	ClineMessage,
 	ClineSayTool,
+	ExtensionMessage,
+	COMPLETION_RESULT_CHANGES_FLAG,
 } from "../../../../src/shared/ExtensionMessage"
 import { COMMAND_OUTPUT_STRING, COMMAND_REQ_APP_STRING } from "../../../../src/shared/combineCommandSequences"
 import { useExtensionState } from "../../context/ExtensionStateContext"
 import { findMatchingResourceOrTemplate } from "../../utils/mcp"
 import { vscode } from "../../utils/vscode"
+import { CheckpointControls, CheckpointOverlay } from "../common/CheckpointControls"
 import CodeAccordian, { removeLeadingNonAlphanumeric } from "../common/CodeAccordian"
 import CodeBlock, { CODE_BLOCK_BG_COLOR } from "../common/CodeBlock"
 import MarkdownBlock from "../common/MarkdownBlock"
+import SuccessButton from "../common/SuccessButton"
 import Thumbnails from "../common/Thumbnails"
 import McpResourceRow from "../mcp/McpResourceRow"
 import McpToolRow from "../mcp/McpToolRow"
 import { highlightMentions } from "./TaskHeader"
 import { FormattedMessage } from 'react-intl'
+
+const ChatRowContainer = styled.div`
+	padding: 10px 6px 10px 15px;
+	position: relative;
+
+	&:hover ${CheckpointControls} {
+		opacity: 1;
+	}
+`
 
 interface ChatRowProps {
 	message: ClineMessage
@@ -34,18 +48,33 @@ interface ChatRowContentProps extends Omit<ChatRowProps, "onHeightChange"> {}
 
 const ChatRow = memo(
 	(props: ChatRowProps) => {
-		const { isLast, onHeightChange, message } = props
+		const { isLast, onHeightChange, message, lastModifiedMessage } = props
 		// Store the previous height to compare with the current height
 		// This allows us to detect changes without causing re-renders
 		const prevHeightRef = useRef(0)
 
+		// NOTE: for tools that are interrupted and not responded to (approved or rejected), there won't be a checkpoint hash
+		let shouldShowCheckpoints =
+			message.lastCheckpointHash != null &&
+			(message.say === "tool" ||
+				message.ask === "tool" ||
+				message.say === "command" ||
+				message.ask === "command" ||
+				message.say === "completion_result" ||
+				message.ask === "completion_result" ||
+				message.say === "use_mcp_server" ||
+				message.ask === "use_mcp_server")
+
+		if (shouldShowCheckpoints && isLast) {
+			shouldShowCheckpoints =
+				lastModifiedMessage?.ask === "resume_completed_task" || lastModifiedMessage?.ask === "resume_task"
+		}
+
 		const [chatrow, { height }] = useSize(
-			<div
-				style={{
-					padding: "10px 6px 10px 15px",
-				}}>
+			<ChatRowContainer>
 				<ChatRowContent {...props} />
-			</div>,
+				{shouldShowCheckpoints && <CheckpointOverlay messageTs={message.ts} />}
+			</ChatRowContainer>,
 		)
 
 		useEffect(() => {
@@ -70,14 +99,11 @@ const ChatRow = memo(
 
 export default ChatRow
 
-export const ChatRowContent = ({
-	message,
-	isExpanded,
-	onToggleExpand,
-	lastModifiedMessage,
-	isLast,
-}: ChatRowContentProps) => {
+export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifiedMessage, isLast }: ChatRowContentProps) => {
 	const { mcpServers } = useExtensionState()
+
+	const [seeNewChangesDisabled, setSeeNewChangesDisabled] = useState(false)
+
 	const [cost, apiReqCancelReason, apiReqStreamingFailedMessage] = useMemo(() => {
 		if (message.text != null && message.say === "api_req_started") {
 			const info: ClineApiReqInfo = JSON.parse(message.text)
@@ -103,6 +129,18 @@ export const ChatRowContent = ({
 	const errorColor = "var(--vscode-errorForeground)"
 	const successColor = "var(--vscode-charts-green)"
 	const cancelledColor = "var(--vscode-descriptionForeground)"
+
+	const handleMessage = useCallback((event: MessageEvent) => {
+		const message: ExtensionMessage = event.data
+		switch (message.type) {
+			case "relinquishControl": {
+				setSeeNewChangesDisabled(false)
+				break
+			}
+		}
+	}, [])
+
+	useEvent("message", handleMessage)
 
 	const [icon, title] = useMemo(() => {
 		switch (type) {
@@ -140,7 +178,10 @@ export const ChatRowContent = ({
 					) : (
 						<span
 							className="codicon codicon-terminal"
-							style={{ color: normalColor, marginBottom: "-1.5px" }}></span>
+							style={{
+								color: normalColor,
+								marginBottom: "-1.5px",
+							}}></span>
 					),
 					<span style={{ color: normalColor, fontWeight: "bold" }}>
 						{message.type === "ask"
@@ -156,20 +197,19 @@ export const ChatRowContent = ({
 					) : (
 						<span
 							className="codicon codicon-server"
-							style={{ color: normalColor, marginBottom: "-1.5px" }}></span>
+							style={{
+								color: normalColor,
+								marginBottom: "-1.5px",
+							}}></span>
 					),
 					<span style={{ color: normalColor, fontWeight: "bold" }}>
 						{message.type === "ask" ? (
 							<>
-								Ai Code想在
-								<code>{mcpServerUse.serverName}</code> MCP服务器上
-								{mcpServerUse.type === "use_mcp_tool" ? "使用一个工具" : "访问一个资源"}：
+								AI Code想要在<code>{mcpServerUse.serverName}</code> MCP服务器上{mcpServerUse.type === "use_mcp_tool" ? "使用工具" : "访问资源"}:
 							</>
 						) : (
 							<>
-								Ai Code在
-								<code>{mcpServerUse.serverName}</code> MCP服务器上
-								{mcpServerUse.type === "use_mcp_tool" ? "使用了一个工具" : "访问了一个资源"}：
+								AI Code在<code>{mcpServerUse.serverName}</code> MCP服务器上{mcpServerUse.type === "use_mcp_tool" ? "使用了工具" : "访问了资源"}:
 							</>
 						)}
 					</span>,
@@ -267,7 +307,7 @@ export const ChatRowContent = ({
 		display: "flex",
 		alignItems: "center",
 		gap: "10px",
-		marginBottom: "10px",
+		marginBottom: "12px",
 	}
 
 	const pStyle: React.CSSProperties = {
@@ -288,7 +328,10 @@ export const ChatRowContent = ({
 		const toolIcon = (name: string) => (
 			<span
 				className={`codicon codicon-${name}`}
-				style={{ color: "var(--vscode-foreground)", marginBottom: "-1.5px" }}></span>
+				style={{
+					color: "var(--vscode-foreground)",
+					marginBottom: "-1.5px",
+				}}></span>
 		)
 
 		switch (tool.tool) {
@@ -369,7 +412,10 @@ export const ChatRowContent = ({
 									msUserSelect: "none",
 								}}
 								onClick={() => {
-									vscode.postMessage({ type: "openFile", text: tool.content })
+									vscode.postMessage({
+										type: "openFile",
+										text: tool.content,
+									})
 								}}>
 								{tool.path?.startsWith(".") && <span>.</span>}
 								<span
@@ -386,7 +432,10 @@ export const ChatRowContent = ({
 								<div style={{ flexGrow: 1 }}></div>
 								<span
 									className={`codicon codicon-link-external`}
-									style={{ fontSize: 13.5, margin: "1px 0" }}></span>
+									style={{
+										fontSize: 13.5,
+										margin: "1px 0",
+									}}></span>
 							</div>
 						</div>
 					</>
@@ -590,7 +639,7 @@ export const ChatRowContent = ({
 							gap: 10,
 							padding: 8,
 							fontSize: "12px",
-							color: "var(--vscode-errorForeground)",
+							color: "var(--vscode-editorWarning-foreground)",
 						}}>
 						<i className="codicon codicon-warning"></i>
 						<span>模型已确定此命令需要明确批准。</span>
@@ -642,8 +691,7 @@ export const ChatRowContent = ({
 								tool={{
 									name: useMcpServer.toolName || "",
 									description:
-										server?.tools?.find((tool) => tool.name === useMcpServer.toolName)
-											?.description || "",
+										server?.tools?.find((tool) => tool.name === useMcpServer.toolName)?.description || "",
 								}}
 							/>
 							{useMcpServer.arguments && useMcpServer.arguments !== "{}" && (
@@ -682,9 +730,7 @@ export const ChatRowContent = ({
 								style={{
 									...headerStyle,
 									marginBottom:
-										(cost == null && apiRequestFailedMessage) || apiReqStreamingFailedMessage
-											? 10
-											: 0,
+										(cost == null && apiRequestFailedMessage) || apiReqStreamingFailedMessage ? 10 : 0,
 									justifyContent: "space-between",
 									cursor: "pointer",
 									userSelect: "none",
@@ -693,11 +739,19 @@ export const ChatRowContent = ({
 									msUserSelect: "none",
 								}}
 								onClick={onToggleExpand}>
-								<div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+								<div
+									style={{
+										display: "flex",
+										alignItems: "center",
+										gap: "10px",
+									}}>
 									{icon}
 									{title}
 									{/* Need to render this everytime since it affects height of row by 2px */}
-									<VSCodeBadge style={{ opacity: cost != null && cost > 0 ? 1 : 0 }}>
+									<VSCodeBadge
+										style={{
+											opacity: cost != null && cost > 0 ? 1 : 0,
+										}}>
 										${Number(cost || 0)?.toFixed(4)}
 									</VSCodeBadge>
 								</div>
@@ -705,7 +759,11 @@ export const ChatRowContent = ({
 							</div>
 							{((cost == null && apiRequestFailedMessage) || apiReqStreamingFailedMessage) && (
 								<>
-									<p style={{ ...pStyle, color: "var(--vscode-errorForeground)" }}>
+									<p
+										style={{
+											...pStyle,
+											color: "var(--vscode-errorForeground)",
+										}}>
 										{apiRequestFailedMessage || apiReqStreamingFailedMessage}
 										{apiRequestFailedMessage?.toLowerCase().includes("powershell") && (
 											<>
@@ -715,7 +773,10 @@ export const ChatRowContent = ({
 												{/* please see this{" "} */}
 												{/* <a
 													href="https://github.com/cline/cline/wiki/TroubleShooting-%E2%80%90-%22PowerShell-is-not-recognized-as-an-internal-or-external-command%22"
-													style={{ color: "inherit", textDecoration: "underline" }}>
+													style={{
+														color: "inherit",
+														textDecoration: "underline",
+													}}>
 													troubleshooting guide
 												</a> */}
 												.
@@ -820,7 +881,13 @@ export const ChatRowContent = ({
 									{title}
 								</div>
 							)}
-							<p style={{ ...pStyle, color: "var(--vscode-errorForeground)" }}>{message.text}</p>
+							<p
+								style={{
+									...pStyle,
+									color: "var(--vscode-errorForeground)",
+								}}>
+								{message.text}
+							</p>
 						</>
 					)
 				case "diff_error":
@@ -835,7 +902,12 @@ export const ChatRowContent = ({
 									borderRadius: 3,
 									fontSize: 12,
 								}}>
-								<div style={{ display: "flex", alignItems: "center", marginBottom: 4 }}>
+								<div
+									style={{
+										display: "flex",
+										alignItems: "center",
+										marginBottom: 4,
+									}}>
 									<i
 										className="codicon codicon-error"
 										style={{
@@ -852,15 +924,45 @@ export const ChatRowContent = ({
 						</>
 					)
 				case "completion_result":
+					const hasChanges = message.text?.endsWith(COMPLETION_RESULT_CHANGES_FLAG) ?? false
+					const text = hasChanges ? message.text?.slice(0, -COMPLETION_RESULT_CHANGES_FLAG.length) : message.text
 					return (
 						<>
-							<div style={headerStyle}>
+							<div
+								style={{
+									...headerStyle,
+									marginBottom: "10px",
+								}}>
 								{icon}
 								{title}
 							</div>
-							<div style={{ color: "var(--vscode-charts-green)", paddingTop: 10 }}>
-								<Markdown markdown={message.text} />
+							<div
+								style={{
+									color: "var(--vscode-charts-green)",
+									paddingTop: 10,
+								}}>
+								<Markdown markdown={text} />
 							</div>
+							{message.partial !== true && hasChanges && (
+								<div style={{ paddingTop: 17 }}>
+									<SuccessButton
+										disabled={seeNewChangesDisabled}
+										onClick={() => {
+											setSeeNewChangesDisabled(true)
+											vscode.postMessage({
+												type: "taskCompletionViewChanges",
+												number: message.ts,
+											})
+										}}
+										style={{
+											width: "100%",
+											cursor: seeNewChangesDisabled ? "wait" : "pointer",
+										}}>
+										<i className="codicon codicon-new-file" style={{ marginRight: 6 }} />
+										See new changes
+									</SuccessButton>
+								</div>
+							)}
 						</>
 					)
 				case "shell_integration_warning":
@@ -875,7 +977,12 @@ export const ChatRowContent = ({
 									borderRadius: 3,
 									fontSize: 12,
 								}}>
-								<div style={{ display: "flex", alignItems: "center", marginBottom: 4 }}>
+								<div
+									style={{
+										display: "flex",
+										alignItems: "center",
+										marginBottom: 4,
+									}}>
 									<i
 										className="codicon codicon-warning"
 										style={{
@@ -955,7 +1062,13 @@ export const ChatRowContent = ({
 								{icon}
 								{title}
 							</div>
-							<p style={{ ...pStyle, color: "var(--vscode-errorForeground)" }}>{message.text}</p>
+							<p
+								style={{
+									...pStyle,
+									color: "var(--vscode-errorForeground)",
+								}}>
+								{message.text}
+							</p>
 						</>
 					)
 				case "auto_approval_max_req_reached":
@@ -965,19 +1078,59 @@ export const ChatRowContent = ({
 								{icon}
 								{title}
 							</div>
-							<p style={{ ...pStyle, color: "var(--vscode-errorForeground)" }}>{message.text}</p>
+							<p
+								style={{
+									...pStyle,
+									color: "var(--vscode-errorForeground)",
+								}}>
+								{message.text}
+							</p>
 						</>
 					)
 				case "completion_result":
 					if (message.text) {
+						// FIXME: is this ever even used?
+						const hasChanges = message.text.endsWith(COMPLETION_RESULT_CHANGES_FLAG) ?? false
+						const text = hasChanges ? message.text.slice(0, -COMPLETION_RESULT_CHANGES_FLAG.length) : message.text
 						return (
 							<div>
-								<div style={headerStyle}>
+								<div
+									style={{
+										...headerStyle,
+										marginBottom: "10px",
+									}}>
 									{icon}
 									{title}
 								</div>
-								<div style={{ color: "var(--vscode-charts-green)", paddingTop: 10 }}>
-									<Markdown markdown={message.text} />
+								<div
+									style={{
+										color: "var(--vscode-charts-green)",
+										paddingTop: 10,
+									}}>
+									<Markdown markdown={text} />
+									{message.partial !== true && hasChanges && (
+										<div style={{ marginTop: 15 }}>
+											<SuccessButton
+												appearance="secondary"
+												disabled={seeNewChangesDisabled}
+												onClick={() => {
+													setSeeNewChangesDisabled(true)
+													vscode.postMessage({
+														type: "taskCompletionViewChanges",
+														number: message.ts,
+													})
+												}}>
+												<i
+													className="codicon codicon-new-file"
+													style={{
+														marginRight: 6,
+														cursor: seeNewChangesDisabled ? "wait" : "pointer",
+													}}
+												/>
+												See new changes
+											</SuccessButton>
+										</div>
+									)}
 								</div>
 							</div>
 						)
@@ -1021,7 +1174,13 @@ export const ProgressIndicator = () => (
 
 const Markdown = memo(({ markdown }: { markdown?: string }) => {
 	return (
-		<div style={{ wordBreak: "break-word", overflowWrap: "anywhere", marginBottom: -15, marginTop: -15 }}>
+		<div
+			style={{
+				wordBreak: "break-word",
+				overflowWrap: "anywhere",
+				marginBottom: -15,
+				marginTop: -15,
+			}}>
 			<MarkdownBlock markdown={markdown} />
 		</div>
 	)

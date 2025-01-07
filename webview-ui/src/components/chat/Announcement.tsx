@@ -24,10 +24,7 @@ const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 				position: "relative",
 				flexShrink: 0,
 			}}>
-			<VSCodeButton
-				appearance="icon"
-				onClick={hideAnnouncement}
-				style={{ position: "absolute", top: "8px", right: "8px" }}>
+			<VSCodeButton appearance="icon" onClick={hideAnnouncement} style={{ position: "absolute", top: "8px", right: "8px" }}>
 				<span className="codicon codicon-close"></span>
 			</VSCodeButton>
 			<h3 style={{ margin: "0 0 8px" }}>
@@ -35,36 +32,37 @@ const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 			</h3>
 			<ul style={{ margin: "0 0 8px", paddingLeft: "12px" }}>
 				<li>
-					<b>自动批准菜单:</b> 现在您可以指定哪些工具需要批准，设置最大数量的自动批准API请求，并为AI Code完成任务时启用系统通知。
+					<b>检查点功能上线了！</b> AI Code 现在会在任务的每一步保存您的工作区快照。将鼠标悬停在任何消息上，可以看到两个新按钮：
+					<ul style={{ margin: "4px 0", paddingLeft: 22 }}>
+						<li>
+							<span
+								className="codicon codicon-diff-multiple"
+								style={{
+									fontSize: "12px",
+									marginRight: "4px",
+								}}></span>
+							<b>比较</b> 显示快照与当前工作区之间的差异
+						</li>
+						<li>
+							<span
+								className="codicon codicon-discard"
+								style={{
+									fontSize: "12px",
+									marginRight: "4px",
+								}}></span>
+							<b>恢复</b> 让您将项目文件恢复到任务的那个时间点
+						</li>
+					</ul>
 				</li>
 				<li>
-					<b>大文件差异编辑:</b> AI Code现在使用高效的搜索和替换方法来修改大文件，以实现更快、更可靠的编辑（不再有"
-					<code>{"// 代码删除"}</code>"）。
-				</li>
-				<li>
-					<b>.aicoderules:</b> 添加根级别的<code>.aicoderules</code>文件，以指定项目的自定义指令。
+					<b>“查看新更改”按钮</b> 当任务完成时，向您展示 AI Code 在整个任务过程中对您的工作区所做的所有更改的概述
 				</li>
 			</ul>
-			<p style={{ margin: "5px 0px", fontWeight: "bold" }}>v2.2 更新:</p>
-			<ul style={{ margin: "0 0 8px", paddingLeft: "12px" }}>
-				<li>
-					通过点击菜单栏中的新 <span className="codicon codicon-server" style={{ fontSize: "10px" }}></span> 图标，添加和配置
-					<VSCodeLink href="https://github.com/modelcontextprotocol/servers" style={{ display: "inline" }}>
-						MCP服务器
-					</VSCodeLink>
-					。
-				</li>
-				<li>
-					AI Code还可以创建自定义工具–只需说"添加一个工具，用于...",然后观察他创建MCP服务器并在扩展中安装，准备好在未来任务中使用。
-				</li>
-				<li>
-					通过问AI Code"添加一个获取最新npm文档的工具"
-					{/* ，或
-					<VSCodeLink href="https://x.com/sdrzn/status/1867271665086074969" style={{ display: "inline" }}>
-						查看MCP在行动的演示。
-					</VSCodeLink> */}
-				</li>
-			</ul>
+			{/* <p style={{ margin: "8px 0" }}>
+				<VSCodeLink href="https://x.com/sdrzn/status/1876378124126236949" style={{ display: "inline" }}>
+					See a demo of Checkpoints here!
+				</VSCodeLink>
+			</p> */}
 			{/*<ul style={{ margin: "0 0 8px", paddingLeft: "12px" }}>
 				 <li>
 					OpenRouter now supports prompt caching! They also have much higher rate limits than other providers,

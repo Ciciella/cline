@@ -182,6 +182,22 @@ Cline can also use a headless browser to inspect any website, e.g., localhost, a
 -   **`@file`:** Adds a file's contents so you don't have to waste API requests approving read file (+ type to search files)
 -   **`@folder`:** Adds folder's files all at once to speed up your workflow even more
 
+<!-- Transparent pixel to create line break after floating image -->
+
+<img width="2000" height="0" src="https://github.com/user-attachments/assets/ee14e6f7-20b8-4391-9091-8e8e25561929"><br>
+
+<img align="right" width="350" src="https://github.com/user-attachments/assets/140c8606-d3bf-41b9-9a1f-4dbf0d4c90cb">
+
+### Checkpoints: Compare and Restore
+
+As Cline works through a task, the extension takes a snapshot of your workspace at each step. You can use the 'Compare' button to see a diff between the snapshot and your current workspace, and the 'Restore' button to roll back to that point.
+
+For example, when working with a local web server, you can use 'Restore Workspace Only' to quickly test different versions of your app, then use 'Restore Task and Workspace' when you find the version you want to continue building from. This lets you safely explore different approaches without losing progress.
+
+<!-- Transparent pixel to create line break after floating image -->
+
+<img width="2000" height="0" src="https://github.com/user-attachments/assets/ee14e6f7-20b8-4391-9091-8e8e25561929"><br>
+
 ## Contributing
 
 To contribute to the project, start by exploring [open issues](https://github.com/cline/cline/issues) or checking our [feature request board](https://github.com/cline/cline/discussions/categories/feature-requests?discussions_q=is%3Aopen+category%3A%22Feature+Requests%22+sort%3Atop). We'd also love to have you join our [Discord](https://discord.gg/cline) to share ideas and connect with other contributors.
