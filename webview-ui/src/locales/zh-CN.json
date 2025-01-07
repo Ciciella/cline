@@ -33,7 +33,7 @@
   "contextMenu.pasteUrl": "粘贴 URL 以获取内容",
   "contextMenu.problems": "问题",
   "contextMenu.noResults": "未找到结果",
-  "contextMenu.addFileOrFolder": "添加 {type}",
+  "contextMenu.addFileOrFolder": "添加{type}",
   "settings.done": "完成",
   "apiOptions.awsAuthentication": "通过提供上述密钥或使用默认的 AWS 凭证提供程序进行身份验证，即 ~/.aws/credentials 或环境变量。这些凭证仅在本地用于从此扩展进行 API 请求。",
   "announcement.newVersion": "🎉 新版本 v{minorVersion}",
