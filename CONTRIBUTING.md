@@ -20,7 +20,20 @@
 
 如果您计划开发一个更大的功能，请先创建一个问题，以便我们讨论它是否符合 Cline 的愿景。
 
-## 💻 编写和提交代码
+## Development Setup
+
+1. **VS Code Extensions**
+
+    - When opening the project, VS Code will prompt you to install recommended extensions
+    - These extensions are required for development - please accept all installation prompts
+    - If you dismissed the prompts, you can install them manually from the Extensions panel
+
+2. **Local Development**
+    - Run `npm install` to install dependencies
+    - Run `npm run test` to run tests locally
+    - Before submitting PR, run `npm run format:fix` to format your code
+
+## Writing and Submitting Code
 
 任何人都可以为 Cline 贡献代码，但我们要求您遵循以下指南，以确保您的贡献能够顺利集成：
 
@@ -41,9 +54,11 @@
    - 如果您的更改影响现有测试，请更新它们
    - 在适当的地方包括单元测试和集成测试
 
-4. **文档**
-   - 更新任何更改功能的文档
-   - 如果您的更改影响使用或设置，请更新 README
+    - Run `npm run lint` to check code style
+    - Run `npm run format` to automatically format code
+    - All PRs must pass CI checks which include both linting and formatting
+    - Address any ESLint warnings or errors before submitting
+    - Follow TypeScript best practices and maintain type safety
 
 5. **提交指南**
    - 编写清晰、描述性的提交消息
