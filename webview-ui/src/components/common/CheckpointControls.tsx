@@ -21,6 +21,7 @@ export const CheckpointOverlay = ({ messageTs }: CheckpointOverlayProps) => {
 	const containerRef = useRef<HTMLDivElement>(null)
 	const tooltipRef = useRef<HTMLDivElement>(null)
 
+	// 当点击区域外时，关闭恢复确认框
 	useClickAway(containerRef, () => {
 		if (showRestoreConfirm) {
 			setShowRestoreConfirm(false)
@@ -28,6 +29,7 @@ export const CheckpointOverlay = ({ messageTs }: CheckpointOverlayProps) => {
 		}
 	})
 
+	// 处理来自扩展的消息
 	const handleMessage = useCallback((event: MessageEvent) => {
 		const message: ExtensionMessage = event.data
 		switch (message.type) {
@@ -44,6 +46,7 @@ export const CheckpointOverlay = ({ messageTs }: CheckpointOverlayProps) => {
 
 	useEvent("message", handleMessage)
 
+	// 恢复任务
 	const handleRestoreTask = () => {
 		setRestoreTaskDisabled(true)
 		vscode.postMessage({
@@ -53,6 +56,7 @@ export const CheckpointOverlay = ({ messageTs }: CheckpointOverlayProps) => {
 		})
 	}
 
+	// 恢复工作区
 	const handleRestoreWorkspace = () => {
 		setRestoreWorkspaceDisabled(true)
 		vscode.postMessage({
@@ -62,6 +66,7 @@ export const CheckpointOverlay = ({ messageTs }: CheckpointOverlayProps) => {
 		})
 	}
 
+	// 恢复任务和工作区
 	const handleRestoreBoth = () => {
 		setRestoreBothDisabled(true)
 		vscode.postMessage({
@@ -71,10 +76,12 @@ export const CheckpointOverlay = ({ messageTs }: CheckpointOverlayProps) => {
 		})
 	}
 
+	// 鼠标进入时设置标志
 	const handleMouseEnter = () => {
 		setHasMouseEntered(true)
 	}
 
+	// 鼠标离开时重置标志并关闭恢复确认框
 	const handleMouseLeave = () => {
 		if (hasMouseEntered) {
 			setShowRestoreConfirm(false)
@@ -82,13 +89,14 @@ export const CheckpointOverlay = ({ messageTs }: CheckpointOverlayProps) => {
 		}
 	}
 
+	// 控件鼠标离开事件处理
 	const handleControlsMouseLeave = (e: React.MouseEvent) => {
 		const tooltipElement = tooltipRef.current
 
 		if (tooltipElement && showRestoreConfirm) {
 			const tooltipRect = tooltipElement.getBoundingClientRect()
 
-			// If mouse is moving towards the tooltip, don't close it
+			// 如果鼠标移向提示框，则不关闭提示框
 			if (
 				e.clientY >= tooltipRect.top &&
 				e.clientY <= tooltipRect.bottom &&
@@ -106,7 +114,7 @@ export const CheckpointOverlay = ({ messageTs }: CheckpointOverlayProps) => {
 	return (
 		<CheckpointControls onMouseLeave={handleControlsMouseLeave}>
 			<VSCodeButton
-				title="Compare"
+				title="比较"
 				appearance="secondary"
 				disabled={compareDisabled}
 				style={{ cursor: compareDisabled ? "wait" : "pointer" }}
@@ -121,7 +129,7 @@ export const CheckpointOverlay = ({ messageTs }: CheckpointOverlayProps) => {
 			</VSCodeButton>
 			<div style={{ position: "relative" }} ref={containerRef}>
 				<VSCodeButton
-					title="Restore"
+					title="恢复"
 					appearance="secondary"
 					style={{ cursor: "pointer" }}
 					onClick={() => setShowRestoreConfirm(true)}>
@@ -136,9 +144,9 @@ export const CheckpointOverlay = ({ messageTs }: CheckpointOverlayProps) => {
 								style={{
 									cursor: restoreBothDisabled ? "wait" : "pointer",
 								}}>
-								Restore Task and Workspace
+								恢复任务和工作区
 							</VSCodeButton>
-							<p>Restores the task and your project's files back to a snapshot taken at this point</p>
+							<p>将任务和项目文件恢复到此时间点的快照</p>
 						</RestoreOption>
 						<RestoreOption>
 							<VSCodeButton
@@ -147,9 +155,9 @@ export const CheckpointOverlay = ({ messageTs }: CheckpointOverlayProps) => {
 								style={{
 									cursor: restoreTaskDisabled ? "wait" : "pointer",
 								}}>
-								Restore Task Only
+								仅恢复任务
 							</VSCodeButton>
-							<p>Deletes messages after this point (does not affect workspace)</p>
+							<p>删除此时间点之后的消息（不影响工作区）</p>
 						</RestoreOption>
 						<RestoreOption>
 							<VSCodeButton
@@ -158,9 +166,9 @@ export const CheckpointOverlay = ({ messageTs }: CheckpointOverlayProps) => {
 								style={{
 									cursor: restoreWorkspaceDisabled ? "wait" : "pointer",
 								}}>
-								Restore Workspace Only
+								仅恢复工作区
 							</VSCodeButton>
-							<p>Restores your project's files to a snapshot taken at this point (task may become out of sync)</p>
+							<p>将项目文件恢复到此时间点的快照（任务可能会不同步）</p>
 						</RestoreOption>
 					</RestoreConfirmTooltip>
 				)}

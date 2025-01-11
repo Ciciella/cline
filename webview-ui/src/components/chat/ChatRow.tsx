@@ -959,7 +959,7 @@ export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifi
 											cursor: seeNewChangesDisabled ? "wait" : "pointer",
 										}}>
 										<i className="codicon codicon-new-file" style={{ marginRight: 6 }} />
-										See new changes
+										查看新更改
 									</SuccessButton>
 								</div>
 							)}
@@ -1027,7 +1027,7 @@ export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifi
 										fontSize: "12px",
 										textTransform: "uppercase",
 									}}>
-									Response
+									响应
 								</div>
 								<CodeAccordian
 									code={message.text}
@@ -1127,7 +1127,7 @@ export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifi
 														cursor: seeNewChangesDisabled ? "wait" : "pointer",
 													}}
 												/>
-												See new changes
+												查看新更改
 											</SuccessButton>
 										</div>
 									)}
