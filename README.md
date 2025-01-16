@@ -1,7 +1,7 @@
 # AI Code 代码编程助手 🤖
 
 <p align="center">
-  <img src="assets/docs/demo2.gif" width="100%" />
+  <img src="assets/docs/shouye.jpg" width="100%" />
 </p>
 
 
@@ -59,6 +59,7 @@ AI code可以直接在你的编辑器中创建和编辑文件，向你展示更�
 
 AI code所做的所有更改都记录在你文件的时间轴中，提供了一种简单的方法来跟踪和还原修改（如果需要）。
 
+<img width="360" src="assets/docs/shezhi-min.jpg">
 
 ### 分析图像和浏览器截图
 
@@ -68,7 +69,7 @@ AI code还可以使用无头浏览器检查任何网站，例如localhost，允�
 
 
 
-<!-- <img width="360" src="https://gitee.com/nulifendou99/ai-code/raw/master/assets/docs/gongnengjieshao.png"> -->
+<img width="360" src="assets/docs/yinyong.png">
 
 ### 添加上下文
 
@@ -79,7 +80,7 @@ AI code还可以使用无头浏览器检查任何网站，例如localhost，允�
 
 ### 检查点：比较和恢复
 
-当 Cline 处理任务时，扩展会在每一步拍摄你的工作区快照。你可以使用“比较”按钮查看快照和当前工作区之间的差异，并使用“恢复”按钮回滚到该点。
+当 AI Code 处理任务时，扩展会在每一步拍摄你的工作区快照。你可以使用“比较”按钮查看快照和当前工作区之间的差异，并使用“恢复”按钮回滚到该点。
 
 例如，当使用本地 Web 服务器时，你可以使用“仅恢复工作区”快速测试应用程序的不同版本，然后在找到要继续构建的版本时使用“恢复任务和工作区”。这让你可以安全地探索不同的方法而不会丢失进度。
 
