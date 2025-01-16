@@ -1,7 +1,7 @@
 # AI Code 代码编程助手 🤖
 
 <p align="center">
-  <img src="assets/docs/shouye.jpg" width="100%" />
+  <img src="https://gitee.com/nulifendou99/ai-code/raw/master/assets/docs/shouye.jpg" width="100%" />
 </p>
 
 
@@ -59,7 +59,7 @@ AI code可以直接在你的编辑器中创建和编辑文件，向你展示更�
 
 AI code所做的所有更改都记录在你文件的时间轴中，提供了一种简单的方法来跟踪和还原修改（如果需要）。
 
-<img width="360" src="assets/docs/shezhi-min.jpg">
+<img width="360" src="https://gitee.com/nulifendou99/ai-code/raw/master/assets/docs/shezhi-min.jpg">
 
 ### 分析图像和浏览器截图
 
@@ -69,7 +69,7 @@ AI code还可以使用无头浏览器检查任何网站，例如localhost，允�
 
 
 
-<img width="360" src="assets/docs/yinyong.png">
+<img width="360" src="https://gitee.com/nulifendou99/ai-code/raw/master/assets/docs/yinyong.png">
 
 ### 添加上下文
 
