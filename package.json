@@ -56,7 +56,7 @@
 				{
 					"id": "ai-code-dev-ActivityBar",
 					"title": "AI Code",
-					"icon": "$(robot)"
+					"icon": "assets/icons/icon.png"
 				}
 			]
 		},
