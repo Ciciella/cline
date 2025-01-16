@@ -18,7 +18,9 @@
 
 看到可以改进的地方了吗？请随时直接创建一个拉取请求！无论是修正一个错字还是添加一个很酷的新 AI 功能，我们都喜欢惊喜（好的那种，不是“undefined is not a function”那种）。
 
-如果您计划开发一个更大的功能，请先创建一个问题，以便我们讨论它是否符合 Cline 的愿景。
+We also welcome contributions to our [documentation](https://github.com/cline/cline/tree/main/docs)! Whether it's fixing typos, improving existing guides, or creating new educational content - we'd love to build a community-driven repository of resources that helps everyone get the most out of Cline. You can start by diving into `/docs` and looking for areas that need improvement.
+
+If you're planning to work on a bigger feature, please create a [feature request](https://github.com/cline/cline/discussions/categories/feature-requests?discussions_q=is%3Aopen+category%3A%22Feature+Requests%22+sort%3Atop) first so we can discuss whether it aligns with Cline's vision.
 
 ## Development Setup
 

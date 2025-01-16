@@ -110,10 +110,22 @@ const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 					environments)
 				</li>
 			</ul>*/}
+			<div
+				style={{
+					height: "1px",
+					background: "var(--vscode-foreground)",
+					opacity: 0.1,
+					margin: "8px 0",
+				}}
+			/>
 			{/* <p style={{ margin: "0" }}>
-				加入
+				Join our{" "}
 				<VSCodeLink style={{ display: "inline" }} href="https://discord.gg/cline">
-					discord.gg/cline
+					discord
+				</VSCodeLink>{" "}
+				or{" "}
+				<VSCodeLink style={{ display: "inline" }} href="https://www.reddit.com/r/cline/">
+					r/cline
 				</VSCodeLink>
 				获取更多更新！
 			</p> */}
