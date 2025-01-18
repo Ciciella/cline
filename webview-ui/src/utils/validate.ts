@@ -38,6 +38,11 @@ export function validateApiConfiguration(apiConfiguration?: ApiConfiguration): s
 					return "您必须提供有效的API密钥或选择不同的提供商。"
 				}
 				break
+			case "mistral":
+				if (!apiConfiguration.mistralApiKey) {
+					return "您必须提供有效的API密钥或选择不同的提供商。"
+				}
+				break
 			case "openai":
 				if (!apiConfiguration.openAiBaseUrl || !apiConfiguration.openAiApiKey || !apiConfiguration.openAiModelId) {
 					return "您必须提供有效的基础URL、API密钥和模型ID。"

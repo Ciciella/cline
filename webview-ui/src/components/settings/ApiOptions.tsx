@@ -21,6 +21,8 @@ import {
 	deepSeekModels,
 	geminiDefaultModelId,
 	geminiModels,
+	mistralDefaultModelId,
+	mistralModels,
 	openAiModelInfoSaneDefaults,
 	openAiNativeDefaultModelId,
 	openAiNativeModels,
@@ -148,6 +150,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 					<VSCodeOption value="anthropic">Anthropic</VSCodeOption>
 					<VSCodeOption value="gemini">Google Gemini</VSCodeOption>
 					<VSCodeOption value="deepseek">DeepSeek</VSCodeOption>
+					<VSCodeOption value="mistral">Mistral</VSCodeOption>
 					<VSCodeOption value="vertex">GCP Vertex AI</VSCodeOption>
 					<VSCodeOption value="bedrock">AWS Bedrock</VSCodeOption>
 					<VSCodeOption value="openai-native">OpenAI</VSCodeOption>
@@ -261,6 +264,37 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 								href="https://www.deepseek.com/"
 								style={{ display: "inline", fontSize: "inherit" }}>
 								您可以在此处注册以获取 DeepSeek API 密钥。
+							</VSCodeLink>
+						)}
+					</p>
+				</div>
+			)}
+
+			{selectedProvider === "mistral" && (
+				<div>
+					<VSCodeTextField
+						value={apiConfiguration?.mistralApiKey || ""}
+						style={{ width: "100%" }}
+						type="password"
+						onInput={handleInputChange("mistralApiKey")}
+						placeholder="输入API密钥...">
+						<span style={{ fontWeight: 500 }}>Mistral API Key</span>
+					</VSCodeTextField>
+					<p
+						style={{
+							fontSize: "12px",
+							marginTop: 3,
+							color: "var(--vscode-descriptionForeground)",
+						}}>
+						此密钥存储在本地，仅用于从此扩展进行 API 请求。
+						{!apiConfiguration?.mistralApiKey && (
+							<VSCodeLink
+								href="https://console.mistral.ai/codestral"
+								style={{
+									display: "inline",
+									fontSize: "inherit",
+								}}>
+								您可以在此处注册以获取 Mistral API 密钥。
 							</VSCodeLink>
 						)}
 					</p>
@@ -712,6 +746,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 							{selectedProvider === "gemini" && createDropdown(geminiModels)}
 							{selectedProvider === "openai-native" && createDropdown(openAiNativeModels)}
 							{selectedProvider === "deepseek" && createDropdown(deepSeekModels)}
+							{selectedProvider === "mistral" && createDropdown(mistralModels)}
 						</div>
 
 						<ModelInfoView
@@ -920,6 +955,8 @@ export function normalizeApiConfiguration(apiConfiguration?: ApiConfiguration) {
 			return getProviderData(openAiNativeModels, openAiNativeDefaultModelId)
 		case "deepseek":
 			return getProviderData(deepSeekModels, deepSeekDefaultModelId)
+		case "mistral":
+			return getProviderData(mistralModels, mistralDefaultModelId)
 		case "openrouter":
 			return {
 				selectedProvider: provider,
