@@ -176,7 +176,7 @@ export const openRouterDefaultModelInfo: ModelInfo = {
 	cacheWritesPrice: 3.75,
 	cacheReadsPrice: 0.3,
 	description:
-		"The new Claude 3.5 Sonnet delivers better-than-Opus capabilities, faster-than-Sonnet speeds, at the same Sonnet prices. Sonnet is particularly good at:\n\n- Coding: New Sonnet scores ~49% on SWE-Bench Verified, higher than the last best score, and without any fancy prompt scaffolding\n- Data science: Augments human data science expertise; navigates unstructured data while using multiple tools for insights\n- Visual processing: excelling at interpreting charts, graphs, and images, accurately transcribing text to derive insights beyond just the text alone\n- Agentic tasks: exceptional tool use, making it great at agentic tasks (i.e. complex, multi-step problem solving tasks that require engaging with other systems)\n\n#multimodal\n\n_This is a faster endpoint, made available in collaboration with Anthropic, that is self-moderated: response moderation happens on the provider's side instead of OpenRouter's. For requests that pass moderation, it's identical to the [Standard](/anthropic/claude-3.5-sonnet) variant._",
+		"新的 Claude 3.5 Sonnet 提供了比 Opus 更强的能力，比 Sonnet 更快的速度，且价格与 Sonnet 相同。Sonnet 特别擅长：\n\n- 编程：新版 Sonnet 在 SWE-Bench Verified 测试中得分约49%，超过了之前的最高分，且无需任何特殊的提示工程\n- 数据科学：增强人类的数据科学专业知识；能够处理非结构化数据，同时使用多种工具获取洞察\n- 视觉处理：擅长解读图表、图形和图像，能够准确转录文本并获得超越文本本身的见解\n- 代理任务：出色的工具使用能力，使其在代理任务方面表现卓越（即需要与其他系统交互的复杂多步骤问题解决任务）\n\n#多模态\n\n_这是与 Anthropic 合作推出的更快速端点，采用自我审核：响应审核在提供方而不是 OpenRouter 端进行。对于通过审核的请求，其功能与[标准版](/anthropic/claude-3.5-sonnet)完全相同。_",
 }
 
 // Vertex AI

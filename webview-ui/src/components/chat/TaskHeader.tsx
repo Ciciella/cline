@@ -230,7 +230,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 											backgroundColor: "var(--vscode-badge-background)",
 										}}
 										onClick={() => setIsTextExpanded(!isTextExpanded)}>
-										See more
+										查看更多
 									</div>
 								</div>
 							)}

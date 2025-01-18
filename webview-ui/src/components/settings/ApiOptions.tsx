@@ -472,12 +472,12 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage }: 
 						<VSCodeLink
 							href="https://cloud.google.com/vertex-ai/generative-ai/docs/partner-models/use-claude#before_you_begin"
 							style={{ display: "inline", fontSize: "inherit" }}>
-							{"1) create a Google Cloud account › enable the Vertex AI API › enable the desired Claude models,"}
+							{"1) 创建 Google Cloud 账户 › 启用 Vertex AI API › 启用所需的 Claude 模型，"}
 						</VSCodeLink>{" "}
 						<VSCodeLink
 							href="https://cloud.google.com/docs/authentication/provide-credentials-adc#google-idp"
 							style={{ display: "inline", fontSize: "inherit" }}>
-							{"2) install the Google Cloud CLI › configure Application Default Credentials."}
+							{"2) 安装 Google Cloud CLI › 配置应用程序默认凭据。"}
 						</VSCodeLink>
 					</p>
 				</div>
