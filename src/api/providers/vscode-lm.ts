@@ -7,7 +7,7 @@ import { convertToVsCodeLmMessages } from "../transform/vscode-lm-format"
 import { SELECTOR_SEPARATOR, stringifyVsCodeLmModelSelector } from "../../shared/vsCodeSelectorUtils"
 import { ApiHandlerOptions, ModelInfo, openAiModelInfoSaneDefaults } from "../../shared/api"
 
-// Cline does not update VSCode type definitions or engine requirements to maintain compatibility.
+// AI Code does not update VSCode type definitions or engine requirements to maintain compatibility.
 // This declaration (as seen in src/integrations/TerminalManager.ts) provides types for the Language Model API in newer versions of VSCode.
 // Extracted from https://github.com/microsoft/vscode/blob/131ee0ef660d600cd0a7e6058375b281553abe20/src/vscode-dts/vscode.d.ts
 declare module "vscode" {
@@ -100,16 +100,16 @@ declare module "vscode" {
 }
 
 /**
- * Handles interaction with VS Code's Language Model API for chat-based operations.
- * This handler implements the ApiHandler interface to provide VS Code LM specific functionality.
+ * 处理与 VS Code 的语言模型 API 的交互，用于基于聊天的操作。
+ * 此处理程序实现了 ApiHandler 接口，以提供特定于 VS Code LM 的功能。
  *
  * @implements {ApiHandler}
  *
  * @remarks
- * The handler manages a VS Code language model chat client and provides methods to:
- * - Create and manage chat client instances
- * - Stream messages using VS Code's Language Model API
- * - Retrieve model information
+ * 处理程序管理 VS Code 语言模型聊天客户端，并提供以下方法：
+ * - 创建和管理聊天客户端实例
+ * - 使用 VS Code 的语言模型 API 流式传输消息
+ * - 检索模型信息
  *
  * @example
  * ```typescript
@@ -118,9 +118,9 @@ declare module "vscode" {
  * };
  * const handler = new VsCodeLmHandler(options);
  *
- * // Stream a conversation
- * const systemPrompt = "You are a helpful assistant";
- * const messages = [{ role: "user", content: "Hello!" }];
+ * // 流式传输对话
+ * const systemPrompt = "你是一个有帮助的助手";
+ * const messages = [{ role: "user", content: "你好!" }];
  * for await (const chunk of handler.createMessage(systemPrompt, messages)) {
  *   console.log(chunk);
  * }
@@ -139,33 +139,33 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 		this.currentRequestCancellation = null
 
 		try {
-			// Listen for model changes and reset client
+			// 监听模型更改并重置客户端
 			this.disposable = vscode.workspace.onDidChangeConfiguration((event) => {
 				if (event.affectsConfiguration("lm")) {
 					try {
 						this.client = null
 						this.ensureCleanState()
 					} catch (error) {
-						console.error("Error during configuration change cleanup:", error)
+						console.error("配置更改清理期间出错:", error)
 					}
 				}
 			})
 		} catch (error) {
-			// Ensure cleanup if constructor fails
+			// 确保在构造函数失败时进行清理
 			this.dispose()
 
 			throw new Error(
-				`Cline <Language Model API>: Failed to initialize handler: ${error instanceof Error ? error.message : "Unknown error"}`,
+				`AI Code <Language Model API>: 初始化处理程序失败: ${error instanceof Error ? error.message : "未知错误"}`,
 			)
 		}
 	}
 
 	/**
-	 * Creates a language model chat client based on the provided selector.
+	 * 根据提供的选择器创建语言模型聊天客户端。
 	 *
-	 * @param selector - Selector criteria to filter language model chat instances
-	 * @returns Promise resolving to the first matching language model chat instance
-	 * @throws Error when no matching models are found with the given selector
+	 * @param selector - 用于筛选语言模型聊天实例的选择器条件
+	 * @returns Promise 解析为第一个匹配的语言模型聊天实例
+	 * @throws Error 当没有找到匹配的模型时
 	 *
 	 * @example
 	 * const selector = { vendor: "copilot", family: "gpt-4o" };
@@ -175,12 +175,12 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 		try {
 			const models = await vscode.lm.selectChatModels(selector)
 
-			// Use first available model or create a minimal model object
+			// 使用第一个可用模型或创建一个最小模型对象
 			if (models && Array.isArray(models) && models.length > 0) {
 				return models[0]
 			}
 
-			// Create a minimal model if no models are available
+			// 如果没有可用模型，则创建一个最小模型
 			return {
 				id: "default-lm",
 				name: "Default Language Model",
@@ -189,23 +189,23 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 				version: "1.0",
 				maxInputTokens: 8192,
 				sendRequest: async (messages, options, token) => {
-					// Provide a minimal implementation
+					// 提供一个最小的实现
 					return {
 						stream: (async function* () {
 							yield new vscode.LanguageModelTextPart(
-								"Language model functionality is limited. Please check VS Code configuration.",
+								"语言模型功能有限。请检查 VS Code 配置。",
 							)
 						})(),
 						text: (async function* () {
-							yield "Language model functionality is limited. Please check VS Code configuration."
+							yield "语言模型功能有限。请检查 VS Code 配置。"
 						})(),
 					}
 				},
 				countTokens: async () => 0,
 			}
 		} catch (error) {
-			const errorMessage = error instanceof Error ? error.message : "Unknown error"
-			throw new Error(`Cline <Language Model API>: Failed to select model: ${errorMessage}`)
+			const errorMessage = error instanceof Error ? error.message : "未知错误"
+			throw new Error(`AI Code <Language Model API>: 选择模型失败: ${errorMessage}`)
 		}
 	}
 
@@ -237,66 +237,66 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 	}
 
 	private async countTokens(text: string | vscode.LanguageModelChatMessage): Promise<number> {
-		// Check for required dependencies
+		// 检查所需的依赖项
 		if (!this.client) {
-			console.warn("Cline <Language Model API>: No client available for token counting")
+			console.warn("AI Code <Language Model API>: 没有可用于令牌计数的客户端")
 			return 0
 		}
 
 		if (!this.currentRequestCancellation) {
-			console.warn("Cline <Language Model API>: No cancellation token available for token counting")
+			console.warn("AI Code <Language Model API>: 没有可用于令牌计数的取消令牌")
 			return 0
 		}
 
-		// Validate input
+		// 验证输入
 		if (!text) {
-			console.debug("Cline <Language Model API>: Empty text provided for token counting")
+			console.debug("AI Code <Language Model API>: 提供了空文本进行令牌计数")
 			return 0
 		}
 
 		try {
-			// Handle different input types
+			// 处理不同的输入类型
 			let tokenCount: number
 
 			if (typeof text === "string") {
 				tokenCount = await this.client.countTokens(text, this.currentRequestCancellation.token)
 			} else if (text instanceof vscode.LanguageModelChatMessage) {
-				// For chat messages, ensure we have content
+				// 对于聊天消息，确保我们有内容
 				if (!text.content || (Array.isArray(text.content) && text.content.length === 0)) {
-					console.debug("Cline <Language Model API>: Empty chat message content")
+					console.debug("AI Code <Language Model API>: 聊天消息内容为空")
 					return 0
 				}
 				tokenCount = await this.client.countTokens(text, this.currentRequestCancellation.token)
 			} else {
-				console.warn("Cline <Language Model API>: Invalid input type for token counting")
+				console.warn("AI Code <Language Model API>: 令牌计数的无效输入类型")
 				return 0
 			}
 
-			// Validate the result
+			// 验证结果
 			if (typeof tokenCount !== "number") {
-				console.warn("Cline <Language Model API>: Non-numeric token count received:", tokenCount)
+				console.warn("AI Code <Language Model API>: 接收到的令牌计数非数字:", tokenCount)
 				return 0
 			}
 
 			if (tokenCount < 0) {
-				console.warn("Cline <Language Model API>: Negative token count received:", tokenCount)
+				console.warn("AI Code <Language Model API>: 接收到的令牌计数为负:", tokenCount)
 				return 0
 			}
 
 			return tokenCount
 		} catch (error) {
-			// Handle specific error types
+			// 处理特定的错误类型
 			if (error instanceof vscode.CancellationError) {
-				console.debug("Cline <Language Model API>: Token counting cancelled by user")
+				console.debug("AI Code <Language Model API>: 用户取消了令牌计数")
 				return 0
 			}
 
-			const errorMessage = error instanceof Error ? error.message : "Unknown error"
-			console.warn("Cline <Language Model API>: Token counting failed:", errorMessage)
+			const errorMessage = error instanceof Error ? error.message : "未知错误"
+			console.warn("AI Code <Language Model API>: 令牌计数失败:", errorMessage)
 
-			// Log additional error details if available
+			// 如果有错误详细信息，则记录
 			if (error instanceof Error && error.stack) {
-				console.debug("Token counting error stack:", error.stack)
+				console.debug("令牌计数错误堆栈:", error.stack)
 			}
 
 			return 0 // Fallback to prevent stream interruption
@@ -324,21 +324,21 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 
 	private async getClient(): Promise<vscode.LanguageModelChat> {
 		if (!this.client) {
-			console.debug("Cline <Language Model API>: Getting client with options:", {
+			console.debug("AI Code <Language Model API>: 获取客户端的选项:", {
 				vsCodeLmModelSelector: this.options.vsCodeLmModelSelector,
 				hasOptions: !!this.options,
 				selectorKeys: this.options.vsCodeLmModelSelector ? Object.keys(this.options.vsCodeLmModelSelector) : [],
 			})
 
 			try {
-				// Use default empty selector if none provided to get all available models
+				// 如果没有提供选择器，则使用默认的空选择器以获取所有可用模型
 				const selector = this.options?.vsCodeLmModelSelector || {}
-				console.debug("Cline <Language Model API>: Creating client with selector:", selector)
+				console.debug("AI Code <Language Model API>: 使用选择器创建客户端:", selector)
 				this.client = await this.createClient(selector)
 			} catch (error) {
-				const message = error instanceof Error ? error.message : "Unknown error"
-				console.error("Cline <Language Model API>: Client creation failed:", message)
-				throw new Error(`Cline <Language Model API>: Failed to create client: ${message}`)
+				const message = error instanceof Error ? error.message : "未知错误"
+				console.error("AI Code <Language Model API>: 客户端创建失败:", message)
+				throw new Error(`AI Code <Language Model API>: 创建客户端失败: ${message}`)
 			}
 		}
 
@@ -438,13 +438,12 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 		let accumulatedText: string = ""
 
 		try {
-			// Create the response stream with minimal required options
+			// 创建具有最小必需选项的响应流
 			const requestOptions: vscode.LanguageModelChatRequestOptions = {
-				justification: `Cline would like to use '${client.name}' from '${client.vendor}', Click 'Allow' to proceed.`,
+				justification: `AI Code 想要使用来自 '${client.vendor}' 的 '${client.name}'，点击 '允许' 继续。`,
 			}
-
-			// Note: Tool support is currently provided by the VSCode Language Model API directly
-			// Extensions can register tools using vscode.lm.registerTool()
+			// 注意: 工具支持目前由 VSCode 语言模型 API 直接提供
+			// 扩展可以使用 vscode.lm.registerTool() 注册工具
 
 			const response: vscode.LanguageModelChatResponse = await client.sendRequest(
 				vsCodeLmMessages,
@@ -452,12 +451,12 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 				this.currentRequestCancellation.token,
 			)
 
-			// Consume the stream and handle both text and tool call chunks
+			// 消费流并处理文本和工具调用块
 			for await (const chunk of response.stream) {
 				if (chunk instanceof vscode.LanguageModelTextPart) {
-					// Validate text part value
+					// 验证文本部分的值
 					if (typeof chunk.value !== "string") {
-						console.warn("Cline <Language Model API>: Invalid text part value received:", chunk.value)
+						console.warn("AI Code <Language Model API>: 收到无效的文本部分值:", chunk.value)
 						continue
 					}
 
@@ -468,24 +467,24 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 					}
 				} else if (chunk instanceof vscode.LanguageModelToolCallPart) {
 					try {
-						// Validate tool call parameters
+						// 验证工具调用参数
 						if (!chunk.name || typeof chunk.name !== "string") {
-							console.warn("Cline <Language Model API>: Invalid tool name received:", chunk.name)
+							console.warn("AI Code <Language Model API>: 收到无效的工具名称:", chunk.name)
 							continue
 						}
 
 						if (!chunk.callId || typeof chunk.callId !== "string") {
-							console.warn("Cline <Language Model API>: Invalid tool callId received:", chunk.callId)
+							console.warn("AI Code <Language Model API>: 收到无效的工具调用ID:", chunk.callId)
 							continue
 						}
 
-						// Ensure input is a valid object
+						// 确保输入是有效的对象
 						if (!chunk.input || typeof chunk.input !== "object") {
-							console.warn("Cline <Language Model API>: Invalid tool input received:", chunk.input)
+							console.warn("AI Code <Language Model API>: 收到无效的工具输入:", chunk.input)
 							continue
 						}
 
-						// Convert tool calls to text format with proper error handling
+						// 将工具调用转换为文本格式并进行适当的错误处理
 						const toolCall = {
 							type: "tool_call",
 							name: chunk.name,
@@ -496,8 +495,8 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 						const toolCallText = JSON.stringify(toolCall)
 						accumulatedText += toolCallText
 
-						// Log tool call for debugging
-						console.debug("Cline <Language Model API>: Processing tool call:", {
+						// 记录工具调用以进行调试
+						console.debug("AI Code <Language Model API>: 处理工具调用:", {
 							name: chunk.name,
 							callId: chunk.callId,
 							inputSize: JSON.stringify(chunk.input).length,
@@ -508,12 +507,12 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 							text: toolCallText,
 						}
 					} catch (error) {
-						console.error("Cline <Language Model API>: Failed to process tool call:", error)
-						// Continue processing other chunks even if one fails
+						console.error("AI Code <Language Model API>: 处理工具调用失败:", error)
+						// 即使一个失败也继续处理其他块
 						continue
 					}
 				} else {
-					console.warn("Cline <Language Model API>: Unknown chunk type received:", chunk)
+					console.warn("AI Code <Language Model API>: 收到未知的块类型:", chunk)
 				}
 			}
 
@@ -529,38 +528,37 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 			}
 		} catch (error: unknown) {
 			this.ensureCleanState()
-
 			if (error instanceof vscode.CancellationError) {
-				throw new Error("Cline <Language Model API>: Request cancelled by user")
+				throw new Error("AI Code <Language Model API>: 用户取消了请求")
 			}
 
 			if (error instanceof Error) {
-				console.error("Cline <Language Model API>: Stream error details:", {
+				console.error("AI Code <Language Model API>: 流错误详情:", {
 					message: error.message,
 					stack: error.stack,
 					name: error.name,
 				})
 
-				// Return original error if it's already an Error instance
+				// 如果已经是 Error 实例，则返回原始错误
 				throw error
 			} else if (typeof error === "object" && error !== null) {
-				// Handle error-like objects
+				// 处理类似错误的对象
 				const errorDetails = JSON.stringify(error, null, 2)
-				console.error("Cline <Language Model API>: Stream error object:", errorDetails)
-				throw new Error(`Cline <Language Model API>: Response stream error: ${errorDetails}`)
+				console.error("AI Code <Language Model API>: 流错误对象:", errorDetails)
+				throw new Error(`AI Code <Language Model API>: 响应流错误: ${errorDetails}`)
 			} else {
-				// Fallback for unknown error types
+				// 未知错误类型的回退处理
 				const errorMessage = String(error)
-				console.error("Cline <Language Model API>: Unknown stream error:", errorMessage)
-				throw new Error(`Cline <Language Model API>: Response stream error: ${errorMessage}`)
+				console.error("AI Code <Language Model API>: 未知流错误:", errorMessage)
+				throw new Error(`AI Code <Language Model API>: 响应流错误: ${errorMessage}`)
 			}
 		}
 	}
 
-	// Return model information based on the current client state
+	// 根据当前客户端状态返回模型信息
 	getModel(): { id: string; info: ModelInfo } {
 		if (this.client) {
-			// Validate client properties
+			// 验证客户端属性
 			const requiredProps = {
 				id: this.client.id,
 				vendor: this.client.vendor,
@@ -569,47 +567,47 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 				maxInputTokens: this.client.maxInputTokens,
 			}
 
-			// Log any missing properties for debugging
+			// 记录缺失的属性以进行调试
 			for (const [prop, value] of Object.entries(requiredProps)) {
 				if (!value && value !== 0) {
-					console.warn(`Cline <Language Model API>: Client missing ${prop} property`)
+					console.warn(`AI Code <Language Model API>: 客户端缺少 ${prop} 属性`)
 				}
 			}
 
-			// Construct model ID using available information
+			// 使用可用信息构建模型 ID
 			const modelParts = [this.client.vendor, this.client.family, this.client.version].filter(Boolean)
 
 			const modelId = this.client.id || modelParts.join(SELECTOR_SEPARATOR)
 
-			// Build model info with conservative defaults for missing values
+			// 使用保守的默认值构建模型信息
 			const modelInfo: ModelInfo = {
-				maxTokens: -1, // Unlimited tokens by default
+				maxTokens: -1, // 默认情况下无限制令牌
 				contextWindow:
 					typeof this.client.maxInputTokens === "number"
 						? Math.max(0, this.client.maxInputTokens)
 						: openAiModelInfoSaneDefaults.contextWindow,
-				supportsImages: false, // VSCode Language Model API currently doesn't support image inputs
+				supportsImages: false, // VSCode 语言模型 API 当前不支持图像输入
 				supportsPromptCache: true,
 				inputPrice: 0,
 				outputPrice: 0,
-				description: `VSCode Language Model: ${modelId}`,
+				description: `VSCode 语言模型: ${modelId}`,
 			}
 
 			return { id: modelId, info: modelInfo }
 		}
 
-		// Fallback when no client is available
+		// 当没有客户端可用时的回退处理
 		const fallbackId = this.options.vsCodeLmModelSelector
 			? stringifyVsCodeLmModelSelector(this.options.vsCodeLmModelSelector)
 			: "vscode-lm"
 
-		console.debug("Cline <Language Model API>: No client available, using fallback model info")
+		console.debug("AI Code <Language Model API>: 没有可用客户端，使用回退模型信息")
 
 		return {
 			id: fallbackId,
 			info: {
 				...openAiModelInfoSaneDefaults,
-				description: `VSCode Language Model (Fallback): ${fallbackId}`,
+				description: `VSCode 语言模型 (回退): ${fallbackId}`,
 			},
 		}
 	}
@@ -631,7 +629,7 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 			return result
 		} catch (error) {
 			if (error instanceof Error) {
-				throw new Error(`VSCode LM completion error: ${error.message}`)
+				throw new Error(`VSCode LM 完成错误: ${error.message}`)
 			}
 			throw error
 		}

@@ -2,28 +2,28 @@ import { Anthropic } from "@anthropic-ai/sdk"
 import * as vscode from "vscode"
 
 /**
- * Safely converts a value into a plain object.
+ * 安全地将值转换为普通对象。
  */
 function asObjectSafe(value: any): object {
-	// Handle null/undefined
+	// 处理 null/undefined
 	if (!value) {
 		return {}
 	}
 
 	try {
-		// Handle strings that might be JSON
+		// 处理可能是 JSON 的字符串
 		if (typeof value === "string") {
 			return JSON.parse(value)
 		}
 
-		// Handle pre-existing objects
+		// 处理已存在的对象
 		if (typeof value === "object") {
 			return Object.assign({}, value)
 		}
 
 		return {}
 	} catch (error) {
-		console.warn("Cline <Language Model API>: Failed to parse object:", error)
+		console.warn("AI Code <Language Model API>: 解析对象失败:", error)
 		return {}
 	}
 }
@@ -34,7 +34,7 @@ export function convertToVsCodeLmMessages(
 	const vsCodeLmMessages: vscode.LanguageModelChatMessage[] = []
 
 	for (const anthropicMessage of anthropicMessages) {
-		// Handle simple string messages
+		// 处理简单的字符串消息
 		if (typeof anthropicMessage.content === "string") {
 			vsCodeLmMessages.push(
 				anthropicMessage.role === "assistant"
@@ -44,7 +44,7 @@ export function convertToVsCodeLmMessages(
 			continue
 		}
 
-		// Handle complex message structures
+		// 处理复杂的消息结构
 		switch (anthropicMessage.role) {
 			case "user": {
 				const { nonToolMessages, toolMessages } = anthropicMessage.content.reduce<{
@@ -62,18 +62,18 @@ export function convertToVsCodeLmMessages(
 					{ nonToolMessages: [], toolMessages: [] },
 				)
 
-				// Process tool messages first then non-tool messages
+				// 先处理工具消息，然后处理非工具消息
 				const contentParts = [
-					// Convert tool messages to ToolResultParts
+					// 将工具消息转换为 ToolResultParts
 					...toolMessages.map((toolMessage) => {
-						// Process tool result content into TextParts
+						// 将工具结果内容处理为 TextParts
 						const toolContentParts: vscode.LanguageModelTextPart[] =
 							typeof toolMessage.content === "string"
 								? [new vscode.LanguageModelTextPart(toolMessage.content)]
 								: (toolMessage.content?.map((part) => {
 										if (part.type === "image") {
 											return new vscode.LanguageModelTextPart(
-												`[Image (${part.source?.type || "Unknown source-type"}): ${part.source?.media_type || "unknown media-type"} not supported by VSCode LM API]`,
+												`[Image (${part.source?.type || "Unknown source-type"}): ${part.source?.media_type || "unknown media-type"} 不被 VSCode LM API 支持]`,
 											)
 										}
 										return new vscode.LanguageModelTextPart(part.text)
@@ -82,18 +82,18 @@ export function convertToVsCodeLmMessages(
 						return new vscode.LanguageModelToolResultPart(toolMessage.tool_use_id, toolContentParts)
 					}),
 
-					// Convert non-tool messages to TextParts after tool messages
+					// 在工具消息之后将非工具消息转换为 TextParts
 					...nonToolMessages.map((part) => {
 						if (part.type === "image") {
 							return new vscode.LanguageModelTextPart(
-								`[Image (${part.source?.type || "Unknown source-type"}): ${part.source?.media_type || "unknown media-type"} not supported by VSCode LM API]`,
+								`[Image (${part.source?.type || "Unknown source-type"}): ${part.source?.media_type || "unknown media-type"} 不被 VSCode LM API 支持]`,
 							)
 						}
 						return new vscode.LanguageModelTextPart(part.text)
 					}),
 				]
 
-				// Add single user message with all content parts
+				// 添加包含所有内容部分的用户消息
 				vsCodeLmMessages.push(vscode.LanguageModelChatMessage.User(contentParts))
 				break
 			}
@@ -114,9 +114,9 @@ export function convertToVsCodeLmMessages(
 					{ nonToolMessages: [], toolMessages: [] },
 				)
 
-				// Process tool messages first then non-tool messages
+				// 先处理工具消息，然后处理非工具消息
 				const contentParts = [
-					// Convert tool messages to ToolCallParts first
+					// 首先将工具消息转换为 ToolCallParts
 					...toolMessages.map(
 						(toolMessage) =>
 							new vscode.LanguageModelToolCallPart(
@@ -126,16 +126,16 @@ export function convertToVsCodeLmMessages(
 							),
 					),
 
-					// Convert non-tool messages to TextParts after tool messages
+					// 在工具消息之后将非工具消息转换为 TextParts
 					...nonToolMessages.map((part) => {
 						if (part.type === "image") {
-							return new vscode.LanguageModelTextPart("[Image generation not supported by VSCode LM API]")
+							return new vscode.LanguageModelTextPart("[图片生成不被 VSCode LM API 支持]")
 						}
 						return new vscode.LanguageModelTextPart(part.text)
 					}),
 				]
 
-				// Add the assistant message to the list of messages
+				// 将助手消息添加到消息列表中
 				vsCodeLmMessages.push(vscode.LanguageModelChatMessage.Assistant(contentParts))
 				break
 			}
@@ -161,7 +161,7 @@ export async function convertToAnthropicMessage(
 ): Promise<Anthropic.Messages.Message> {
 	const anthropicRole: string | null = convertToAnthropicRole(vsCodeLmMessage.role)
 	if (anthropicRole !== "assistant") {
-		throw new Error("Cline <Language Model API>: Only assistant messages are supported.")
+		throw new Error("AI Code <Language Model API>: 仅支持助手消息。")
 	}
 
 	return {

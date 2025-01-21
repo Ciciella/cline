@@ -131,21 +131,21 @@
 			]
 		},
 		"configuration": {
-			"title": "Cline",
+			"title": "AI Code",
 			"properties": {
-				"cline.vsCodeLmModelSelector": {
+				"aiCode.vsCodeLmModelSelector": {
 					"type": "object",
 					"properties": {
 						"vendor": {
 							"type": "string",
-							"description": "The vendor of the language model (e.g. copilot)"
+							"description": "语言模型的供应商（例如：copilot）"
 						},
 						"family": {
 							"type": "string",
-							"description": "The family of the language model (e.g. gpt-4)"
+							"description": "语言模型的系列（例如：gpt-4）"
 						}
 					},
-					"description": "Settings for VSCode Language Model API"
+					"description": "VSCode语言模型API的设置"
 				}
 			}
 		}

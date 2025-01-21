@@ -94,7 +94,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 							setTextAreaDisabled(true)
 							setClineAsk("auto_approval_max_req_reached")
 							setEnableButtons(true)
-							setPrimaryButtonText("Proceed")
+							setPrimaryButtonText("继续")
 							setSecondaryButtonText("开始新任务")
 							break
 						case "followup":
@@ -666,7 +666,6 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 	}, [])
 	useEvent("wheel", handleWheel, window, { passive: true }) // passive improves scrolling performance
 
-	const { formatMessage } = useIntl();
 
 	const placeholderText = useMemo(() => {
 		const text = task ? "输入一条消息..." : "输入你的任务..."

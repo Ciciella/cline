@@ -259,7 +259,7 @@ export class Cline {
 				conversationHistoryDeletedRange: this.conversationHistoryDeletedRange,
 			})
 		} catch (error) {
-			console.error("Failed to save aicode messages:", error)
+			console.error("Failed to save ai code messages:", error)
 		}
 	}
 
@@ -3146,7 +3146,7 @@ export class Cline {
 		let details = ""
 
 		// It could be useful for cline to know if the user went from one or no file to another between messages, so we always include this context
-		details += "\n\n# VSCode可见文件"
+		details += "\n\n# VSCode Visible Files"
 		const visibleFiles = vscode.window.visibleTextEditors
 			?.map((editor) => editor.document?.uri?.fsPath)
 			.filter(Boolean)
@@ -3155,10 +3155,10 @@ export class Cline {
 		if (visibleFiles) {
 			details += `\n${visibleFiles}`
 		} else {
-			details += "\n(没有可见文件)"
+			details += "\n(No visible files)"
 		}
 
-		details += "\n\n# VSCode打开的标签页"
+		details += "\n\n# VSCode Open Tabs"
 		const openTabs = vscode.window.tabGroups.all
 			.flatMap((group) => group.tabs)
 			.map((tab) => (tab.input as vscode.TabInputText)?.uri?.fsPath)
@@ -3168,7 +3168,7 @@ export class Cline {
 		if (openTabs) {
 			details += `\n${openTabs}`
 		} else {
-			details += "\n(没有打开的标签页)"
+			details += "\n(No open tabs)"
 		}
 
 		const busyTerminals = this.terminalManager.getTerminals(true)
@@ -3213,12 +3213,12 @@ export class Cline {
 		let terminalDetails = ""
 		if (busyTerminals.length > 0) {
 			// terminals are cool, let's retrieve their output
-			terminalDetails += "\n\n# 活动运行的终端"
+			terminalDetails += "\n\n# Actively Running Terminals"
 			for (const busyTerminal of busyTerminals) {
-				terminalDetails += `\n## 原始命令: \`${busyTerminal.lastCommand}\``
+				terminalDetails += `\n## Original command: \`${busyTerminal.lastCommand}\``
 				const newOutput = this.terminalManager.getUnretrievedOutput(busyTerminal.id)
 				if (newOutput) {
-					terminalDetails += `\n### 新输出\n${newOutput}`
+					terminalDetails += `\n### New Output\n${newOutput}`
 				} else {
 					// details += `\n(Still running, no new output)` // don't want to show this right after running the command
 				}
@@ -3234,12 +3234,12 @@ export class Cline {
 				}
 			}
 			if (inactiveTerminalOutputs.size > 0) {
-				terminalDetails += "\n\n# 非活动终端"
+				terminalDetails += "\n\n# Inactive Terminals"
 				for (const [terminalId, newOutput] of inactiveTerminalOutputs) {
 					const inactiveTerminal = inactiveTerminals.find((t) => t.id === terminalId)
 					if (inactiveTerminal) {
 						terminalDetails += `\n## ${inactiveTerminal.lastCommand}`
-						terminalDetails += `\n### 新输出\n${newOutput}`
+						terminalDetails += `\n### New Output\n${newOutput}`
 					}
 				}
 			}
@@ -3273,11 +3273,11 @@ export class Cline {
 		details += `\n\n# Current Time\n${formatter.format(now)} (${timeZone}, UTC${timeZoneOffsetStr})`
 
 		if (includeFileDetails) {
-			details += `\n\n# 当前工作目录 (${cwd.toPosix()}) 文件\n`
+			details += `\n\n# Current Working Directory (${cwd.toPosix()}) Files\n`
 			const isDesktop = arePathsEqual(cwd, path.join(os.homedir(), "Desktop"))
 			if (isDesktop) {
 				// don't want to immediately access desktop since it would show permission popup
-				details += "(桌面文件不会自动显示。如有需要请使用 list_files 来浏览。)"
+				details += "(Desktop files not shown automatically. Use list_files to explore if needed.)"
 			} else {
 				const [files, didHitLimit] = await listFiles(cwd, true, 200)
 				const result = formatResponse.formatFilesList(cwd, files, didHitLimit)
