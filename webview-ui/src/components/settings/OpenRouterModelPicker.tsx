@@ -10,8 +10,13 @@ import { vscode } from "../../utils/vscode"
 import { highlight } from "../history/HistoryView"
 import { ModelInfoView, normalizeApiConfiguration } from "./ApiOptions"
 import { FormattedMessage } from 'react-intl';
+import { CODE_BLOCK_BG_COLOR } from "../common/CodeBlock"
 
-const OpenRouterModelPicker: React.FC = () => {
+export interface OpenRouterModelPickerProps {
+	isPopup?: boolean
+}
+
+const OpenRouterModelPicker: React.FC<OpenRouterModelPickerProps> = ({ isPopup }) => {
 	const { apiConfiguration, setApiConfiguration, openRouterModels } = useExtensionState()
 	const [searchTerm, setSearchTerm] = useState(apiConfiguration?.openRouterModelId || openRouterDefaultModelId)
 	const [isDropdownVisible, setIsDropdownVisible] = useState(false)
@@ -25,8 +30,10 @@ const OpenRouterModelPicker: React.FC = () => {
 		// could be setting invalid model id/undefined info but validation will catch it
 		setApiConfiguration({
 			...apiConfiguration,
-			openRouterModelId: newModelId,
-			openRouterModelInfo: openRouterModels[newModelId],
+			...{
+				openRouterModelId: newModelId,
+				openRouterModelInfo: openRouterModels[newModelId],
+			},
 		})
 		setSearchTerm(newModelId)
 	}
@@ -130,7 +137,7 @@ const OpenRouterModelPicker: React.FC = () => {
 	}, [selectedIndex])
 
 	return (
-		<>
+		<div style={{ width: "100%" }}>
 			<style>
 				{`
 				.model-item-highlight {
@@ -139,7 +146,7 @@ const OpenRouterModelPicker: React.FC = () => {
 				}
 				`}
 			</style>
-			<div>
+			<div style={{ display: "flex", flexDirection: "column" }}>
 				<label htmlFor="model-search">
 					<span style={{ fontWeight: 500 }}>Model</span>
 				</label>
@@ -205,6 +212,7 @@ const OpenRouterModelPicker: React.FC = () => {
 					modelInfo={selectedModelInfo}
 					isDescriptionExpanded={isDescriptionExpanded}
 					setIsDescriptionExpanded={setIsDescriptionExpanded}
+					isPopup={isPopup}
 				/>
 			) : (
 				<p
@@ -235,7 +243,7 @@ const OpenRouterModelPicker: React.FC = () => {
 					/>
 				</p>
 			)}
-		</>
+		</div>
 	)
 }
 
@@ -330,11 +338,13 @@ export const ModelDescriptionMarkdown = memo(
 		key,
 		isExpanded,
 		setIsExpanded,
+		isPopup,
 	}: {
 		markdown?: string
 		key: string
 		isExpanded: boolean
 		setIsExpanded: (isExpanded: boolean) => void
+		isPopup?: boolean
 	}) => {
 		const [reactContent, setMarkdown] = useRemark()
 		// const [isExpanded, setIsExpanded] = useState(false)
@@ -404,7 +414,7 @@ export const ModelDescriptionMarkdown = memo(
 									fontSize: "inherit",
 									paddingRight: 0,
 									paddingLeft: 3,
-									backgroundColor: "var(--vscode-sideBar-background)",
+									backgroundColor: isPopup ? CODE_BLOCK_BG_COLOR : "var(--vscode-sideBar-background)",
 								}}
 								onClick={() => setIsExpanded(true)}>
 								查看更多

@@ -1,5 +1,12 @@
-# 更新日志
+# Change Log
 
+## [3.2.0]
+
+- 添加计划/执行模式切换，让你在让AI Code开始工作之前计划任务
+- 通过聊天字段下方的新弹出菜单，轻松切换API提供商和模型
+- 添加VS Code LM API提供商，运行其他VS Code扩展提供的模型（例如GitHub Copilot）。感谢@julesmons，@RaySinner和@MrUbens的贡献！
+- 添加MCP服务器的开/关切换，当不使用时可以禁用它们。感谢@MrUbens！
+- 在MCP服务器中为单个工具添加自动批准选项。感谢@MrUbens！
 
 ## [3.1.9]
 

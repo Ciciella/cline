@@ -20,11 +20,11 @@ import { vscode } from "../../utils/vscode"
 import HistoryPreview from "../history/HistoryPreview"
 import { normalizeApiConfiguration } from "../settings/ApiOptions"
 import Announcement from "./Announcement"
+import AutoApproveMenu from "./AutoApproveMenu"
 import BrowserSessionRow from "./BrowserSessionRow"
 import ChatRow from "./ChatRow"
 import ChatTextArea from "./ChatTextArea"
 import TaskHeader from "./TaskHeader"
-import AutoApproveMenu from "./AutoApproveMenu"
 import { FormattedMessage, useIntl } from 'react-intl';
 
 interface ChatViewProps {
@@ -100,7 +100,14 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 						case "followup":
 							setTextAreaDisabled(isPartial)
 							setClineAsk("followup")
-							setEnableButtons(isPartial)
+							setEnableButtons(false)
+							// setPrimaryButtonText(undefined)
+							// setSecondaryButtonText(undefined)
+							break
+						case "plan_mode_response":
+							setTextAreaDisabled(isPartial)
+							setClineAsk("plan_mode_response")
+							setEnableButtons(false)
 							// setPrimaryButtonText(undefined)
 							// setSecondaryButtonText(undefined)
 							break
@@ -263,6 +270,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 				} else if (clineAsk) {
 					switch (clineAsk) {
 						case "followup":
+						case "plan_mode_response":
 						case "tool":
 						case "browser_action_launch":
 						case "command": // user can provide feedback to a tool or command use
@@ -661,11 +669,9 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 	const { formatMessage } = useIntl();
 
 	const placeholderText = useMemo(() => {
-		const text = task ? 
-			formatMessage({ id: "chatView.typeMessage", defaultMessage: "Type a message (@ to add context)..." }) : 
-			formatMessage({ id: "chatView.typeTask", defaultMessage: "Type your task here (@ to add context)..." });
-		return text;
-	}, [task, formatMessage]);
+		const text = task ? "输入一条消息..." : "输入你的任务..."
+		return text
+	}, [task])
 
 	const itemContent = useCallback(
 		(index: number, messageOrGroup: ClineMessage | ClineMessage[]) => {

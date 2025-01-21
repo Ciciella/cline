@@ -2,7 +2,7 @@
 	"name": "claude-dev-china",
 	"displayName": "AI Code: Cline, Chat, Deepseek, 中文版",
 	"description": "在您的IDE中自动编码代理，能够在您的许可下创建/编辑文件、执行命令等等。支持deepseek模型",
-	"version": "3.1.84",
+	"version": "3.2.0",
 	"icon": "assets/icons/icon.png",
 	"galleryBanner": {
 		"color": "#617A91",
@@ -129,6 +129,25 @@
 					"when": "view == ai-code-dev.SidebarProvider"
 				}
 			]
+		},
+		"configuration": {
+			"title": "Cline",
+			"properties": {
+				"cline.vsCodeLmModelSelector": {
+					"type": "object",
+					"properties": {
+						"vendor": {
+							"type": "string",
+							"description": "The vendor of the language model (e.g. copilot)"
+						},
+						"family": {
+							"type": "string",
+							"description": "The family of the language model (e.g. gpt-4)"
+						}
+					},
+					"description": "Settings for VSCode Language Model API"
+				}
+			}
 		}
 	},
 	"scripts": {

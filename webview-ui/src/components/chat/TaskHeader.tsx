@@ -97,6 +97,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 	const isCostAvailable = useMemo(() => {
 		return (
 			apiConfiguration?.apiProvider !== "openai" &&
+			apiConfiguration?.apiProvider !== "vscode-lm" &&
 			apiConfiguration?.apiProvider !== "ollama" &&
 			apiConfiguration?.apiProvider !== "lmstudio" &&
 			apiConfiguration?.apiProvider !== "gemini"
@@ -260,6 +261,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 									display: "flex",
 									justifyContent: "space-between",
 									alignItems: "center",
+									height: 17,
 								}}>
 								<div
 									style={{
@@ -358,6 +360,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 										display: "flex",
 										justifyContent: "space-between",
 										alignItems: "center",
+										height: 17,
 									}}>
 									<div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
 										<span style={{ fontWeight: "bold" }}>

@@ -32,37 +32,24 @@ const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 			</h3>
 			<ul style={{ margin: "0 0 8px", paddingLeft: "12px" }}>
 				<li>
-					<b>检查点功能上线了！</b> AI Code 现在会在任务的每一步保存您的工作区快照。将鼠标悬停在任何消息上，可以看到两个新按钮：
-					<ul style={{ margin: "4px 0", paddingLeft: 22 }}>
-						<li>
-							<span
-								className="codicon codicon-diff-multiple"
-								style={{
-									fontSize: "12px",
-									marginRight: "4px",
-								}}></span>
-							<b>比较</b> 显示快照与当前工作区之间的差异
-						</li>
-						<li>
-							<span
-								className="codicon codicon-discard"
-								style={{
-									fontSize: "12px",
-									marginRight: "4px",
-								}}></span>
-							<b>恢复</b> 让您将项目文件恢复到任务的那个时间点
-						</li>
-					</ul>
+					<b>计划/执行模式切换：</b> 计划模式让AI Code集中于收集信息，提出澄清问题，脑暴想法，并架构解决方案。切换回执行模式，让他执行计划！
 				</li>
 				<li>
-					<b>“查看新更改”按钮</b> 当任务完成时，向您展示 AI Code 在整个任务过程中对您的工作区所做的所有更改的概述
+					<b>快速API/模型切换</b>，通过聊天字段下方的新弹出菜单
 				</li>
+				<li>
+					<b>VS Code LM API</b> 让你可以使用来自其他扩展的模型，如GitHub Copilot
+				</li>
+				<li>
+					<b>MCP服务器改进：</b> 当不使用时的开关切换，和单个工具的自动批准选项
+				</li>
+				{/* <li>
+					如果你错过了，Cline现在支持检查点！{" "}
+					<VSCodeLink href="https://x.com/sdrzn/status/1876378124126236949" style={{ display: "inline" }}>
+						在这里查看。
+					</VSCodeLink>
+				</li> */}
 			</ul>
-			{/* <p style={{ margin: "8px 0" }}>
-				<VSCodeLink href="https://x.com/sdrzn/status/1876378124126236949" style={{ display: "inline" }}>
-					See a demo of Checkpoints here!
-				</VSCodeLink>
-			</p> */}
 			{/*<ul style={{ margin: "0 0 8px", paddingLeft: "12px" }}>
 				 <li>
 					OpenRouter now supports prompt caching! They also have much higher rate limits than other providers,
