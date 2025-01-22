@@ -24,7 +24,7 @@ import Thumbnails from "../common/Thumbnails"
 import McpResourceRow from "../mcp/McpResourceRow"
 import McpToolRow from "../mcp/McpToolRow"
 import { highlightMentions } from "./TaskHeader"
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage } from "react-intl"
 
 const ChatRowContainer = styled.div`
 	padding: 10px 6px 10px 15px;
@@ -146,27 +146,21 @@ export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifi
 		switch (type) {
 			case "error":
 				return [
-					<span
-						className="codicon codicon-error"
-						style={{ color: errorColor, marginBottom: "-1.5px" }}></span>,
+					<span className="codicon codicon-error" style={{ color: errorColor, marginBottom: "-1.5px" }}></span>,
 					<span style={{ color: errorColor, fontWeight: "bold" }}>
 						<FormattedMessage id="chatRow.error" defaultMessage="Error" />
 					</span>,
 				]
 			case "mistake_limit_reached":
 				return [
-					<span
-						className="codicon codicon-error"
-						style={{ color: errorColor, marginBottom: "-1.5px" }}></span>,
+					<span className="codicon codicon-error" style={{ color: errorColor, marginBottom: "-1.5px" }}></span>,
 					<span style={{ color: errorColor, fontWeight: "bold" }}>
 						<FormattedMessage id="chatRow.clineHavingTrouble" defaultMessage="AI Code is having trouble..." />
 					</span>,
 				]
 			case "auto_approval_max_req_reached":
 				return [
-					<span
-						className="codicon codicon-warning"
-						style={{ color: errorColor, marginBottom: "-1.5px" }}></span>,
+					<span className="codicon codicon-warning" style={{ color: errorColor, marginBottom: "-1.5px" }}></span>,
 					<span style={{ color: errorColor, fontWeight: "bold" }}>
 						<FormattedMessage id="chatRow.maximumRequestsReached" defaultMessage="最大请求已达到" />
 					</span>,
@@ -184,9 +178,7 @@ export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifi
 							}}></span>
 					),
 					<span style={{ color: normalColor, fontWeight: "bold" }}>
-						{message.type === "ask"
-							? "AI Code想执行这个命令:"
-							: "AI Code执行了这个命令:"}
+						{message.type === "ask" ? "AI Code想执行这个命令:" : "AI Code执行了这个命令:"}
 					</span>,
 				]
 			case "use_mcp_server":
@@ -205,20 +197,20 @@ export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifi
 					<span style={{ color: normalColor, fontWeight: "bold" }}>
 						{message.type === "ask" ? (
 							<>
-								AI Code想要在<code>{mcpServerUse.serverName}</code> MCP服务器上{mcpServerUse.type === "use_mcp_tool" ? "使用工具" : "访问资源"}:
+								AI Code想要在<code>{mcpServerUse.serverName}</code> MCP服务器上
+								{mcpServerUse.type === "use_mcp_tool" ? "使用工具" : "访问资源"}:
 							</>
 						) : (
 							<>
-								AI Code在<code>{mcpServerUse.serverName}</code> MCP服务器上{mcpServerUse.type === "use_mcp_tool" ? "使用了工具" : "访问了资源"}:
+								AI Code在<code>{mcpServerUse.serverName}</code> MCP服务器上
+								{mcpServerUse.type === "use_mcp_tool" ? "使用了工具" : "访问了资源"}:
 							</>
 						)}
 					</span>,
 				]
 			case "completion_result":
 				return [
-					<span
-						className="codicon codicon-check"
-						style={{ color: successColor, marginBottom: "-1.5px" }}></span>,
+					<span className="codicon codicon-check" style={{ color: successColor, marginBottom: "-1.5px" }}></span>,
 					<span style={{ color: successColor, fontWeight: "bold" }}>
 						<FormattedMessage id="chatRow.taskCompleted" defaultMessage="Task Completed" />
 					</span>,
@@ -282,9 +274,7 @@ export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifi
 				]
 			case "followup":
 				return [
-					<span
-						className="codicon codicon-question"
-						style={{ color: normalColor, marginBottom: "-1.5px" }}></span>,
+					<span className="codicon codicon-question" style={{ color: normalColor, marginBottom: "-1.5px" }}></span>,
 					<span style={{ color: normalColor, fontWeight: "bold" }}>
 						<FormattedMessage id="chatRow.clineHasQuestion" defaultMessage="AI Code has a question:" />
 					</span>,
@@ -359,9 +349,7 @@ export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifi
 						<div style={headerStyle}>
 							{toolIcon("new-file")}
 							<span style={{ fontWeight: "bold" }}>
-								{message.type === "ask"
-									? "AI Code想创建一个新文件："
-									: "AI Code创建了一个新文件："}
+								{message.type === "ask" ? "AI Code想创建一个新文件：" : "AI Code创建了一个新文件："}
 							</span>
 						</div>
 						<CodeAccordian
@@ -380,7 +368,10 @@ export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifi
 							{toolIcon("file-code")}
 							<span style={{ fontWeight: "bold" }}>
 								{message.type === "ask" ? (
-									<FormattedMessage id="chatRow.readFileAsk" defaultMessage="AI Code wants to read this file:" />
+									<FormattedMessage
+										id="chatRow.readFileAsk"
+										defaultMessage="AI Code wants to read this file:"
+									/>
 								) : (
 									<FormattedMessage id="chatRow.readFileSay" defaultMessage="AI Code read this file:" />
 								)}
@@ -447,9 +438,15 @@ export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifi
 							{toolIcon("folder-opened")}
 							<span style={{ fontWeight: "bold" }}>
 								{message.type === "ask" ? (
-									<FormattedMessage id="chatRow.listFilesTopLevelAsk" defaultMessage="AI Code wants to view the top level files in this directory:" />
+									<FormattedMessage
+										id="chatRow.listFilesTopLevelAsk"
+										defaultMessage="AI Code wants to view the top level files in this directory:"
+									/>
 								) : (
-									<FormattedMessage id="chatRow.listFilesTopLevelSay" defaultMessage="AI Code viewed the top level files in this directory:" />
+									<FormattedMessage
+										id="chatRow.listFilesTopLevelSay"
+										defaultMessage="AI Code viewed the top level files in this directory:"
+									/>
 								)}
 							</span>
 						</div>
@@ -469,9 +466,15 @@ export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifi
 							{toolIcon("folder-opened")}
 							<span style={{ fontWeight: "bold" }}>
 								{message.type === "ask" ? (
-									<FormattedMessage id="chatRow.listFilesRecursiveAsk" defaultMessage="AI Code wants to recursively view all files in this directory:" />
+									<FormattedMessage
+										id="chatRow.listFilesRecursiveAsk"
+										defaultMessage="AI Code wants to recursively view all files in this directory:"
+									/>
 								) : (
-									<FormattedMessage id="chatRow.listFilesRecursiveSay" defaultMessage="AI Code recursively viewed all files in this directory:" />
+									<FormattedMessage
+										id="chatRow.listFilesRecursiveSay"
+										defaultMessage="AI Code recursively viewed all files in this directory:"
+									/>
 								)}
 							</span>
 						</div>
@@ -491,9 +494,15 @@ export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifi
 							{toolIcon("file-code")}
 							<span style={{ fontWeight: "bold" }}>
 								{message.type === "ask" ? (
-									<FormattedMessage id="chatRow.listCodeDefinitionNamesAsk" defaultMessage="AI Code wants to view source code definition names used in this directory:" />
+									<FormattedMessage
+										id="chatRow.listCodeDefinitionNamesAsk"
+										defaultMessage="AI Code wants to view source code definition names used in this directory:"
+									/>
 								) : (
-									<FormattedMessage id="chatRow.listCodeDefinitionNamesSay" defaultMessage="AI Code viewed source code definition names used in this directory:" />
+									<FormattedMessage
+										id="chatRow.listCodeDefinitionNamesSay"
+										defaultMessage="AI Code viewed source code definition names used in this directory:"
+									/>
 								)}
 							</span>
 						</div>
@@ -512,9 +521,17 @@ export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifi
 							{toolIcon("search")}
 							<span style={{ fontWeight: "bold" }}>
 								{message.type === "ask" ? (
-									<FormattedMessage id="chatRow.searchFilesAsk" defaultMessage="AI Code wants to search this directory for {regex}:" values={{ regex: <code>{tool.regex}</code> }} />
+									<FormattedMessage
+										id="chatRow.searchFilesAsk"
+										defaultMessage="AI Code wants to search this directory for {regex}:"
+										values={{ regex: <code>{tool.regex}</code> }}
+									/>
 								) : (
-									<FormattedMessage id="chatRow.searchFilesSay" defaultMessage="AI Code searched this directory for {regex}:" values={{ regex: <code>{tool.regex}</code> }} />
+									<FormattedMessage
+										id="chatRow.searchFilesSay"
+										defaultMessage="AI Code searched this directory for {regex}:"
+										values={{ regex: <code>{tool.regex}</code> }}
+									/>
 								)}
 							</span>
 						</div>
@@ -923,9 +940,7 @@ export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifi
 										}}></i>
 									<span style={{ fontWeight: 500, color: "#FFA500" }}>差异编辑失败</span>
 								</div>
-								<div>
-									这通常发生在模型使用的搜索模式与文件中的内容不匹配时。正在重试...
-								</div>
+								<div>这通常发生在模型使用的搜索模式与文件中的内容不匹配时。正在重试...</div>
 							</div>
 						</>
 					)
@@ -997,7 +1012,10 @@ export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifi
 											color: "#FFA500",
 										}}></i>
 									<span style={{ fontWeight: 500, color: "#FFA500" }}>
-										<FormattedMessage id="chatRow.shellIntegrationWarning" defaultMessage="Shell Integration Unavailable" />
+										<FormattedMessage
+											id="chatRow.shellIntegrationWarning"
+											defaultMessage="Shell Integration Unavailable"
+										/>
 									</span>
 								</div>
 								<div>
@@ -1008,8 +1026,7 @@ export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifi
 											updateCommand: <code>CMD/CTRL + Shift + P</code>,
 											terminalCommand: <code>CMD/CTRL + Shift + P</code>,
 										}}
-									/>
-									{" "}
+									/>{" "}
 									{/* <a
 										href="https://github.com/cline/cline/wiki/Troubleshooting-%E2%80%90-Shell-Integration-Unavailable"
 										style={{ color: "inherit", textDecoration: "underline" }}>
@@ -1197,4 +1214,3 @@ const Markdown = memo(({ markdown }: { markdown?: string }) => {
 		</div>
 	)
 })
-

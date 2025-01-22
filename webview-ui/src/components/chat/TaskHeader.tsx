@@ -8,7 +8,7 @@ import { formatLargeNumber } from "../../utils/format"
 import { formatSize } from "../../utils/size"
 import { vscode } from "../../utils/vscode"
 import Thumbnails from "../common/Thumbnails"
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage } from "react-intl"
 
 interface TaskHeaderProps {
 	task: ClineMessage

@@ -192,9 +192,7 @@ export class VsCodeLmHandler implements ApiHandler, SingleCompletionHandler {
 					// 提供一个最小的实现
 					return {
 						stream: (async function* () {
-							yield new vscode.LanguageModelTextPart(
-								"语言模型功能有限。请检查 VS Code 配置。",
-							)
+							yield new vscode.LanguageModelTextPart("语言模型功能有限。请检查 VS Code 配置。")
 						})(),
 						text: (async function* () {
 							yield "语言模型功能有限。请检查 VS Code 配置。"

@@ -25,7 +25,7 @@ import BrowserSessionRow from "./BrowserSessionRow"
 import ChatRow from "./ChatRow"
 import ChatTextArea from "./ChatTextArea"
 import TaskHeader from "./TaskHeader"
-import { FormattedMessage, useIntl } from 'react-intl';
+import { FormattedMessage, useIntl } from "react-intl"
 
 interface ChatViewProps {
 	isHidden: boolean
@@ -614,7 +614,7 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 						return
 					}
 					const timer = setTimeout(() => {
-							scrollToBottomAuto()
+						scrollToBottomAuto()
 					}, 0)
 					return () => clearTimeout(timer)
 				} else {
@@ -665,7 +665,6 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 		}
 	}, [])
 	useEvent("wheel", handleWheel, window, { passive: true }) // passive improves scrolling performance
-
 
 	const placeholderText = useMemo(() => {
 		const text = task ? "输入一条消息..." : "输入你的任务..."
@@ -758,12 +757,10 @@ const ChatView = ({ isHidden, showAnnouncement, hideAnnouncement, showHistoryVie
 									defaultMessage="Claude 3.5 Sonnet's agentic coding capabilities"
 								/>
 							</VSCodeLink>{" "}
-
 							<FormattedMessage
 								id="chatView.complexTasks"
 								defaultMessage="I can handle complex software development tasks step-by-step. With tools that let me create & edit files, explore complex projects, use the browser, and execute terminal commands (after you grant permission), I can assist you in ways that go beyond code completion or tech support. I can even use MCP to create new tools and extend my own capabilities."
 							/>
-							
 						</p>
 					</div>
 					{taskHistory.length > 0 && <HistoryPreview showHistoryView={showHistoryView} />}

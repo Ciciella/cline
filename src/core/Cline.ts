@@ -725,9 +725,7 @@ export class Cline {
 	async sayAndCreateMissingParamError(toolName: ToolUseName, paramName: string, relPath?: string) {
 		await this.say(
 			"error",
-			`AI Code尝试使用${toolName}${
-				relPath ? ` 对 '${relPath.toPosix()}'` : ""
-			}时缺少必需参数'${paramName}'。正在重试...`,
+			`AI Code尝试使用${toolName}${relPath ? ` 对 '${relPath.toPosix()}'` : ""}时缺少必需参数'${paramName}'。正在重试...`,
 		)
 		return formatResponse.toolError(formatResponse.missingToolParameterError(paramName))
 	}
@@ -2290,7 +2288,7 @@ export class Cline {
 									timeoutId = setTimeout(() => {
 										showSystemNotification({
 											subtitle: "命令仍在运行",
-											message: "一个自动批准的命令已经运行了30秒,可能需要您的注意。"
+											message: "一个自动批准的命令已经运行了30秒,可能需要您的注意。",
 										})
 									}, 30_000)
 								}
@@ -2940,11 +2938,7 @@ export class Cline {
 							type: "text",
 							text:
 								assistantMessage +
-								`\n\n[${
-									cancelReason === "streaming_failed"
-										? "响应中断由于API错误"
-										: "响应中断由用户"
-								}]`,
+								`\n\n[${cancelReason === "streaming_failed" ? "响应中断由于API错误" : "响应中断由用户"}]`,
 						},
 					],
 				})
@@ -3015,8 +3009,7 @@ export class Cline {
 					// PREV: we need to let the request finish for openrouter to get generation details
 					// UPDATE: it's better UX to interrupt the request at the cost of the api cost not being retrieved
 					if (this.didAlreadyUseTool) {
-						assistantMessage +=
-							"\n\n[响应中断由工具使用结果。一次只能使用一个工具，并且应放置在消息末尾。]"
+						assistantMessage += "\n\n[响应中断由工具使用结果。一次只能使用一个工具，并且应放置在消息末尾。]"
 						break
 					}
 				}
@@ -3092,17 +3085,14 @@ export class Cline {
 				didEndLoop = recDidEndLoop
 			} else {
 				// if there's no assistant_responses, that means we got no text or tool_use content blocks from API which we should assume is an error
-				await this.say(
-					"error",
-					"意外的API响应:语言模型没有提供任何助手消息。这可能表明API或模型输出存在问题。",
-				)
+				await this.say("error", "意外的API响应:语言模型没有提供任何助手消息。这可能表明API或模型输出存在问题。")
 				await this.addToApiConversationHistory({
 					role: "assistant",
 					content: [
-						{ 
-							type: "text", 
-							text: "失败:我没有提供响应。" 
-						}
+						{
+							type: "text",
+							text: "失败:我没有提供响应。",
+						},
 					],
 				})
 			}

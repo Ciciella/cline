@@ -193,10 +193,7 @@ const HistoryView = ({ onDone }: HistoryViewProps) => {
 							<VSCodeRadio value="oldest">最早</VSCodeRadio>
 							<VSCodeRadio value="mostExpensive">最贵</VSCodeRadio>
 							<VSCodeRadio value="mostTokens">最多令牌</VSCodeRadio>
-							<VSCodeRadio
-								value="mostRelevant"
-								disabled={!searchQuery}
-								style={{ opacity: searchQuery ? 1 : 0.5 }}>
+							<VSCodeRadio value="mostRelevant" disabled={!searchQuery} style={{ opacity: searchQuery ? 1 : 0.5 }}>
 								最相关
 							</VSCodeRadio>
 						</VSCodeRadioGroup>
@@ -256,7 +253,7 @@ const HistoryView = ({ onDone }: HistoryViewProps) => {
 												fontSize: "0.85em",
 												textTransform: "uppercase",
 											}}>
-											{formatDate(item.ts, 'zh-CN')}
+											{formatDate(item.ts, "zh-CN")}
 										</span>
 										<VSCodeButton
 											appearance="icon"
@@ -429,7 +426,7 @@ const HistoryView = ({ onDone }: HistoryViewProps) => {
 															fontWeight: 500,
 															color: "var(--vscode-descriptionForeground)",
 														}}>
-															API 费用：
+														API 费用：
 													</span>
 													<span
 														style={{

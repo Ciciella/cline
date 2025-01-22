@@ -9,7 +9,7 @@ import { useExtensionState } from "../../context/ExtensionStateContext"
 import { vscode } from "../../utils/vscode"
 import { highlight } from "../history/HistoryView"
 import { ModelInfoView, normalizeApiConfiguration } from "./ApiOptions"
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage } from "react-intl"
 import { CODE_BLOCK_BG_COLOR } from "../common/CodeBlock"
 
 export interface OpenRouterModelPickerProps {
@@ -226,7 +226,7 @@ const OpenRouterModelPicker: React.FC<OpenRouterModelPickerProps> = ({ isPopup }
 						defaultMessage="The extension automatically fetches the latest list of models available on "
 					/>
 					<VSCodeLink style={{ display: "inline", fontSize: "inherit" }} href="https://openrouter.ai/models">
-							<FormattedMessage id="openRouterModelPicker.openRouter" defaultMessage="OpenRouter." />
+						<FormattedMessage id="openRouterModelPicker.openRouter" defaultMessage="OpenRouter." />
 					</VSCodeLink>
 					<FormattedMessage
 						id="openRouterModelPicker.modelRecommendation"
@@ -235,7 +235,10 @@ const OpenRouterModelPicker: React.FC<OpenRouterModelPickerProps> = ({ isPopup }
 					<VSCodeLink
 						style={{ display: "inline", fontSize: "inherit" }}
 						onClick={() => handleModelChange("anthropic/claude-3.5-sonnet:beta")}>
-						<FormattedMessage id="openRouterModelPicker.recommendedModel" defaultMessage="anthropic/claude-3.5-sonnet:beta." />
+						<FormattedMessage
+							id="openRouterModelPicker.recommendedModel"
+							defaultMessage="anthropic/claude-3.5-sonnet:beta."
+						/>
 					</VSCodeLink>
 					<FormattedMessage
 						id="openRouterModelPicker.searchFreeOptions"

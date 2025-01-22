@@ -50,28 +50,19 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
 			case ContextMenuOptionType.Problems:
 				return (
 					<span>
-						<FormattedMessage
-							id="contextMenu.problems"
-							defaultMessage="Problems"
-						/>
+						<FormattedMessage id="contextMenu.problems" defaultMessage="Problems" />
 					</span>
 				)
 			case ContextMenuOptionType.URL:
 				return (
 					<span>
-						<FormattedMessage
-							id="contextMenu.pasteUrl"
-							defaultMessage="Paste URL to fetch contents"
-						/>
+						<FormattedMessage id="contextMenu.pasteUrl" defaultMessage="Paste URL to fetch contents" />
 					</span>
 				)
 			case ContextMenuOptionType.NoResults:
 				return (
 					<span>
-						<FormattedMessage
-							id="contextMenu.noResults"
-							defaultMessage="No results found"
-						/>
+						<FormattedMessage id="contextMenu.noResults" defaultMessage="No results found" />
 					</span>
 				)
 			case ContextMenuOptionType.File:

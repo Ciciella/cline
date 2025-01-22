@@ -3,7 +3,7 @@ import { useExtensionState } from "../../context/ExtensionStateContext"
 import { vscode } from "../../utils/vscode"
 import { memo } from "react"
 import { formatLargeNumber } from "../../utils/format"
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage } from "react-intl"
 
 type HistoryPreviewProps = {
 	showHistoryView: () => void
@@ -89,7 +89,7 @@ const HistoryPreview = ({ showHistoryView }: HistoryPreviewProps) => {
 											fontSize: "0.85em",
 											textTransform: "uppercase",
 										}}>
-										{formatDate(item.ts, 'zh-CN')}
+										{formatDate(item.ts, "zh-CN")}
 									</span>
 								</div>
 								<div

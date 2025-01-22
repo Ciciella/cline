@@ -42,7 +42,7 @@
 		"sonnet",
 		"ai",
 		"llama",
-    	"deepseek",
+		"deepseek",
 		"qinghua",
 		"zhipu",
 		"aicode",
@@ -80,27 +80,27 @@
 				"title": "MCP服务器",
 				"icon": "$(server)"
 			},
-      {
-        "command": "aicode.historyButtonClicked",
-        "title": "历史记录",
-        "icon": "$(history)"
-      },
-      {
-        "command": "aicode.popoutButtonClicked",
-        "title": "在编辑器中打开",
-        "icon": "$(link-external)"
-      },
-      {
-        "command": "aicode.settingsButtonClicked",
-        "title": "设置",
-        "icon": "$(settings-gear)"
-      },
-      {
-        "command": "aicode.openInNewTab",
-        "title": "在新标签页中打开",
-        "category": "AI Code"
-      }
-    ],
+			{
+				"command": "aicode.historyButtonClicked",
+				"title": "历史记录",
+				"icon": "$(history)"
+			},
+			{
+				"command": "aicode.popoutButtonClicked",
+				"title": "在编辑器中打开",
+				"icon": "$(link-external)"
+			},
+			{
+				"command": "aicode.settingsButtonClicked",
+				"title": "设置",
+				"icon": "$(settings-gear)"
+			},
+			{
+				"command": "aicode.openInNewTab",
+				"title": "在新标签页中打开",
+				"category": "AI Code"
+			}
+		],
 		"menus": {
 			"view/title": [
 				{
@@ -228,7 +228,7 @@
 		"tree-sitter-wasms": "^0.1.11",
 		"turndown": "^7.2.0",
 		"web-tree-sitter": "^0.22.6",
-    	"vscode-nls": "^5.2.0",
+		"vscode-nls": "^5.2.0",
 		"zod": "^3.23.8"
-  }
+	}
 }

@@ -28,11 +28,16 @@ const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 				<span className="codicon codicon-close"></span>
 			</VSCodeButton>
 			<h3 style={{ margin: "0 0 8px" }}>
-				<FormattedMessage id="announcement.newVersion" defaultMessage="🎉 New in v{minorVersion}" values={{ minorVersion }} />
+				<FormattedMessage
+					id="announcement.newVersion"
+					defaultMessage="🎉 New in v{minorVersion}"
+					values={{ minorVersion }}
+				/>
 			</h3>
 			<ul style={{ margin: "0 0 8px", paddingLeft: "12px" }}>
 				<li>
-					<b>计划/执行模式切换：</b> 计划模式让AI Code集中于收集信息，提出澄清问题，脑暴想法，并架构解决方案。切换回执行模式，让他执行计划！
+					<b>计划/执行模式切换：</b> 计划模式让AI
+					Code集中于收集信息，提出澄清问题，脑暴想法，并架构解决方案。切换回执行模式，让他执行计划！
 				</li>
 				<li>
 					<b>快速API/模型切换</b>，通过聊天字段下方的新弹出菜单

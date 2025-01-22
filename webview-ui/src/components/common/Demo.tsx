@@ -19,10 +19,10 @@ import {
 	VSCodeTextArea,
 	VSCodeTextField,
 } from "@vscode/webview-ui-toolkit/react"
-import { FormattedMessage, useIntl } from 'react-intl';
+import { FormattedMessage, useIntl } from "react-intl"
 
 function Demo() {
-	const intl = useIntl();
+	const intl = useIntl()
 	// function handleHowdyClick() {
 	// 	vscode.postMessage({
 	// 		command: "hello",
@@ -151,7 +151,9 @@ function Demo() {
 				<VSCodeTag>
 					<FormattedMessage id="demo.tag" defaultMessage="Tag" />
 				</VSCodeTag>
-				<VSCodeTextArea placeholder={intl.formatMessage({ id: "demo.textAreaPlaceholder", defaultMessage: "Text Area" })} />
+				<VSCodeTextArea
+					placeholder={intl.formatMessage({ id: "demo.textAreaPlaceholder", defaultMessage: "Text Area" })}
+				/>
 			</div>
 		</main>
 	)

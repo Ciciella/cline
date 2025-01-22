@@ -39,7 +39,7 @@ import VSCodeButtonLink from "../common/VSCodeButtonLink"
 import OpenRouterModelPicker, { ModelDescriptionMarkdown } from "./OpenRouterModelPicker"
 import styled from "styled-components"
 import * as vscodemodels from "vscode"
-import { FormattedMessage } from 'react-intl'
+import { FormattedMessage } from "react-intl"
 
 interface ApiOptionsProps {
 	showModelOptions: boolean
@@ -239,11 +239,17 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 							marginTop: 3,
 							color: "var(--vscode-descriptionForeground)",
 						}}>
-						<FormattedMessage id="apiOptions.apiKeyStorage" defaultMessage="This key is stored locally and only used to make API requests from this extension." />
+						<FormattedMessage
+							id="apiOptions.apiKeyStorage"
+							defaultMessage="This key is stored locally and only used to make API requests from this extension."
+						/>
 						<VSCodeLink
 							href="https://console.anthropic.com/settings/keys"
 							style={{ display: "inline", fontSize: "inherit" }}>
-							<FormattedMessage id="apiOptions.anthropicApiKeyInfo" defaultMessage="You can get an Anthropic API key by signing up here." />
+							<FormattedMessage
+								id="apiOptions.anthropicApiKeyInfo"
+								defaultMessage="You can get an Anthropic API key by signing up here."
+							/>
 						</VSCodeLink>
 					</p>
 				</div>
@@ -265,11 +271,17 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 							marginTop: 3,
 							color: "var(--vscode-descriptionForeground)",
 						}}>
-						<FormattedMessage id="apiOptions.apiKeyStorage" defaultMessage="This key is stored locally and only used to make API requests from this extension." />
+						<FormattedMessage
+							id="apiOptions.apiKeyStorage"
+							defaultMessage="This key is stored locally and only used to make API requests from this extension."
+						/>
 						<VSCodeLink
 							href="https://platform.openai.com/api-keys"
 							style={{ display: "inline", fontSize: "inherit" }}>
-							<FormattedMessage id="apiOptions.openaiApiKeyInfo" defaultMessage="You can get an OpenAI API key by signing up here." />
+							<FormattedMessage
+								id="apiOptions.openaiApiKeyInfo"
+								defaultMessage="You can get an OpenAI API key by signing up here."
+							/>
 						</VSCodeLink>
 					</p>
 				</div>
@@ -293,9 +305,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 						}}>
 						此密钥存储在本地，仅用于从此扩展进行 API 请求。
 						{!apiConfiguration?.deepSeekApiKey && (
-							<VSCodeLink
-								href="https://www.deepseek.com/"
-								style={{ display: "inline", fontSize: "inherit" }}>
+							<VSCodeLink href="https://www.deepseek.com/" style={{ display: "inline", fontSize: "inherit" }}>
 								您可以在此处注册以获取 DeepSeek API 密钥。
 							</VSCodeLink>
 						)}
@@ -360,7 +370,10 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 							marginTop: "5px",
 							color: "var(--vscode-descriptionForeground)",
 						}}>
-						<FormattedMessage id="apiOptions.apiKeyStorage" defaultMessage="This key is stored locally and only used to make API requests from this extension." />{" "}
+						<FormattedMessage
+							id="apiOptions.apiKeyStorage"
+							defaultMessage="This key is stored locally and only used to make API requests from this extension."
+						/>{" "}
 						{/* {!apiConfiguration?.openRouterApiKey && (
 							<span style={{ color: "var(--vscode-charts-green)" }}>
 								(<span style={{ fontWeight: 500 }}>Note:</span> OpenRouter is recommended for high rate
@@ -501,7 +514,10 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 							marginTop: "5px",
 							color: "var(--vscode-descriptionForeground)",
 						}}>
-						<FormattedMessage id="apiOptions.vertexAIUsage" defaultMessage="To use Google Cloud Vertex AI, you need to" />
+						<FormattedMessage
+							id="apiOptions.vertexAIUsage"
+							defaultMessage="To use Google Cloud Vertex AI, you need to"
+						/>
 						<VSCodeLink
 							href="https://cloud.google.com/vertex-ai/generative-ai/docs/partner-models/use-claude#before_you_begin"
 							style={{ display: "inline", fontSize: "inherit" }}>
@@ -532,13 +548,17 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 							marginTop: 3,
 							color: "var(--vscode-descriptionForeground)",
 						}}>
-						<FormattedMessage id="apiOptions.apiKeyStorage" defaultMessage="This key is stored locally and only used to make API requests from this extension." />
+						<FormattedMessage
+							id="apiOptions.apiKeyStorage"
+							defaultMessage="This key is stored locally and only used to make API requests from this extension."
+						/>
 						{!apiConfiguration?.geminiApiKey && (
-						<VSCodeLink
-							href="https://ai.google.dev/"
-							style={{ display: "inline", fontSize: "inherit" }}>
-							<FormattedMessage id="apiOptions.geminiApiKeyInfo" defaultMessage="You can get a Gemini API key by signing up here." />
-						</VSCodeLink>
+							<VSCodeLink href="https://ai.google.dev/" style={{ display: "inline", fontSize: "inherit" }}>
+								<FormattedMessage
+									id="apiOptions.geminiApiKeyInfo"
+									defaultMessage="You can get a Gemini API key by signing up here."
+								/>
+							</VSCodeLink>
 						)}
 					</p>
 				</div>
@@ -553,10 +573,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 						onInput={handleInputChange("openAiBaseUrl")}
 						placeholder={"输入基础URL..."}>
 						<span style={{ fontWeight: 500 }}>
-							<FormattedMessage
-								id="apiOptions.baseUrl"
-								defaultMessage="Base URL"
-							/>
+							<FormattedMessage id="apiOptions.baseUrl" defaultMessage="Base URL" />
 						</span>
 					</VSCodeTextField>
 					<VSCodeTextField
@@ -586,10 +603,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 								})
 							}
 						}}>
-						<FormattedMessage
-							id="apiOptions.setAzureApiVersion"
-							defaultMessage="Set Azure API version"
-						/>
+						<FormattedMessage id="apiOptions.setAzureApiVersion" defaultMessage="Set Azure API version" />
 					</VSCodeCheckbox>
 					{azureApiVersionSelected && (
 						<VSCodeTextField
@@ -606,13 +620,15 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 							color: "var(--vscode-descriptionForeground)",
 						}}>
 						<span style={{ color: "var(--vscode-errorForeground)" }}>
-							(<span style={{ fontWeight: 500 }}>
+							(
+							<span style={{ fontWeight: 500 }}>
 								<FormattedMessage id="apiOptions.note" defaultMessage="Note:" />
-							</span> 
-							<FormattedMessage 
-								id="apiOptions.complexPrompts" 
-								defaultMessage="AI Code uses complex prompts and works best with Claude models. Less capable models may not work as expected." 
-							/>)
+							</span>
+							<FormattedMessage
+								id="apiOptions.complexPrompts"
+								defaultMessage="AI Code uses complex prompts and works best with Claude models. Less capable models may not work as expected."
+							/>
+							)
 						</span>
 					</p>
 				</div>
@@ -661,7 +677,9 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 									marginTop: "5px",
 									color: "var(--vscode-descriptionForeground)",
 								}}>
-								VS Code 语言模型 API 允许您运行由其他 VS Code 扩展（包括但不限于 GitHub Copilot）提供的模型。最简单的入门方法是从 VS Marketplace 安装 Copilot 扩展并启用 Claude 3.5 Sonnet。
+								VS Code 语言模型 API 允许您运行由其他 VS Code 扩展（包括但不限于 GitHub
+								Copilot）提供的模型。最简单的入门方法是从 VS Marketplace 安装 Copilot 扩展并启用 Claude 3.5
+								Sonnet。
 							</p>
 						)}
 
@@ -736,7 +754,8 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 						</VSCodeLink>{" "}
 						功能才能与此扩展一起使用。{" "}
 						<span style={{ color: "var(--vscode-errorForeground)" }}>
-							(<span style={{ fontWeight: 500 }}>注意：</span> AI Code 使用复杂的提示，并且在 Claude 模型上效果最佳。功能较弱的模型可能无法正常工作。)
+							(<span style={{ fontWeight: 500 }}>注意：</span> AI Code 使用复杂的提示，并且在 Claude
+							模型上效果最佳。功能较弱的模型可能无法正常工作。)
 						</span>
 					</p>
 				</div>
@@ -751,10 +770,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 						onInput={handleInputChange("ollamaBaseUrl")}
 						placeholder={"Default: http://localhost:11434"}>
 						<span style={{ fontWeight: 500 }}>
-							<FormattedMessage
-								id="apiOptions.baseUrlOptional"
-								defaultMessage="Base URL (optional)"
-							/>
+							<FormattedMessage id="apiOptions.baseUrlOptional" defaultMessage="Base URL (optional)" />
 						</span>
 					</VSCodeTextField>
 					<VSCodeTextField
@@ -793,18 +809,22 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 							marginTop: "5px",
 							color: "var(--vscode-descriptionForeground)",
 						}}>
-						<FormattedMessage id="apiOptions.ollamaUsage" defaultMessage="Ollama allows you to run models locally on your computer. For instructions on how to get started, see their" />
+						<FormattedMessage
+							id="apiOptions.ollamaUsage"
+							defaultMessage="Ollama allows you to run models locally on your computer. For instructions on how to get started, see their"
+						/>
 						<VSCodeLink
 							href="https://github.com/ollama/ollama/blob/main/README.md"
 							style={{ display: "inline", fontSize: "inherit" }}>
 							<FormattedMessage id="apiOptions.quickstartGuide" defaultMessage="quickstart guide." />
 						</VSCodeLink>
 						<span style={{ color: "var(--vscode-errorForeground)" }}>
-							
-							(<span style={{ fontWeight: 500 }}>注意:</span> <FormattedMessage
+							(<span style={{ fontWeight: 500 }}>注意:</span>{" "}
+							<FormattedMessage
 								id="apiOptions.note2"
 								defaultMessage="AI Code uses complex prompts and works best with Claude models. Less capable models may not work as expected."
-							/>)
+							/>
+							)
 						</span>
 					</p>
 				</div>
@@ -922,42 +942,51 @@ export const ModelInfoView = ({
 				key="supportsPromptCache"
 				isSupported={modelInfo.supportsPromptCache}
 				supportsLabel="支持提示缓存"
-			doesNotSupportLabel="不支持提示缓存"
+				doesNotSupportLabel="不支持提示缓存"
 			/>
 		),
 		modelInfo.maxTokens !== undefined && modelInfo.maxTokens > 0 && (
 			<span key="maxTokens">
 				<span style={{ fontWeight: 500 }}>
 					<FormattedMessage id="apiOptions.maxOutput" defaultMessage="Max output:" />
-				</span> {modelInfo.maxTokens?.toLocaleString()} <FormattedMessage id="apiOptions.tokens" defaultMessage="tokens" />
+				</span>{" "}
+				{modelInfo.maxTokens?.toLocaleString()} <FormattedMessage id="apiOptions.tokens" defaultMessage="tokens" />
 			</span>
 		),
 		modelInfo.inputPrice !== undefined && modelInfo.inputPrice > 0 && (
 			<span key="inputPrice">
 				<span style={{ fontWeight: 500 }}>
 					<FormattedMessage id="apiOptions.inputPrice" defaultMessage="Input price:" />
-				</span> {formatPrice(modelInfo.inputPrice)}/<FormattedMessage id="apiOptions.millionTokens" defaultMessage="million tokens" />
+				</span>{" "}
+				{formatPrice(modelInfo.inputPrice)}/
+				<FormattedMessage id="apiOptions.millionTokens" defaultMessage="million tokens" />
 			</span>
 		),
 		modelInfo.supportsPromptCache && modelInfo.cacheWritesPrice && (
 			<span key="cacheWritesPrice">
 				<span style={{ fontWeight: 500 }}>
 					<FormattedMessage id="apiOptions.cacheWritesPrice" defaultMessage="Cache writes price:" />
-				</span> {formatPrice(modelInfo.cacheWritesPrice || 0)}/<FormattedMessage id="apiOptions.millionTokens" defaultMessage="million tokens" />
+				</span>{" "}
+				{formatPrice(modelInfo.cacheWritesPrice || 0)}/
+				<FormattedMessage id="apiOptions.millionTokens" defaultMessage="million tokens" />
 			</span>
 		),
 		modelInfo.supportsPromptCache && modelInfo.cacheReadsPrice && (
 			<span key="cacheReadsPrice">
 				<span style={{ fontWeight: 500 }}>
 					<FormattedMessage id="apiOptions.cacheReadsPrice" defaultMessage="Cache reads price:" />
-				</span> {formatPrice(modelInfo.cacheReadsPrice || 0)}/<FormattedMessage id="apiOptions.millionTokens" defaultMessage="million tokens" />
+				</span>{" "}
+				{formatPrice(modelInfo.cacheReadsPrice || 0)}/
+				<FormattedMessage id="apiOptions.millionTokens" defaultMessage="million tokens" />
 			</span>
 		),
 		modelInfo.outputPrice !== undefined && modelInfo.outputPrice > 0 && (
 			<span key="outputPrice">
 				<span style={{ fontWeight: 500 }}>
 					<FormattedMessage id="apiOptions.outputPrice" defaultMessage="Output price:" />
-				</span> {formatPrice(modelInfo.outputPrice)}/<FormattedMessage id="apiOptions.millionTokens" defaultMessage="million tokens" />
+				</span>{" "}
+				{formatPrice(modelInfo.outputPrice)}/
+				<FormattedMessage id="apiOptions.millionTokens" defaultMessage="million tokens" />
 			</span>
 		),
 		isGemini && (
@@ -966,8 +995,7 @@ export const ModelInfoView = ({
 					id="apiOptions.geminiInfo"
 					defaultMessage="* Free up to {requestLimit} requests per minute. After that, billing depends on prompt size."
 					values={{ requestLimit: selectedModelId && selectedModelId.includes("flash") ? "15" : "2" }}
-				/>
-				{" "}
+				/>{" "}
 				<VSCodeLink href="https://ai.google.dev/pricing" style={{ display: "inline", fontSize: "inherit" }}>
 					<FormattedMessage id="apiOptions.geminiPricingInfo" defaultMessage="For more info, see pricing details." />
 				</VSCodeLink>

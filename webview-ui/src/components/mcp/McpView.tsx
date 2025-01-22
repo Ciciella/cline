@@ -103,7 +103,8 @@ const McpView = ({ onDone }: McpViewProps) => {
 						marginBottom: "20px",
 						marginTop: "5px",
 					}}>
-					模型上下文协议启用了与本地运行的MCP服务器的通信，这些服务器提供了额外的工具和资源，以扩展AI Code的功能。你可以使用
+					模型上下文协议启用了与本地运行的MCP服务器的通信，这些服务器提供了额外的工具和资源，以扩展AI
+					Code的功能。你可以使用
 					<VSCodeLink href="https://github.com/modelcontextprotocol/servers" style={{ display: "inline" }}>
 						社区制作的服务器
 					</VSCodeLink>
