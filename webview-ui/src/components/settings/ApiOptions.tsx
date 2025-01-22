@@ -51,9 +51,9 @@ interface ApiOptionsProps {
 // This is necessary to ensure dropdown opens downward, important for when this is used in popup
 const DROPDOWN_Z_INDEX = 1001 // Higher than the OpenRouterModelPicker's and ModelSelectorTooltip's z-index
 
-const DropdownContainer = styled.div`
+const DropdownContainer = styled.div<{ zIndex?: number }>`
 	position: relative;
-	z-index: ${DROPDOWN_Z_INDEX};
+	z-index: ${(props) => props.zIndex || DROPDOWN_Z_INDEX};
 
 	// Force dropdowns to open downward
 	& vscode-dropdown::part(listbox) {
@@ -402,7 +402,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 						placeholder="Enter Session Token...">
 						<span style={{ fontWeight: 500 }}>AWS Session Token</span>
 					</VSCodeTextField>
-					<div className="dropdown-container">
+					<DropdownContainer zIndex={DROPDOWN_Z_INDEX - 1} className="dropdown-container">
 						<label htmlFor="aws-region-dropdown">
 							<span style={{ fontWeight: 500 }}>AWS Region</span>
 						</label>
@@ -438,7 +438,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 							<VSCodeOption value="us-gov-west-1">us-gov-west-1</VSCodeOption>
 							{/* <VSCodeOption value="us-gov-east-1">us-gov-east-1</VSCodeOption> */}
 						</VSCodeDropdown>
-					</div>
+					</DropdownContainer>
 					<VSCodeCheckbox
 						checked={apiConfiguration?.awsUseCrossRegionInference || false}
 						onChange={(e: any) => {
@@ -478,7 +478,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 						placeholder="Enter Project ID...">
 						<span style={{ fontWeight: 500 }}>Google Cloud Project ID</span>
 					</VSCodeTextField>
-					<div className="dropdown-container">
+					<DropdownContainer zIndex={DROPDOWN_Z_INDEX - 2} className="dropdown-container">
 						<label htmlFor="vertex-region-dropdown">
 							<span style={{ fontWeight: 500 }}>Google Cloud Region</span>
 						</label>
@@ -494,7 +494,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 							<VSCodeOption value="europe-west4">europe-west4</VSCodeOption>
 							<VSCodeOption value="asia-southeast1">asia-southeast1</VSCodeOption>
 						</VSCodeDropdown>
-					</div>
+					</DropdownContainer>
 					<p
 						style={{
 							fontSize: "12px",
@@ -620,7 +620,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 
 			{selectedProvider === "vscode-lm" && (
 				<div>
-					<div className="dropdown-container">
+					<DropdownContainer zIndex={DROPDOWN_Z_INDEX - 2} className="dropdown-container">
 						<label htmlFor="vscode-lm-model">
 							<span style={{ fontWeight: 500 }}>语言模型</span>
 						</label>
@@ -674,7 +674,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 							}}>
 							注意：这是一个非常实验性的集成，可能无法按预期工作。
 						</p>
-					</div>
+					</DropdownContainer>
 				</div>
 			)}
 
@@ -828,7 +828,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 				selectedProvider !== "vscode-lm" &&
 				showModelOptions && (
 					<>
-						<div className="dropdown-container">
+						<DropdownContainer zIndex={DROPDOWN_Z_INDEX - 2} className="dropdown-container">
 							<label htmlFor="model-id">
 								<span style={{ fontWeight: 500 }}>模型</span>
 							</label>
@@ -839,7 +839,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 							{selectedProvider === "openai-native" && createDropdown(openAiNativeModels)}
 							{selectedProvider === "deepseek" && createDropdown(deepSeekModels)}
 							{selectedProvider === "mistral" && createDropdown(mistralModels)}
-						</div>
+						</DropdownContainer>
 
 						<ModelInfoView
 							selectedModelId={selectedModelId}
