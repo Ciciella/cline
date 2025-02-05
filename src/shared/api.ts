@@ -11,10 +11,13 @@ export type ApiProvider =
 	| "deepseek"
 	| "mistral"
 	| "vscode-lm"
+	| "litellm"
 
 export interface ApiHandlerOptions {
 	apiModelId?: string
 	apiKey?: string // anthropic
+	liteLlmBaseUrl?: string
+	liteLlmModelId?: string
 	anthropicBaseUrl?: string
 	openRouterApiKey?: string
 	openRouterModelId?: string
@@ -243,6 +246,14 @@ export const openAiModelInfoSaneDefaults: ModelInfo = {
 export type GeminiModelId = keyof typeof geminiModels
 export const geminiDefaultModelId: GeminiModelId = "gemini-2.0-flash-thinking-exp-1219"
 export const geminiModels = {
+	"gemini-2.0-flash-thinking-exp-01-21": {
+		maxTokens: 65536,
+		contextWindow: 1_048_576,
+		supportsImages: true,
+		supportsPromptCache: false,
+		inputPrice: 0,
+		outputPrice: 0,
+	},
 	"gemini-2.0-flash-thinking-exp-1219": {
 		maxTokens: 8192,
 		contextWindow: 32_767,
@@ -314,6 +325,14 @@ export const geminiModels = {
 export type OpenAiNativeModelId = keyof typeof openAiNativeModels
 export const openAiNativeDefaultModelId: OpenAiNativeModelId = "gpt-4o"
 export const openAiNativeModels = {
+	"o3-mini": {
+		maxTokens: 100_000,
+		contextWindow: 200_000,
+		supportsImages: false,
+		supportsPromptCache: false,
+		inputPrice: 1.1,
+		outputPrice: 4.4,
+	},
 	// don't support tool use yet
 	o1: {
 		maxTokens: 100_000,
@@ -336,16 +355,16 @@ export const openAiNativeModels = {
 		contextWindow: 128_000,
 		supportsImages: true,
 		supportsPromptCache: false,
-		inputPrice: 3,
-		outputPrice: 12,
+		inputPrice: 1.1,
+		outputPrice: 4.4,
 	},
 	"gpt-4o": {
 		maxTokens: 4_096,
 		contextWindow: 128_000,
 		supportsImages: true,
 		supportsPromptCache: false,
-		inputPrice: 5,
-		outputPrice: 15,
+		inputPrice: 2.5,
+		outputPrice: 10,
 	},
 	"gpt-4o-mini": {
 		maxTokens: 16_384,
@@ -403,3 +422,16 @@ export const mistralModels = {
 		outputPrice: 0.9,
 	},
 } as const satisfies Record<string, ModelInfo>
+
+// LiteLLM
+// https://docs.litellm.ai/docs/
+export type LiteLLMModelId = string
+export const liteLlmDefaultModelId = "gpt-3.5-turbo"
+export const liteLlmModelInfoSaneDefaults: ModelInfo = {
+	maxTokens: 4096,
+	contextWindow: 8192,
+	supportsImages: false,
+	supportsPromptCache: false,
+	inputPrice: 0,
+	outputPrice: 0,
+}

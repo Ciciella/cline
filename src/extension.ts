@@ -3,6 +3,7 @@
 import delay from "delay"
 import * as vscode from "vscode"
 import { ClineProvider } from "./core/webview/ClineProvider"
+import { Logger } from "./services/logging/Logger"
 import { createClineAPI } from "./exports"
 import "./utils/path" // necessary to have access to String.prototype.toPosix
 import { DIFF_VIEW_URI_SCHEME } from "./integrations/editor/DiffViewProvider"
@@ -24,7 +25,8 @@ export function activate(context: vscode.ExtensionContext) {
 	outputChannel = vscode.window.createOutputChannel("AI Code")
 	context.subscriptions.push(outputChannel)
 
-	outputChannel.appendLine("AI Code extension activated")
+	Logger.initialize(outputChannel)
+	Logger.log("AI Code extension activated")
 
 	const sidebarProvider = new ClineProvider(context, outputChannel)
 
@@ -36,7 +38,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(
 		vscode.commands.registerCommand("aicode.plusButtonClicked", async () => {
-			outputChannel.appendLine("Plus button Clicked")
+			Logger.log("Plus button Clicked")
 			await sidebarProvider.clearTask()
 			await sidebarProvider.postStateToWebview()
 			await sidebarProvider.postMessageToWebview({
@@ -53,7 +55,7 @@ export function activate(context: vscode.ExtensionContext) {
 	)
 
 	const openClineInNewTab = async () => {
-		outputChannel.appendLine("Opening AI Code in new tab")
+		Logger.log("Opening AI Code in new tab")
 		// (this example uses webviewProvider activation event which is necessary to deserialize cached webview, but since we use retainContextWhenHidden, we don't need to use that event)
 		// https://github.com/microsoft/vscode-extension-samples/blob/main/webview-sample/src/extension.ts
 		const tabProvider = new ClineProvider(context, outputChannel)
@@ -100,7 +102,19 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(
 		vscode.commands.registerCommand("aicode.historyButtonClicked", () => {
-			sidebarProvider.postMessageToWebview({ type: "action", action: "historyButtonClicked" })
+			sidebarProvider.postMessageToWebview({
+				type: "action",
+				action: "historyButtonClicked",
+			})
+		}),
+	)
+
+	context.subscriptions.push(
+		vscode.commands.registerCommand("aicode.accountLoginClicked", () => {
+			sidebarProvider.postMessageToWebview({
+				type: "action",
+				action: "accountLoginClicked",
+			})
 		}),
 	)
 
@@ -120,6 +134,12 @@ export function activate(context: vscode.ExtensionContext) {
 
 	// URI Handler
 	const handleUri = async (uri: vscode.Uri) => {
+		console.log("URI Handler called with:", {
+			path: uri.path,
+			query: uri.query,
+			scheme: uri.scheme,
+		})
+
 		const path = uri.path
 		const query = new URLSearchParams(uri.query.replace(/\+/g, "%2B"))
 		const visibleProvider = ClineProvider.getVisibleInstance()
@@ -134,6 +154,26 @@ export function activate(context: vscode.ExtensionContext) {
 				}
 				break
 			}
+			case "/auth": {
+				const token = query.get("token")
+				const state = query.get("state")
+
+				console.log("Auth callback received:", {
+					token: token,
+					state: state,
+				})
+
+				// Validate state parameter
+				if (!(await visibleProvider.validateAuthState(state))) {
+					vscode.window.showErrorMessage("Invalid auth state")
+					return
+				}
+
+				if (token) {
+					await visibleProvider.handleAuthCallback(token)
+				}
+				break
+			}
 			default:
 				break
 		}
@@ -145,5 +185,5 @@ export function activate(context: vscode.ExtensionContext) {
 
 // This method is called when your extension is deactivated
 export function deactivate() {
-	outputChannel.appendLine("AI Code扩展失效")
+	Logger.log("AI Code扩展失效")
 }
