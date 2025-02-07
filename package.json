@@ -133,7 +133,7 @@
 		"configuration": {
 			"title": "AI Code",
 			"properties": {
-				"aiCode.vsCodeLmModelSelector": {
+				"AICode.vsCodeLmModelSelector": {
 					"type": "object",
 					"properties": {
 						"vendor": {
@@ -145,9 +145,9 @@
 							"description": "语言模型的系列（例如：gpt-4）"
 						}
 					},
-					"description": "Settings for VSCode Language Model API"
+					"description": "VSCode 语言模型 API 的设置"
 				},
-				"cline.mcp.mode": {
+				"AICode.mcp.mode": {
 					"type": "string",
 					"enum": [
 						"full",
@@ -162,7 +162,7 @@
 					"default": "full",
 					"description": "控制在提示中包含 MCP 的内容，如果你只需要访问某些功能，可以减少令牌使用量。"
 				},
-				"cline.enableCheckpoints": {
+				"AICode.enableCheckpoints": {
 					"type": "boolean",
 					"default": true,
 					"description": "允许扩展在任务执行过程中保存工作区的检查点。"

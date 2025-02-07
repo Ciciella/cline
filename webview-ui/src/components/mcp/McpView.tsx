@@ -149,7 +149,7 @@ const McpView = ({ onDone }: McpViewProps) => {
 							})
 						}}
 						style={{ fontSize: "12px" }}>
-						Advanced MCP Settings
+						高级 MCP 设置
 					</VSCodeLink>
 				</div>
 

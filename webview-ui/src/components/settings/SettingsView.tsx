@@ -164,7 +164,7 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
 							margin: "0 0 16px 0",
 						}}>
 						<i className="codicon codicon-settings-gear" />
-						Advanced Settings
+						高级设置
 					</SettingsButton>
 				</div>
 				<div
