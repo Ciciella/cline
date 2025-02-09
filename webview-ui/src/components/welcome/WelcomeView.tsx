@@ -86,7 +86,6 @@ const WelcomeView = () => {
 					/>
 				</b>
 
-
 				<div style={{ marginTop: "15px" }}>
 					<ApiOptions showModelOptions={false} />
 					<VSCodeButton onClick={handleSubmit} disabled={disableLetsGoButton} style={{ marginTop: "3px" }}>

@@ -145,14 +145,13 @@ const McpView = ({ onDone }: McpViewProps) => {
 						onClick={() => {
 							vscode.postMessage({
 								type: "openExtensionSettings",
-								text: "cline.mcp",
+								text: "aiCode.mcp",
 							})
 						}}
 						style={{ fontSize: "12px" }}>
 						高级 MCP 设置
 					</VSCodeLink>
 				</div>
-
 
 				{/* Bottom padding */}
 				<div style={{ height: "20px" }} />

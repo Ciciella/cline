@@ -71,32 +71,32 @@
 		},
 		"commands": [
 			{
-				"command": "aicode.plusButtonClicked",
+				"command": "aiCode.plusButtonClicked",
 				"title": "新任务",
 				"icon": "$(add)"
 			},
 			{
-				"command": "aicode.mcpButtonClicked",
+				"command": "aiCode.mcpButtonClicked",
 				"title": "MCP服务器",
 				"icon": "$(server)"
 			},
 			{
-				"command": "aicode.historyButtonClicked",
+				"command": "aiCode.historyButtonClicked",
 				"title": "历史记录",
 				"icon": "$(history)"
 			},
 			{
-				"command": "aicode.popoutButtonClicked",
+				"command": "aiCode.popoutButtonClicked",
 				"title": "在编辑器中打开",
 				"icon": "$(link-external)"
 			},
 			{
-				"command": "aicode.settingsButtonClicked",
+				"command": "aiCode.settingsButtonClicked",
 				"title": "设置",
 				"icon": "$(settings-gear)"
 			},
 			{
-				"command": "aicode.openInNewTab",
+				"command": "aiCode.openInNewTab",
 				"title": "在新标签页中打开",
 				"category": "AI Code"
 			}
@@ -104,27 +104,27 @@
 		"menus": {
 			"view/title": [
 				{
-					"command": "aicode.plusButtonClicked",
+					"command": "aiCode.plusButtonClicked",
 					"group": "navigation@1",
 					"when": "view == ai-code-dev.SidebarProvider"
 				},
 				{
-					"command": "aicode.mcpButtonClicked",
+					"command": "aiCode.mcpButtonClicked",
 					"group": "navigation@2",
 					"when": "view == ai-code-dev.SidebarProvider"
 				},
 				{
-					"command": "aicode.historyButtonClicked",
+					"command": "aiCode.historyButtonClicked",
 					"group": "navigation@3",
 					"when": "view == ai-code-dev.SidebarProvider"
 				},
 				{
-					"command": "aicode.popoutButtonClicked",
+					"command": "aiCode.popoutButtonClicked",
 					"group": "navigation@4",
 					"when": "view == ai-code-dev.SidebarProvider"
 				},
 				{
-					"command": "aicode.settingsButtonClicked",
+					"command": "aiCode.settingsButtonClicked",
 					"group": "navigation@5",
 					"when": "view == ai-code-dev.SidebarProvider"
 				}
@@ -218,7 +218,7 @@
 		"@vscode/test-cli": "^0.0.9",
 		"@vscode/test-electron": "^2.4.0",
 		"chai": "^4.3.10",
-		"esbuild": "^0.21.5",
+		"esbuild": "^0.25.0",
 		"eslint": "^8.57.0",
 		"husky": "^9.1.7",
 		"npm-run-all": "^4.1.5",

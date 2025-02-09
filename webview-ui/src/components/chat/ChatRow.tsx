@@ -152,7 +152,9 @@ export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifi
 							color: errorColor,
 							marginBottom: "-1.5px",
 						}}></span>,
-					<span style={{ color: errorColor, fontWeight: "bold" }}><FormattedMessage id="chatRow.error" defaultMessage="Error" /></span>,
+					<span style={{ color: errorColor, fontWeight: "bold" }}>
+						<FormattedMessage id="chatRow.error" defaultMessage="Error" />
+					</span>,
 				]
 			case "mistake_limit_reached":
 				return [
@@ -162,7 +164,9 @@ export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifi
 							color: errorColor,
 							marginBottom: "-1.5px",
 						}}></span>,
-					<span style={{ color: errorColor, fontWeight: "bold" }}><FormattedMessage id="chatRow.clineHavingTrouble" defaultMessage="AI Code is having trouble..." /></span>,
+					<span style={{ color: errorColor, fontWeight: "bold" }}>
+						<FormattedMessage id="chatRow.clineHavingTrouble" defaultMessage="AI Code is having trouble..." />
+					</span>,
 				]
 			case "auto_approval_max_req_reached":
 				return [
@@ -172,7 +176,9 @@ export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifi
 							color: errorColor,
 							marginBottom: "-1.5px",
 						}}></span>,
-					<span style={{ color: errorColor, fontWeight: "bold" }}><FormattedMessage id="chatRow.maximumRequestsReached" defaultMessage="最大请求已达到" /></span>,
+					<span style={{ color: errorColor, fontWeight: "bold" }}>
+						<FormattedMessage id="chatRow.maximumRequestsReached" defaultMessage="最大请求已达到" />
+					</span>,
 				]
 			case "command":
 				return [
@@ -203,7 +209,8 @@ export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifi
 							}}></span>
 					),
 					<span style={{ color: normalColor, fontWeight: "bold" }}>
-						AI Code 想要在 <code>{mcpServerUse.serverName}</code> MCP 服务器上{mcpServerUse.type === "use_mcp_tool" ? "使用工具" : "访问资源"}:
+						AI Code 想要在 <code>{mcpServerUse.serverName}</code> MCP 服务器上
+						{mcpServerUse.type === "use_mcp_tool" ? "使用工具" : "访问资源"}:
 					</span>,
 				]
 			case "completion_result":
@@ -291,7 +298,9 @@ export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifi
 							color: normalColor,
 							marginBottom: "-1.5px",
 						}}></span>,
-					<span style={{ color: normalColor, fontWeight: "bold" }}><FormattedMessage id="chatRow.clineHasQuestion" defaultMessage="AI Code has a question:" /></span>,
+					<span style={{ color: normalColor, fontWeight: "bold" }}>
+						<FormattedMessage id="chatRow.clineHasQuestion" defaultMessage="AI Code has a question:" />
+					</span>,
 				]
 			default:
 				return [null, null]
@@ -982,12 +991,10 @@ export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifi
 											fontWeight: 500,
 											color: "#FFA500",
 										}}>
-										Diff Edit Failed
+										差异编辑失败
 									</span>
 								</div>
-								<div>
-									这通常发生在模型使用的搜索模式与文件中的内容不匹配时。正在重试...
-								</div>
+								<div>这通常发生在模型使用的搜索模式与文件中的内容不匹配时。正在重试...</div>
 							</div>
 						</>
 					)
@@ -1025,8 +1032,7 @@ export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifi
 									</span>
 								</div>
 								<div>
-									AI Code 尝试访问 <code>{message.text}</code>，但被{" "}
-									<code>.clineignore</code>
+									AI Code 尝试访问 <code>{message.text}</code>，但被 <code>.clineignore</code>
 									文件阻止。
 								</div>
 							</div>

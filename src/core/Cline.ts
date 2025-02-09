@@ -343,13 +343,13 @@ export class Cline {
 
 			switch (restoreType) {
 				case "task":
-					vscode.window.showInformationMessage("Task messages have been restored to the checkpoint")
+					vscode.window.showInformationMessage("任务消息已恢复到检查点")
 					break
 				case "workspace":
-					vscode.window.showInformationMessage("Workspace files have been restored to the checkpoint")
+					vscode.window.showInformationMessage("工作区文件已恢复到检查点")
 					break
 				case "taskAndWorkspace":
-					vscode.window.showInformationMessage("Task and workspace have been restored to the checkpoint")
+					vscode.window.showInformationMessage("任务和工作区已恢复到检查点")
 					break
 			}
 
@@ -3194,10 +3194,7 @@ export class Cline {
 				didEndLoop = recDidEndLoop
 			} else {
 				// if there's no assistant_responses, that means we got no text or tool_use content blocks from API which we should assume is an error
-				await this.say(
-					"error",
-					"意外的API响应：语言模型没有提供任何助手消息。这可能表明API或模型输出存在问题。",
-				)
+				await this.say("error", "意外的API响应：语言模型没有提供任何助手消息。这可能表明API或模型输出存在问题。")
 				await this.addToApiConversationHistory({
 					role: "assistant",
 					content: [

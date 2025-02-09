@@ -250,14 +250,14 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 							defaultMessage="This key is stored locally and only used to make API requests from this extension."
 						/>
 						{!apiConfiguration?.apiKey && (
-						<VSCodeLink
-							href="https://console.anthropic.com/settings/keys"
-							style={{ display: "inline", fontSize: "inherit" }}>
-							<FormattedMessage
-								id="apiOptions.anthropicApiKeyInfo"
-								defaultMessage="You can get an Anthropic API key by signing up here."
-							/>
-						</VSCodeLink>
+							<VSCodeLink
+								href="https://console.anthropic.com/settings/keys"
+								style={{ display: "inline", fontSize: "inherit" }}>
+								<FormattedMessage
+									id="apiOptions.anthropicApiKeyInfo"
+									defaultMessage="You can get an Anthropic API key by signing up here."
+								/>
+							</VSCodeLink>
 						)}
 					</p>
 				</div>
@@ -290,10 +290,10 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 									display: "inline",
 									fontSize: "inherit",
 								}}>
-							<FormattedMessage
-								id="apiOptions.openaiApiKeyInfo"
-								defaultMessage="You can get an OpenAI API key by signing up here."
-							/>
+								<FormattedMessage
+									id="apiOptions.openaiApiKeyInfo"
+									defaultMessage="You can get an OpenAI API key by signing up here."
+								/>
 							</VSCodeLink>
 						)}
 					</p>
@@ -563,7 +563,6 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 						使用跨区域推理
 					</VSCodeCheckbox>
 					<p
-
 						style={{
 							fontSize: "12px",
 							marginTop: "5px",
@@ -571,11 +570,13 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 						}}>
 						{apiConfiguration?.awsUseProfile ? (
 							<>
-								使用来自 ~/.aws/credentials 的 AWS 配置文件凭据。将配置文件名称留空以使用默认配置文件。这些凭据仅用于本地从此扩展进行 API 请求。
+								使用来自 ~/.aws/credentials 的 AWS
+								配置文件凭据。将配置文件名称留空以使用默认配置文件。这些凭据仅用于本地从此扩展进行 API 请求。
 							</>
 						) : (
 							<>
-								通过提供上述密钥进行身份验证，或者使用默认的 AWS 凭据提供者，即 ~/.aws/credentials 或环境变量。这些凭据仅用于本地从此扩展进行 API 请求。
+								通过提供上述密钥进行身份验证，或者使用默认的 AWS 凭据提供者，即 ~/.aws/credentials
+								或环境变量。这些凭据仅用于本地从此扩展进行 API 请求。
 							</>
 						)}
 					</p>
@@ -763,7 +764,8 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 							color: "var(--vscode-descriptionForeground)",
 						}}>
 						<span style={{ color: "var(--vscode-errorForeground)" }}>
-							(<span style={{ fontWeight: 500 }}>注意:</span> AI Code 使用复杂的提示，并且在 Claude 模型上效果最佳。能力较弱的模型可能无法按预期工作。)
+							(<span style={{ fontWeight: 500 }}>注意:</span> AI Code 使用复杂的提示，并且在 Claude
+							模型上效果最佳。能力较弱的模型可能无法按预期工作。)
 						</span>
 					</p>
 				</div>
@@ -793,7 +795,8 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 							color: "var(--vscode-descriptionForeground)",
 						}}>
 						<span style={{ color: "var(--vscode-errorForeground)" }}>
-							(<span style={{ fontWeight: 500 }}>注意:</span> AI Code 使用复杂的提示，并且在 Claude 模型上效果最佳。能力较弱的模型可能无法按预期工作。)
+							(<span style={{ fontWeight: 500 }}>注意:</span> AI Code 使用复杂的提示，并且在 Claude
+							模型上效果最佳。能力较弱的模型可能无法按预期工作。)
 						</span>
 					</p>
 				</div>
