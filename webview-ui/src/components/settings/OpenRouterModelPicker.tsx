@@ -234,10 +234,10 @@ const OpenRouterModelPicker: React.FC<OpenRouterModelPickerProps> = ({ isPopup }
 					/>
 					<VSCodeLink
 						style={{ display: "inline", fontSize: "inherit" }}
-						onClick={() => handleModelChange("anthropic/claude-3.5-sonnet:beta")}>
+						onClick={() => handleModelChange("anthropic/claude-3.5-sonnet")}>
 						<FormattedMessage
 							id="openRouterModelPicker.recommendedModel"
-							defaultMessage="anthropic/claude-3.5-sonnet:beta."
+							defaultMessage="anthropic/claude-3.5-sonnet."
 						/>
 					</VSCodeLink>
 					<FormattedMessage

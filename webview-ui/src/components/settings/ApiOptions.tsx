@@ -20,6 +20,8 @@ import {
 	bedrockModels,
 	deepSeekDefaultModelId,
 	deepSeekModels,
+	qwenDefaultModelId,
+	qwenModels,
 	geminiDefaultModelId,
 	geminiModels,
 	mistralDefaultModelId,
@@ -180,16 +182,19 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 					}}>
 					<VSCodeOption value="openrouter">OpenRouter</VSCodeOption>
 					<VSCodeOption value="anthropic">Anthropic</VSCodeOption>
-					<VSCodeOption value="gemini">Google Gemini</VSCodeOption>
-					<VSCodeOption value="deepseek">DeepSeek</VSCodeOption>
-					<VSCodeOption value="mistral">Mistral</VSCodeOption>
-					<VSCodeOption value="vertex">GCP Vertex AI</VSCodeOption>
 					<VSCodeOption value="bedrock">AWS Bedrock</VSCodeOption>
-					<VSCodeOption value="openai-native">OpenAI</VSCodeOption>
 					<VSCodeOption value="openai">
 						<FormattedMessage id="apiOptions.openaiCompatible" defaultMessage="OpenAI Compatible" />
 					</VSCodeOption>
+					<VSCodeOption value="vertex">GCP Vertex AI</VSCodeOption>
+					<VSCodeOption value="gemini">Google Gemini</VSCodeOption>
+					<VSCodeOption value="deepseek">DeepSeek</VSCodeOption>
+					<VSCodeOption value="mistral">Mistral</VSCodeOption>
+					<VSCodeOption value="openai-native">OpenAI</VSCodeOption>
 					<VSCodeOption value="vscode-lm">VS Code LM API</VSCodeOption>
+					<VSCodeOption value="requesty">Requesty</VSCodeOption>
+					<VSCodeOption value="together">Together</VSCodeOption>
+					<VSCodeOption value="qwen">Alibaba Qwen</VSCodeOption>
 					<VSCodeOption value="lmstudio">LM Studio</VSCodeOption>
 					<VSCodeOption value="ollama">Ollama</VSCodeOption>
 					<VSCodeOption value="litellm">LiteLLM</VSCodeOption>
@@ -244,6 +249,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 							id="apiOptions.apiKeyStorage"
 							defaultMessage="This key is stored locally and only used to make API requests from this extension."
 						/>
+						{!apiConfiguration?.apiKey && (
 						<VSCodeLink
 							href="https://console.anthropic.com/settings/keys"
 							style={{ display: "inline", fontSize: "inherit" }}>
@@ -252,6 +258,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 								defaultMessage="You can get an Anthropic API key by signing up here."
 							/>
 						</VSCodeLink>
+						)}
 					</p>
 				</div>
 			)}
@@ -276,14 +283,19 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 							id="apiOptions.apiKeyStorage"
 							defaultMessage="This key is stored locally and only used to make API requests from this extension."
 						/>
-						<VSCodeLink
-							href="https://platform.openai.com/api-keys"
-							style={{ display: "inline", fontSize: "inherit" }}>
+						{!apiConfiguration?.openAiNativeApiKey && (
+							<VSCodeLink
+								href="https://platform.openai.com/api-keys"
+								style={{
+									display: "inline",
+									fontSize: "inherit",
+								}}>
 							<FormattedMessage
 								id="apiOptions.openaiApiKeyInfo"
 								defaultMessage="You can get an OpenAI API key by signing up here."
 							/>
-						</VSCodeLink>
+							</VSCodeLink>
+						)}
 					</p>
 				</div>
 			)}
@@ -306,8 +318,68 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 						}}>
 						此密钥存储在本地，仅用于从此扩展进行 API 请求。
 						{!apiConfiguration?.deepSeekApiKey && (
-							<VSCodeLink href="https://www.deepseek.com/" style={{ display: "inline", fontSize: "inherit" }}>
+							<VSCodeLink
+								href="https://www.deepseek.com/"
+								style={{
+									display: "inline",
+									fontSize: "inherit",
+								}}>
 								您可以在此处注册以获取 DeepSeek API 密钥。
+							</VSCodeLink>
+						)}
+					</p>
+				</div>
+			)}
+
+			{selectedProvider === "qwen" && (
+				<div>
+					<DropdownContainer className="dropdown-container" style={{ position: "inherit" }}>
+						<label htmlFor="qwen-line-provider">
+							<span style={{ fontWeight: 500, marginTop: 5 }}>阿里巴巴 API 接口</span>
+						</label>
+						<VSCodeDropdown
+							id="qwen-line-provider"
+							value={apiConfiguration?.qwenApiLine || "china"}
+							onChange={handleInputChange("qwenApiLine")}
+							style={{
+								minWidth: 130,
+								position: "relative",
+							}}>
+							<VSCodeOption value="china">中国 API</VSCodeOption>
+							<VSCodeOption value="international">国际 API</VSCodeOption>
+						</VSCodeDropdown>
+					</DropdownContainer>
+					<p
+						style={{
+							fontSize: "12px",
+							marginTop: 3,
+							color: "var(--vscode-descriptionForeground)",
+						}}>
+						请根据您的位置选择合适的 API 接口。如果您在中国，请选择中国 API 接口。否则，请选择国际 API 接口。
+					</p>
+					<VSCodeTextField
+						value={apiConfiguration?.qwenApiKey || ""}
+						style={{ width: "100%" }}
+						type="password"
+						onInput={handleInputChange("qwenApiKey")}
+						placeholder="输入 API 密钥...">
+						<span style={{ fontWeight: 500 }}>Qwen API 密钥</span>
+					</VSCodeTextField>
+					<p
+						style={{
+							fontSize: "12px",
+							marginTop: 3,
+							color: "var(--vscode-descriptionForeground)",
+						}}>
+						此密钥存储在本地，仅用于从此扩展进行 API 请求。
+						{!apiConfiguration?.qwenApiKey && (
+							<VSCodeLink
+								href="https://bailian.console.aliyun.com/"
+								style={{
+									display: "inline",
+									fontSize: "inherit",
+								}}>
+								您可以在此处注册以获取 Qwen API 密钥。
 							</VSCodeLink>
 						)}
 					</p>
@@ -392,30 +464,56 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 						flexDirection: "column",
 						gap: 5,
 					}}>
-					<VSCodeTextField
-						value={apiConfiguration?.awsAccessKey || ""}
-						style={{ width: "100%" }}
-						type="password"
-						onInput={handleInputChange("awsAccessKey")}
-						placeholder="Enter Access Key...">
-						<span style={{ fontWeight: 500 }}>AWS Access Key</span>
-					</VSCodeTextField>
-					<VSCodeTextField
-						value={apiConfiguration?.awsSecretKey || ""}
-						style={{ width: "100%" }}
-						type="password"
-						onInput={handleInputChange("awsSecretKey")}
-						placeholder="Enter Secret Key...">
-						<span style={{ fontWeight: 500 }}>AWS Secret Key</span>
-					</VSCodeTextField>
-					<VSCodeTextField
-						value={apiConfiguration?.awsSessionToken || ""}
-						style={{ width: "100%" }}
-						type="password"
-						onInput={handleInputChange("awsSessionToken")}
-						placeholder="Enter Session Token...">
-						<span style={{ fontWeight: 500 }}>AWS Session Token</span>
-					</VSCodeTextField>
+					<VSCodeRadioGroup
+						value={apiConfiguration?.awsUseProfile ? "profile" : "credentials"}
+						onChange={(e) => {
+							const value = (e.target as HTMLInputElement)?.value
+							const useProfile = value === "profile"
+							setApiConfiguration({
+								...apiConfiguration,
+								awsUseProfile: useProfile,
+							})
+						}}>
+						<VSCodeRadio value="credentials">AWS Credentials</VSCodeRadio>
+						<VSCodeRadio value="profile">AWS Profile</VSCodeRadio>
+					</VSCodeRadioGroup>
+
+					{apiConfiguration?.awsUseProfile ? (
+						<VSCodeTextField
+							value={apiConfiguration?.awsProfile || ""}
+							style={{ width: "100%" }}
+							onInput={handleInputChange("awsProfile")}
+							placeholder="Enter profile name (default if empty)">
+							<span style={{ fontWeight: 500 }}>AWS Profile Name</span>
+						</VSCodeTextField>
+					) : (
+						<>
+							<VSCodeTextField
+								value={apiConfiguration?.awsAccessKey || ""}
+								style={{ width: "100%" }}
+								type="password"
+								onInput={handleInputChange("awsAccessKey")}
+								placeholder="Enter Access Key...">
+								<span style={{ fontWeight: 500 }}>AWS Access Key</span>
+							</VSCodeTextField>
+							<VSCodeTextField
+								value={apiConfiguration?.awsSecretKey || ""}
+								style={{ width: "100%" }}
+								type="password"
+								onInput={handleInputChange("awsSecretKey")}
+								placeholder="Enter Secret Key...">
+								<span style={{ fontWeight: 500 }}>AWS Secret Key</span>
+							</VSCodeTextField>
+							<VSCodeTextField
+								value={apiConfiguration?.awsSessionToken || ""}
+								style={{ width: "100%" }}
+								type="password"
+								onInput={handleInputChange("awsSessionToken")}
+								placeholder="Enter Session Token...">
+								<span style={{ fontWeight: 500 }}>AWS Session Token</span>
+							</VSCodeTextField>
+						</>
+					)}
 					<DropdownContainer zIndex={DROPDOWN_Z_INDEX - 1} className="dropdown-container">
 						<label htmlFor="aws-region-dropdown">
 							<span style={{ fontWeight: 500 }}>AWS Region</span>
@@ -462,18 +560,24 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 								awsUseCrossRegionInference: isChecked,
 							})
 						}}>
-						Use cross-region inference
+						使用跨区域推理
 					</VSCodeCheckbox>
 					<p
+
 						style={{
 							fontSize: "12px",
 							marginTop: "5px",
 							color: "var(--vscode-descriptionForeground)",
 						}}>
-						<FormattedMessage
-							id="apiOptions.awsAuthentication"
-							defaultMessage="Authenticate by either providing the keys above or use the default AWS credential providers, i.e. ~/.aws/credentials or environment variables. These credentials are only used locally to make API requests from this extension."
-						/>
+						{apiConfiguration?.awsUseProfile ? (
+							<>
+								使用来自 ~/.aws/credentials 的 AWS 配置文件凭据。将配置文件名称留空以使用默认配置文件。这些凭据仅用于本地从此扩展进行 API 请求。
+							</>
+						) : (
+							<>
+								通过提供上述密钥进行身份验证，或者使用默认的 AWS 凭据提供者，即 ~/.aws/credentials 或环境变量。这些凭据仅用于本地从此扩展进行 API 请求。
+							</>
+						)}
 					</p>
 				</div>
 			)}
@@ -635,6 +739,66 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 				</div>
 			)}
 
+			{selectedProvider === "requesty" && (
+				<div>
+					<VSCodeTextField
+						value={apiConfiguration?.requestyApiKey || ""}
+						style={{ width: "100%" }}
+						type="password"
+						onInput={handleInputChange("requestyApiKey")}
+						placeholder="Enter API Key...">
+						<span style={{ fontWeight: 500 }}>API Key</span>
+					</VSCodeTextField>
+					<VSCodeTextField
+						value={apiConfiguration?.requestyModelId || ""}
+						style={{ width: "100%" }}
+						onInput={handleInputChange("requestyModelId")}
+						placeholder={"Enter Model ID..."}>
+						<span style={{ fontWeight: 500 }}>Model ID</span>
+					</VSCodeTextField>
+					<p
+						style={{
+							fontSize: "12px",
+							marginTop: 3,
+							color: "var(--vscode-descriptionForeground)",
+						}}>
+						<span style={{ color: "var(--vscode-errorForeground)" }}>
+							(<span style={{ fontWeight: 500 }}>注意:</span> AI Code 使用复杂的提示，并且在 Claude 模型上效果最佳。能力较弱的模型可能无法按预期工作。)
+						</span>
+					</p>
+				</div>
+			)}
+
+			{selectedProvider === "together" && (
+				<div>
+					<VSCodeTextField
+						value={apiConfiguration?.togetherApiKey || ""}
+						style={{ width: "100%" }}
+						type="password"
+						onInput={handleInputChange("togetherApiKey")}
+						placeholder="Enter API Key...">
+						<span style={{ fontWeight: 500 }}>API Key</span>
+					</VSCodeTextField>
+					<VSCodeTextField
+						value={apiConfiguration?.togetherModelId || ""}
+						style={{ width: "100%" }}
+						onInput={handleInputChange("togetherModelId")}
+						placeholder={"Enter Model ID..."}>
+						<span style={{ fontWeight: 500 }}>Model ID</span>
+					</VSCodeTextField>
+					<p
+						style={{
+							fontSize: "12px",
+							marginTop: 3,
+							color: "var(--vscode-descriptionForeground)",
+						}}>
+						<span style={{ color: "var(--vscode-errorForeground)" }}>
+							(<span style={{ fontWeight: 500 }}>注意:</span> AI Code 使用复杂的提示，并且在 Claude 模型上效果最佳。能力较弱的模型可能无法按预期工作。)
+						</span>
+					</p>
+				</div>
+			)}
+
 			{selectedProvider === "vscode-lm" && (
 				<div>
 					<DropdownContainer zIndex={DROPDOWN_Z_INDEX - 2} className="dropdown-container">
@@ -785,11 +949,11 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 							marginTop: "5px",
 							color: "var(--vscode-descriptionForeground)",
 						}}>
-						LiteLLM provides a unified interface to access various LLM providers' models. See their{" "}
+						LiteLLM 提供了一个统一的接口来访问各种 LLM 提供者的模型。有关更多信息，请参阅他们的{" "}
 						<VSCodeLink href="https://docs.litellm.ai/docs/" style={{ display: "inline", fontSize: "inherit" }}>
-							quickstart guide
+							快速入门指南
 						</VSCodeLink>{" "}
-						for more information.
+						。
 					</p>
 				</div>
 			)}
@@ -891,6 +1055,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 							{selectedProvider === "gemini" && createDropdown(geminiModels)}
 							{selectedProvider === "openai-native" && createDropdown(openAiNativeModels)}
 							{selectedProvider === "deepseek" && createDropdown(deepSeekModels)}
+							{selectedProvider === "qwen" && createDropdown(qwenModels)}
 							{selectedProvider === "mistral" && createDropdown(mistralModels)}
 						</DropdownContainer>
 
@@ -1118,6 +1283,8 @@ export function normalizeApiConfiguration(apiConfiguration?: ApiConfiguration): 
 			return getProviderData(openAiNativeModels, openAiNativeDefaultModelId)
 		case "deepseek":
 			return getProviderData(deepSeekModels, deepSeekDefaultModelId)
+		case "qwen":
+			return getProviderData(qwenModels, qwenDefaultModelId)
 		case "mistral":
 			return getProviderData(mistralModels, mistralDefaultModelId)
 		case "openrouter":

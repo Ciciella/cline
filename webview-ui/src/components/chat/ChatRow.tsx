@@ -146,24 +146,33 @@ export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifi
 		switch (type) {
 			case "error":
 				return [
-					<span className="codicon codicon-error" style={{ color: errorColor, marginBottom: "-1.5px" }}></span>,
-					<span style={{ color: errorColor, fontWeight: "bold" }}>
-						<FormattedMessage id="chatRow.error" defaultMessage="Error" />
-					</span>,
+					<span
+						className="codicon codicon-error"
+						style={{
+							color: errorColor,
+							marginBottom: "-1.5px",
+						}}></span>,
+					<span style={{ color: errorColor, fontWeight: "bold" }}><FormattedMessage id="chatRow.error" defaultMessage="Error" /></span>,
 				]
 			case "mistake_limit_reached":
 				return [
-					<span className="codicon codicon-error" style={{ color: errorColor, marginBottom: "-1.5px" }}></span>,
-					<span style={{ color: errorColor, fontWeight: "bold" }}>
-						<FormattedMessage id="chatRow.clineHavingTrouble" defaultMessage="AI Code is having trouble..." />
-					</span>,
+					<span
+						className="codicon codicon-error"
+						style={{
+							color: errorColor,
+							marginBottom: "-1.5px",
+						}}></span>,
+					<span style={{ color: errorColor, fontWeight: "bold" }}><FormattedMessage id="chatRow.clineHavingTrouble" defaultMessage="AI Code is having trouble..." /></span>,
 				]
 			case "auto_approval_max_req_reached":
 				return [
-					<span className="codicon codicon-warning" style={{ color: errorColor, marginBottom: "-1.5px" }}></span>,
-					<span style={{ color: errorColor, fontWeight: "bold" }}>
-						<FormattedMessage id="chatRow.maximumRequestsReached" defaultMessage="最大请求已达到" />
-					</span>,
+					<span
+						className="codicon codicon-warning"
+						style={{
+							color: errorColor,
+							marginBottom: "-1.5px",
+						}}></span>,
+					<span style={{ color: errorColor, fontWeight: "bold" }}><FormattedMessage id="chatRow.maximumRequestsReached" defaultMessage="最大请求已达到" /></span>,
 				]
 			case "command":
 				return [
@@ -177,12 +186,11 @@ export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifi
 								marginBottom: "-1.5px",
 							}}></span>
 					),
-					<span style={{ color: normalColor, fontWeight: "bold" }}>
-						{message.type === "ask" ? "AI Code想执行这个命令:" : "AI Code执行了这个命令:"}
-					</span>,
+					<span style={{ color: normalColor, fontWeight: "bold" }}>AI Code想要执行此命令：</span>,
 				]
 			case "use_mcp_server":
 				const mcpServerUse = JSON.parse(message.text || "{}") as ClineAskUseMcpServer
+
 				return [
 					isMcpServerResponding ? (
 						<ProgressIndicator />
@@ -195,22 +203,17 @@ export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifi
 							}}></span>
 					),
 					<span style={{ color: normalColor, fontWeight: "bold" }}>
-						{message.type === "ask" ? (
-							<>
-								AI Code想要在<code>{mcpServerUse.serverName}</code> MCP服务器上
-								{mcpServerUse.type === "use_mcp_tool" ? "使用工具" : "访问资源"}:
-							</>
-						) : (
-							<>
-								AI Code在<code>{mcpServerUse.serverName}</code> MCP服务器上
-								{mcpServerUse.type === "use_mcp_tool" ? "使用了工具" : "访问了资源"}:
-							</>
-						)}
+						AI Code 想要在 <code>{mcpServerUse.serverName}</code> MCP 服务器上{mcpServerUse.type === "use_mcp_tool" ? "使用工具" : "访问资源"}:
 					</span>,
 				]
 			case "completion_result":
 				return [
-					<span className="codicon codicon-check" style={{ color: successColor, marginBottom: "-1.5px" }}></span>,
+					<span
+						className="codicon codicon-check"
+						style={{
+							color: successColor,
+							marginBottom: "-1.5px",
+						}}></span>,
 					<span style={{ color: successColor, fontWeight: "bold" }}>
 						<FormattedMessage id="chatRow.taskCompleted" defaultMessage="Task Completed" />
 					</span>,
@@ -250,11 +253,19 @@ export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifi
 					),
 					apiReqCancelReason != null ? (
 						apiReqCancelReason === "user_cancelled" ? (
-							<span style={{ color: normalColor, fontWeight: "bold" }}>
+							<span
+								style={{
+									color: normalColor,
+									fontWeight: "bold",
+								}}>
 								<FormattedMessage id="chatRow.apiRequestCancelled" defaultMessage="API Request Cancelled" />
 							</span>
 						) : (
-							<span style={{ color: errorColor, fontWeight: "bold" }}>
+							<span
+								style={{
+									color: errorColor,
+									fontWeight: "bold",
+								}}>
 								<FormattedMessage id="chatRow.apiStreamingFailed" defaultMessage="API Streaming Failed" />
 							</span>
 						)
@@ -274,24 +285,18 @@ export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifi
 				]
 			case "followup":
 				return [
-					<span className="codicon codicon-question" style={{ color: normalColor, marginBottom: "-1.5px" }}></span>,
-					<span style={{ color: normalColor, fontWeight: "bold" }}>
-						<FormattedMessage id="chatRow.clineHasQuestion" defaultMessage="AI Code has a question:" />
-					</span>,
+					<span
+						className="codicon codicon-question"
+						style={{
+							color: normalColor,
+							marginBottom: "-1.5px",
+						}}></span>,
+					<span style={{ color: normalColor, fontWeight: "bold" }}><FormattedMessage id="chatRow.clineHasQuestion" defaultMessage="AI Code has a question:" /></span>,
 				]
 			default:
 				return [null, null]
 		}
-	}, [
-		type,
-		cost,
-		apiRequestFailedMessage,
-		isCommandExecuting,
-		apiReqCancelReason,
-		isMcpServerResponding,
-		message.text,
-		message.type,
-	])
+	}, [type, cost, apiRequestFailedMessage, isCommandExecuting, apiReqCancelReason, isMcpServerResponding, message.text])
 
 	const headerStyle: React.CSSProperties = {
 		display: "flex",
@@ -330,9 +335,7 @@ export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifi
 					<>
 						<div style={headerStyle}>
 							{toolIcon("edit")}
-							<span style={{ fontWeight: "bold" }}>
-								{message.type === "ask" ? "AI Code想编辑这个文件：" : "AI Code编辑了这个文件："}
-							</span>
+							<span style={{ fontWeight: "bold" }}>AI Code 想要编辑这个文件:</span>
 						</div>
 						<CodeAccordian
 							// isLoading={message.partial}
@@ -348,9 +351,7 @@ export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifi
 					<>
 						<div style={headerStyle}>
 							{toolIcon("new-file")}
-							<span style={{ fontWeight: "bold" }}>
-								{message.type === "ask" ? "AI Code想创建一个新文件：" : "AI Code创建了一个新文件："}
-							</span>
+							<span style={{ fontWeight: "bold" }}>AI Code 想要创建一个新文件：</span>
 						</div>
 						<CodeAccordian
 							isLoading={message.partial}
@@ -367,14 +368,8 @@ export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifi
 						<div style={headerStyle}>
 							{toolIcon("file-code")}
 							<span style={{ fontWeight: "bold" }}>
-								{message.type === "ask" ? (
-									<FormattedMessage
-										id="chatRow.readFileAsk"
-										defaultMessage="AI Code wants to read this file:"
-									/>
-								) : (
-									<FormattedMessage id="chatRow.readFileSay" defaultMessage="AI Code read this file:" />
-								)}
+								{/* {message.type === "ask" ? "" : "Cline read this file:"} */}
+								AI Code 想要读取这个文件：
 							</span>
 						</div>
 						{/* <CodeAccordian
@@ -520,19 +515,7 @@ export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifi
 						<div style={headerStyle}>
 							{toolIcon("search")}
 							<span style={{ fontWeight: "bold" }}>
-								{message.type === "ask" ? (
-									<FormattedMessage
-										id="chatRow.searchFilesAsk"
-										defaultMessage="AI Code wants to search this directory for {regex}:"
-										values={{ regex: <code>{tool.regex}</code> }}
-									/>
-								) : (
-									<FormattedMessage
-										id="chatRow.searchFilesSay"
-										defaultMessage="AI Code searched this directory for {regex}:"
-										values={{ regex: <code>{tool.regex}</code> }}
-									/>
-								)}
+								AI Code 想要在此目录中搜索 <code>{tool.regex}</code>:
 							</span>
 						</div>
 						<CodeAccordian
@@ -994,9 +977,58 @@ export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifi
 											fontSize: 18,
 											color: "#FFA500",
 										}}></i>
-									<span style={{ fontWeight: 500, color: "#FFA500" }}>差异编辑失败</span>
+									<span
+										style={{
+											fontWeight: 500,
+											color: "#FFA500",
+										}}>
+										Diff Edit Failed
+									</span>
 								</div>
-								<div>这通常发生在模型使用的搜索模式与文件中的内容不匹配时。正在重试...</div>
+								<div>
+									这通常发生在模型使用的搜索模式与文件中的内容不匹配时。正在重试...
+								</div>
+							</div>
+						</>
+					)
+				case "clineignore_error":
+					return (
+						<>
+							<div
+								style={{
+									display: "flex",
+									flexDirection: "column",
+									backgroundColor: "rgba(255, 191, 0, 0.1)",
+									padding: 8,
+									borderRadius: 3,
+									fontSize: 12,
+								}}>
+								<div
+									style={{
+										display: "flex",
+										alignItems: "center",
+										marginBottom: 4,
+									}}>
+									<i
+										className="codicon codicon-error"
+										style={{
+											marginRight: 8,
+											fontSize: 18,
+											color: "#FFA500",
+										}}></i>
+									<span
+										style={{
+											fontWeight: 500,
+											color: "#FFA500",
+										}}>
+										访问被拒绝
+									</span>
+								</div>
+								<div>
+									AI Code 尝试访问 <code>{message.text}</code>，但被{" "}
+									<code>.clineignore</code>
+									文件阻止。
+								</div>
 							</div>
 						</>
 					)

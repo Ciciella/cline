@@ -1,5 +1,23 @@
 # 更新日志
 
+## [3.3.0]
+
+-   添加.clineignore以阻止AI Code访问指定的文件模式
+-   为计划/执行切换添加键盘快捷键和提示信息
+-   修复新文件不会出现在文件下拉菜单中的错误
+-   添加对限速请求的自动重试功能（感谢@ViezeVingertjes！）
+-   在高级设置中添加了o3-mini的推理努力支持
+-   添加了使用AWS CLI创建配置文件以实现对AWS bedrock的长期连接支持
+-   添加了Requesty API提供商
+-   添加了Together API提供商
+-   添加了阿里巴巴Qwen API提供商（感谢@aicccode！）
+
+## [3.2.13]
+
+-   添加了新的Gemini模型gemini-2.0-flash-lite-preview-02-05和gemini-2.0-flash-001
+-   添加了所有可用的Mistral API模型（感谢@ViezeVingertjes！）
+-   添加了LiteLLM API提供商支持（感谢@him0！）
+
 ## [3.2.12]
 
 - 修复 Windows 用户的命令链接问题

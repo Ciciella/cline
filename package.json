@@ -2,7 +2,7 @@
 	"name": "claude-dev-china",
 	"displayName": "AI Code: Cline, Chat, Deepseek, 中文版",
 	"description": "在您的IDE中自动编码代理，能够在您的许可下创建/编辑文件、执行命令等等。支持deepseek模型",
-	"version": "3.2.7",
+	"version": "3.3.2",
 	"icon": "assets/icons/icon.png",
 	"galleryBanner": {
 		"color": "#617A91",
@@ -166,6 +166,16 @@
 					"type": "boolean",
 					"default": true,
 					"description": "允许扩展在任务执行过程中保存工作区的检查点。"
+				},
+				"aiCode.modelSettings.o3Mini.reasoningEffort": {
+					"type": "string",
+					"enum": [
+						"low",
+						"medium",
+						"high"
+					],
+					"default": "medium",
+					"description": "控制使用o3-mini模型时的推理努力。较高的值可能会导致更彻底但更慢的响应。"
 				}
 			}
 		}
@@ -192,7 +202,8 @@
 		"publish:marketplace": "vsce publish && ovsx publish",
 		"publish:marketplace:prerelease": "vsce publish --pre-release && ovsx publish --pre-release",
 		"prepare": "husky",
-		"changeset": "changeset"
+		"changeset": "changeset",
+		"version-packages": "changeset version"
 	},
 	"devDependencies": {
 		"@changesets/cli": "^2.27.12",
@@ -243,7 +254,7 @@
 		"isbinaryfile": "^5.0.2",
 		"mammoth": "^1.8.0",
 		"monaco-vscode-textmate-theme-converter": "^0.1.7",
-		"openai": "^4.82.0",
+		"openai": "^4.83.0",
 		"os-name": "^6.0.0",
 		"p-wait-for": "^5.0.2",
 		"pdf-parse": "^1.1.1",

@@ -62,25 +62,44 @@ If you're planning to work on a bigger feature, please create a [feature request
     - Address any ESLint warnings or errors before submitting
     - Follow TypeScript best practices and maintain type safety
 
-5. **提交指南**
-   - 编写清晰、描述性的提交消息
-   - 使用常规提交格式（例如，“feat:”，“fix:”，“docs:”）
-   - 在提交中引用相关问题，使用 #issue-number
+3. **Testing**
 
-6. **提交之前**
-   - 在最新的 main 上重新基准您的分支
-   - 确保您的分支成功构建
-   - 仔细检查所有测试是否通过
-   - 检查您的更改是否有任何调试代码或控制台日志
+    - Add tests for new features
+    - Run `npm test` to ensure all tests pass
+    - Update existing tests if your changes affect them
+    - Include both unit tests and integration tests where appropriate
 
-7. **拉取请求描述**
-   - 清楚描述您的更改内容
-   - 包括测试更改的步骤
-   - 列出任何重大更改
-   - 对于 UI 更改，添加截图
+4. **Version Management with Changesets**
 
-## 贡献协议
+    - Create a changeset for any user-facing changes using `npm run changeset`
+    - Choose the appropriate version bump:
+        - `major` for breaking changes (1.0.0 → 2.0.0)
+        - `minor` for new features (1.0.0 → 1.1.0)
+        - `patch` for bug fixes (1.0.0 → 1.0.1)
+    - Write clear, descriptive changeset messages that explain the impact
+    - Documentation-only changes don't require changesets
 
-通过提交拉取请求，您同意您的贡献将根据与项目相同的许可证（[Apache 2.0](LICENSE)）进行许可。
+5. **Commit Guidelines**
 
-记住：为 Cline 做贡献不仅仅是编写代码 - 这也是成为一个塑造 AI 辅助开发未来的社区的一部分。让我们一起构建一些惊人的东西！🚀
+    - Write clear, descriptive commit messages
+    - Use conventional commit format (e.g., "feat:", "fix:", "docs:")
+    - Reference relevant issues in commits using #issue-number
+
+6. **Before Submitting**
+
+    - Rebase your branch on the latest main
+    - Ensure your branch builds successfully
+    - Double-check all tests are passing
+    - Review your changes for any debugging code or console logs
+
+7. **Pull Request Description**
+    - Clearly describe what your changes do
+    - Include steps to test the changes
+    - List any breaking changes
+    - Add screenshots for UI changes
+
+## Contribution Agreement
+
+By submitting a pull request, you agree that your contributions will be licensed under the same license as the project ([Apache 2.0](LICENSE)).
+
+Remember: Contributing to Cline isn't just about writing code - it's about being part of a community that's shaping the future of AI-assisted development. Let's build something amazing together! 🚀

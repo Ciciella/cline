@@ -56,7 +56,7 @@ const AccountView = ({ onDone }: AccountViewProps) => {
 							{userInfo?.photoURL && (
 								<img
 									src={userInfo.photoURL}
-									alt="头像"
+									alt="Profile"
 									style={{
 										width: 48,
 										height: 48,
@@ -69,10 +69,10 @@ const AccountView = ({ onDone }: AccountViewProps) => {
 								{userInfo?.displayName && <div>姓名: {userInfo.displayName}</div>}
 								{userInfo?.email && <div>邮箱: {userInfo.email}</div>}
 							</div>
-							<VSCodeButton onClick={handleLogout}>退出登录</VSCodeButton>
+							<VSCodeButton onClick={handleLogout}>登出</VSCodeButton>
 						</>
 					) : (
-						<VSCodeButton onClick={handleLogin}>登录 AI Code</VSCodeButton>
+						<VSCodeButton onClick={handleLogin}>登录到AI Code</VSCodeButton>
 					)}
 				</div>
 			</div>

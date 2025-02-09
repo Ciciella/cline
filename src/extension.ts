@@ -28,7 +28,9 @@ export function activate(context: vscode.ExtensionContext) {
 	Logger.initialize(outputChannel)
 	Logger.log("AI Code extension activated")
 
+
 	const sidebarProvider = new ClineProvider(context, outputChannel)
+
 
 	context.subscriptions.push(
 		vscode.window.registerWebviewViewProvider(ClineProvider.sideBarId, sidebarProvider, {
@@ -58,6 +60,7 @@ export function activate(context: vscode.ExtensionContext) {
 		Logger.log("Opening AI Code in new tab")
 		// (this example uses webviewProvider activation event which is necessary to deserialize cached webview, but since we use retainContextWhenHidden, we don't need to use that event)
 		// https://github.com/microsoft/vscode-extension-samples/blob/main/webview-sample/src/extension.ts
+
 		const tabProvider = new ClineProvider(context, outputChannel)
 		//const column = vscode.window.activeTextEditor ? vscode.window.activeTextEditor.viewColumn : undefined
 		const lastCol = Math.max(...vscode.window.visibleTextEditors.map((editor) => editor.viewColumn || 0))
@@ -117,6 +120,7 @@ export function activate(context: vscode.ExtensionContext) {
 			})
 		}),
 	)
+
 
 	/*
 	We use the text document content provider API to show the left side for diff view by creating a virtual document for the original content. This makes it readonly so users know to edit the right side if they want to keep their changes.
@@ -185,5 +189,5 @@ export function activate(context: vscode.ExtensionContext) {
 
 // This method is called when your extension is deactivated
 export function deactivate() {
-	Logger.log("AI Code扩展失效")
+	Logger.log("AI Code extension deactivated")
 }

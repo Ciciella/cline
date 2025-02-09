@@ -8,7 +8,10 @@ export type ApiProvider =
 	| "lmstudio"
 	| "gemini"
 	| "openai-native"
+	| "requesty"
+	| "together"
 	| "deepseek"
+	| "qwen"
 	| "mistral"
 	| "vscode-lm"
 	| "litellm"
@@ -27,6 +30,8 @@ export interface ApiHandlerOptions {
 	awsSessionToken?: string
 	awsRegion?: string
 	awsUseCrossRegionInference?: boolean
+	awsUseProfile?: boolean
+	awsProfile?: string
 	vertexProjectId?: string
 	vertexRegion?: string
 	openAiBaseUrl?: string
@@ -39,9 +44,16 @@ export interface ApiHandlerOptions {
 	geminiApiKey?: string
 	openAiNativeApiKey?: string
 	deepSeekApiKey?: string
+	requestyApiKey?: string
+	requestyModelId?: string
+	togetherApiKey?: string
+	togetherModelId?: string
+	qwenApiKey?: string
 	mistralApiKey?: string
 	azureApiVersion?: string
 	vsCodeLmModelSelector?: any
+	o3MiniReasoningEffort?: string
+	qwenApiLine?: string
 }
 
 export type ApiConfiguration = ApiHandlerOptions & {
@@ -169,7 +181,7 @@ export const bedrockModels = {
 
 // OpenRouter
 // https://openrouter.ai/models?order=newest&supported_parameters=tools
-export const openRouterDefaultModelId = "anthropic/claude-3.5-sonnet:beta" // will always exist in openRouterModels
+export const openRouterDefaultModelId = "anthropic/claude-3.5-sonnet" // will always exist in openRouterModels
 export const openRouterDefaultModelInfo: ModelInfo = {
 	maxTokens: 8192,
 	contextWindow: 200_000,
@@ -181,7 +193,7 @@ export const openRouterDefaultModelInfo: ModelInfo = {
 	cacheWritesPrice: 3.75,
 	cacheReadsPrice: 0.3,
 	description:
-		"新的 Claude 3.5 Sonnet 提供了比 Opus 更强的能力，比 Sonnet 更快的速度，且价格与 Sonnet 相同。Sonnet 特别擅长：\n\n- 编程：新版 Sonnet 在 SWE-Bench Verified 测试中得分约49%，超过了之前的最高分，且无需任何特殊的提示工程\n- 数据科学：增强人类的数据科学专业知识；能够处理非结构化数据，同时使用多种工具获取洞察\n- 视觉处理：擅长解读图表、图形和图像，能够准确转录文本并获得超越文本本身的见解\n- 代理任务：出色的工具使用能力，使其在代理任务方面表现卓越（即需要与其他系统交互的复杂多步骤问题解决任务）\n\n#多模态\n\n_这是与 Anthropic 合作推出的更快速端点，采用自我审核：响应审核在提供方而不是 OpenRouter 端进行。对于通过审核的请求，其功能与[标准版](/anthropic/claude-3.5-sonnet)完全相同。_",
+		"新的Claude 3.5 Sonnet提供了优于Opus的能力，以更快的速度和相同的Sonnet价格。Sonnet特别擅长于：\n\n- 编码：新的Sonnet在SWE-Bench Verified上得分约为49%，高于之前的最佳得分，并且无需任何复杂的提示结构\n- 数据科学：增强了人类数据科学专业知识；在使用多种工具获取见解的同时，导航非结构化数据\n- 视觉处理：擅长解释图表、图形和图像，准确地转录文本以获取超越文本本身的见解\n- 代理任务：卓越的工具使用，使其在代理任务（即需要与其他系统交互的复杂多步骤问题解决任务）中表现出色\n\n#多模态",
 }
 
 // Vertex AI
@@ -244,10 +256,34 @@ export const openAiModelInfoSaneDefaults: ModelInfo = {
 // Gemini
 // https://ai.google.dev/gemini-api/docs/models/gemini
 export type GeminiModelId = keyof typeof geminiModels
-export const geminiDefaultModelId: GeminiModelId = "gemini-2.0-flash-thinking-exp-1219"
+export const geminiDefaultModelId: GeminiModelId = "gemini-2.0-flash-001"
 export const geminiModels = {
+	"gemini-2.0-flash-001": {
+		maxTokens: 8192,
+		contextWindow: 1_048_576,
+		supportsImages: true,
+		supportsPromptCache: false,
+		inputPrice: 0,
+		outputPrice: 0,
+	},
+	"gemini-2.0-flash-lite-preview-02-05": {
+		maxTokens: 8192,
+		contextWindow: 1_048_576,
+		supportsImages: true,
+		supportsPromptCache: false,
+		inputPrice: 0,
+		outputPrice: 0,
+	},
+	"gemini-2.0-pro-exp-02-05": {
+		maxTokens: 8192,
+		contextWindow: 2_097_152,
+		supportsImages: true,
+		supportsPromptCache: false,
+		inputPrice: 0,
+		outputPrice: 0,
+	},
 	"gemini-2.0-flash-thinking-exp-01-21": {
-		maxTokens: 65536,
+		maxTokens: 65_536,
 		contextWindow: 1_048_576,
 		supportsImages: true,
 		supportsPromptCache: false,
@@ -265,14 +301,6 @@ export const geminiModels = {
 	"gemini-2.0-flash-exp": {
 		maxTokens: 8192,
 		contextWindow: 1_048_576,
-		supportsImages: true,
-		supportsPromptCache: false,
-		inputPrice: 0,
-		outputPrice: 0,
-	},
-	"gemini-exp-1206": {
-		maxTokens: 8192,
-		contextWindow: 2_097_152,
 		supportsImages: true,
 		supportsPromptCache: false,
 		inputPrice: 0,
@@ -311,6 +339,14 @@ export const geminiModels = {
 		outputPrice: 0,
 	},
 	"gemini-1.5-pro-exp-0827": {
+		maxTokens: 8192,
+		contextWindow: 2_097_152,
+		supportsImages: true,
+		supportsPromptCache: false,
+		inputPrice: 0,
+		outputPrice: 0,
+	},
+	"gemini-exp-1206": {
 		maxTokens: 8192,
 		contextWindow: 2_097_152,
 		supportsImages: true,
@@ -408,13 +444,164 @@ export const deepSeekModels = {
 	},
 } as const satisfies Record<string, ModelInfo>
 
+// Qwen
+// https://bailian.console.aliyun.com/
+export type QwenModelId = keyof typeof qwenModels
+export const qwenDefaultModelId: QwenModelId = "qwen-coder-plus-latest"
+export const qwenModels = {
+	"qwen-coder-plus-latest": {
+		maxTokens: 129_024,
+		contextWindow: 131_072,
+		supportsImages: false,
+		supportsPromptCache: false,
+		inputPrice: 0.0035,
+		outputPrice: 0.007,
+		cacheWritesPrice: 0.0035,
+		cacheReadsPrice: 0.007,
+	},
+	"qwen-plus-latest": {
+		maxTokens: 129_024,
+		contextWindow: 131_072,
+		supportsImages: false,
+		supportsPromptCache: false,
+		inputPrice: 0.0008,
+		outputPrice: 0.002,
+		cacheWritesPrice: 0.0004,
+		cacheReadsPrice: 0.001,
+	},
+	"qwen-turbo-latest": {
+		maxTokens: 1_000_000,
+		contextWindow: 1_000_000,
+		supportsImages: false,
+		supportsPromptCache: false,
+		inputPrice: 0.0003,
+		outputPrice: 0.0006,
+		cacheWritesPrice: 0.00015,
+		cacheReadsPrice: 0.0003,
+	},
+	"qwen-max-latest": {
+		maxTokens: 30_720,
+		contextWindow: 32_768,
+		supportsImages: false,
+		supportsPromptCache: false,
+		inputPrice: 0.0112,
+		outputPrice: 0.0448,
+		cacheWritesPrice: 0.0056,
+		cacheReadsPrice: 0.0224,
+	},
+	"qwen-coder-plus": {
+		maxTokens: 129_024,
+		contextWindow: 131_072,
+		supportsImages: false,
+		supportsPromptCache: false,
+		inputPrice: 0.0035,
+		outputPrice: 0.007,
+		cacheWritesPrice: 0.0035,
+		cacheReadsPrice: 0.007,
+	},
+	"qwen-plus": {
+		maxTokens: 129_024,
+		contextWindow: 131_072,
+		supportsImages: false,
+		supportsPromptCache: false,
+		inputPrice: 0.0008,
+		outputPrice: 0.002,
+		cacheWritesPrice: 0.0004,
+		cacheReadsPrice: 0.001,
+	},
+	"qwen-turbo": {
+		maxTokens: 1_000_000,
+		contextWindow: 1_000_000,
+		supportsImages: false,
+		supportsPromptCache: false,
+		inputPrice: 0.0003,
+		outputPrice: 0.0006,
+		cacheWritesPrice: 0.00015,
+		cacheReadsPrice: 0.0003,
+	},
+	"qwen-max": {
+		maxTokens: 30_720,
+		contextWindow: 32_768,
+		supportsImages: false,
+		supportsPromptCache: false,
+		inputPrice: 0.0112,
+		outputPrice: 0.0448,
+		cacheWritesPrice: 0.0056,
+		cacheReadsPrice: 0.0224,
+	},
+} as const satisfies Record<string, ModelInfo>
+
 // Mistral
 // https://docs.mistral.ai/getting-started/models/models_overview/
 export type MistralModelId = keyof typeof mistralModels
-export const mistralDefaultModelId: MistralModelId = "codestral-latest"
+export const mistralDefaultModelId: MistralModelId = "codestral-2501"
 export const mistralModels = {
-	"codestral-latest": {
-		maxTokens: 32_768,
+	"mistral-large-2411": {
+		maxTokens: 131_000,
+		contextWindow: 131_000,
+		supportsImages: false,
+		supportsPromptCache: false,
+		inputPrice: 2.0,
+		outputPrice: 6.0,
+	},
+	"pixtral-large-2411": {
+		maxTokens: 131_000,
+		contextWindow: 131_000,
+		supportsImages: true,
+		supportsPromptCache: false,
+		inputPrice: 2.0,
+		outputPrice: 6.0,
+	},
+	"ministral-3b-2410": {
+		maxTokens: 131_000,
+		contextWindow: 131_000,
+		supportsImages: false,
+		supportsPromptCache: false,
+		inputPrice: 0.04,
+		outputPrice: 0.04,
+	},
+	"ministral-8b-2410": {
+		maxTokens: 131_000,
+		contextWindow: 131_000,
+		supportsImages: false,
+		supportsPromptCache: false,
+		inputPrice: 0.1,
+		outputPrice: 0.1,
+	},
+	"mistral-small-2501": {
+		maxTokens: 32_000,
+		contextWindow: 32_000,
+		supportsImages: false,
+		supportsPromptCache: false,
+		inputPrice: 0.1,
+		outputPrice: 0.3,
+	},
+	"pixtral-12b-2409": {
+		maxTokens: 131_000,
+		contextWindow: 131_000,
+		supportsImages: true,
+		supportsPromptCache: false,
+		inputPrice: 0.15,
+		outputPrice: 0.15,
+	},
+	"open-mistral-nemo-2407": {
+		maxTokens: 131_000,
+		contextWindow: 131_000,
+		supportsImages: false,
+		supportsPromptCache: false,
+		inputPrice: 0.15,
+		outputPrice: 0.15,
+	},
+	"open-codestral-mamba": {
+		maxTokens: 256_000,
+		contextWindow: 256_000,
+		supportsImages: false,
+		supportsPromptCache: false,
+		inputPrice: 0.15,
+		outputPrice: 0.15,
+	},
+	"codestral-2501": {
+		maxTokens: 256_000,
 		contextWindow: 256_000,
 		supportsImages: false,
 		supportsPromptCache: false,

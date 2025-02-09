@@ -86,39 +86,6 @@ const WelcomeView = () => {
 					/>
 				</b>
 
-				<div
-					style={{
-						marginTop: "15px",
-						padding: isSubscribed ? "5px 15px 5px 15px" : "12px",
-						background: "var(--vscode-textBlockQuote-background)",
-						borderRadius: "6px",
-						fontSize: "0.9em",
-					}}>
-					{isSubscribed ? (
-						<p style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-							<span style={{ color: "var(--vscode-testing-iconPassed)", fontSize: "1.5em" }}>✓</span>
-							感谢订阅！我们会及时通知您新功能的更新。
-						</p>
-					) : (
-						<>
-							<p style={{ margin: 0, marginBottom: "8px" }}>
-								虽然Cline目前需要您提供自己的API密钥，但我们正在开发具有更多功能的官方账户系统。订阅我们的邮件列表以获取最新更新！
-							</p>
-							<div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-								<VSCodeTextField
-									type="email"
-									value={email}
-									onInput={(e: any) => setEmail(e.target.value)}
-									placeholder="请输入您的邮箱"
-									style={{ flex: 1 }}
-								/>
-								<VSCodeButton appearance="secondary" onClick={handleSubscribe} disabled={!email}>
-									订阅
-								</VSCodeButton>
-							</div>
-						</>
-					)}
-				</div>
 
 				<div style={{ marginTop: "15px" }}>
 					<ApiOptions showModelOptions={false} />

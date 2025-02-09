@@ -38,6 +38,11 @@ export function validateApiConfiguration(apiConfiguration?: ApiConfiguration): s
 					return "您必须提供有效的API密钥或选择不同的提供商。"
 				}
 				break
+			case "qwen":
+				if (!apiConfiguration.qwenApiKey) {
+					return "You must provide a valid API key or choose a different provider."
+				}
+				break
 			case "mistral":
 				if (!apiConfiguration.mistralApiKey) {
 					return "您必须提供有效的API密钥或选择不同的提供商。"
@@ -46,6 +51,16 @@ export function validateApiConfiguration(apiConfiguration?: ApiConfiguration): s
 			case "openai":
 				if (!apiConfiguration.openAiBaseUrl || !apiConfiguration.openAiApiKey || !apiConfiguration.openAiModelId) {
 					return "您必须提供有效的基础URL、API密钥和模型ID。"
+				}
+				break
+			case "requesty":
+				if (!apiConfiguration.requestyApiKey || !apiConfiguration.requestyModelId) {
+					return "You must provide a valid API key or choose a different provider."
+				}
+				break
+			case "together":
+				if (!apiConfiguration.togetherApiKey || !apiConfiguration.togetherModelId) {
+					return "You must provide a valid API key or choose a different provider."
 				}
 				break
 			case "ollama":

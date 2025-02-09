@@ -9,6 +9,9 @@ import * as path from "path"
 import { serializeError } from "serialize-error"
 import * as vscode from "vscode"
 import { ApiHandler, buildApiHandler } from "../api"
+import { OpenAiHandler } from "../api/providers/openai"
+import { OpenRouterHandler } from "../api/providers/openrouter"
+import { ApiStream } from "../api/transform/stream"
 import CheckpointTracker from "../integrations/checkpoints/CheckpointTracker"
 import { DIFF_VIEW_URI_SCHEME, DiffViewProvider } from "../integrations/editor/DiffViewProvider"
 import { findToolName, formatContentBlockToMarkdown } from "../integrations/misc/export-markdown"
@@ -46,20 +49,16 @@ import { HistoryItem } from "../shared/HistoryItem"
 import { ClineAskResponse, ClineCheckpointRestore } from "../shared/WebviewMessage"
 import { calculateApiCost } from "../utils/cost"
 import { fileExistsAtPath } from "../utils/fs"
-import { LLMFileAccessController } from "../services/llm-access-control/LLMFileAccessController"
 import { arePathsEqual, getReadablePath } from "../utils/path"
 import { fixModelHtmlEscaping, removeInvalidChars } from "../utils/string"
 import { AssistantMessageContent, parseAssistantMessage, ToolParamName, ToolUseName } from "./assistant-message"
 import { constructNewFileContent } from "./assistant-message/diff"
+import { ClineIgnoreController, LOCK_TEXT_SYMBOL } from "./ignore/ClineIgnoreController"
 import { parseMentions } from "./mentions"
 import { formatResponse } from "./prompts/responses"
-import { ClineProvider, GlobalFileNames } from "./webview/ClineProvider"
-import { OpenRouterHandler } from "../api/providers/openrouter"
+import { addUserInstructions, SYSTEM_PROMPT } from "./prompts/system"
 import { getNextTruncationRange, getTruncatedMessages } from "./sliding-window"
-import { SYSTEM_PROMPT } from "./prompts/system"
-import { addUserInstructions } from "./prompts/system"
-import { OpenAiHandler } from "../api/providers/openai"
-import { ApiStream } from "../api/transform/stream"
+import { ClineProvider, GlobalFileNames } from "./webview/ClineProvider"
 
 const cwd = vscode.workspace.workspaceFolders?.map((folder) => folder.uri.fsPath).at(0) ?? path.join(os.homedir(), "Desktop") // may or may not exist but fs checking existence would immediately ask for permission which would be bad UX, need to come up with a better solution
 
@@ -81,7 +80,7 @@ export class Cline {
 	private chatSettings: ChatSettings
 	apiConversationHistory: Anthropic.MessageParam[] = []
 	clineMessages: ClineMessage[] = []
-	private llmAccessController: LLMFileAccessController
+	private clineIgnoreController: ClineIgnoreController
 	private askResponse?: ClineAskResponse
 	private askResponseText?: string
 	private askResponseImages?: string[]
@@ -125,9 +124,9 @@ export class Cline {
 		images?: string[],
 		historyItem?: HistoryItem,
 	) {
-		this.llmAccessController = new LLMFileAccessController(cwd)
-		this.llmAccessController.initialize().catch((error) => {
-			console.error("Failed to initialize LLMFileAccessController:", error)
+		this.clineIgnoreController = new ClineIgnoreController(cwd)
+		this.clineIgnoreController.initialize().catch((error) => {
+			console.error("Failed to initialize ClineIgnoreController:", error)
 		})
 		this.providerRef = new WeakRef(provider)
 		this.api = buildApiHandler(apiConfiguration)
@@ -1055,7 +1054,7 @@ export class Cline {
 		this.terminalManager.disposeAll()
 		this.urlContentFetcher.closeBrowser()
 		this.browserSession.closeBrowser()
-		this.llmAccessController.dispose()
+		this.clineIgnoreController.dispose()
 		await this.diffViewProvider.revertChanges() // need to await for when we want to make sure directories/files are reverted before re-starting the task from a checkpoint
 	}
 
@@ -1233,16 +1232,22 @@ export class Cline {
 			try {
 				const ruleFileContent = (await fs.readFile(clineRulesFilePath, "utf8")).trim()
 				if (ruleFileContent) {
-					clineRulesFileInstructions = `# .aicoderules\n\nThe following is provided by a root-level .aicoderules file where the user has specified instructions for this working directory (${cwd.toPosix()})\n\n${ruleFileContent}`
+					clineRulesFileInstructions = `# .clinerules\n\nThe following is provided by a root-level .clinerules file where the user has specified instructions for this working directory (${cwd.toPosix()})\n\n${ruleFileContent}`
 				}
 			} catch {
-				console.error(`Failed to read .aicoderules file at ${clineRulesFilePath}`)
+				console.error(`Failed to read .clinerules file at ${clineRulesFilePath}`)
 			}
+		}
+
+		const clineIgnoreContent = this.clineIgnoreController.clineIgnoreContent
+		let clineIgnoreInstructions: string | undefined
+		if (clineIgnoreContent) {
+			clineIgnoreInstructions = `# .clineignore\n\n(The following is provided by a root-level .clineignore file where the user has specified files and directories that should not be accessed. When using list_files, you'll notice a ${LOCK_TEXT_SYMBOL} next to files that are blocked. Attempting to access the file's contents e.g. through read_file will result in an error.)\n\n${clineIgnoreContent}\n.clineignore`
 		}
 
 		if (settingsCustomInstructions || clineRulesFileInstructions) {
 			// altering the system prompt mid-task will break the prompt cache, but in the grand scheme this will not change often so it's better to not pollute user messages with it the way we have to with <potentially relevant details>
-			systemPrompt += addUserInstructions(settingsCustomInstructions, clineRulesFileInstructions)
+			systemPrompt += addUserInstructions(settingsCustomInstructions, clineRulesFileInstructions, clineIgnoreInstructions)
 		}
 
 		// If the previous API request's total token usage is close to the context window, truncate the conversation history to free up space for the new request
@@ -1589,6 +1594,15 @@ export class Cline {
 							// wait so we can determine if it's a new file or editing an existing file
 							break
 						}
+
+						const accessAllowed = this.clineIgnoreController.validateAccess(relPath)
+						if (!accessAllowed) {
+							await this.say("clineignore_error", relPath)
+							pushToolResult(formatResponse.toolError(formatResponse.clineIgnoreError(relPath)))
+							await this.saveCheckpoint()
+							break
+						}
+
 						// Check if file exists using cached map or fs.access
 						let fileExists: boolean
 						if (this.diffViewProvider.editType !== undefined) {
@@ -1706,6 +1720,7 @@ export class Cline {
 									await this.saveCheckpoint()
 									break
 								}
+
 								this.consecutiveMistakeCount = 0
 
 								// if isEditingFile false, that means we have the full contents of the file already.
@@ -1818,6 +1833,11 @@ export class Cline {
 											`${newProblemsMessage}`,
 									)
 								}
+
+								if (!fileExists) {
+									this.providerRef.deref()?.workspaceTracker?.populateFilePaths()
+								}
+
 								await this.diffViewProvider.reset()
 								await this.saveCheckpoint()
 								break
@@ -1857,6 +1877,15 @@ export class Cline {
 									await this.saveCheckpoint()
 									break
 								}
+
+								const accessAllowed = this.clineIgnoreController.validateAccess(relPath)
+								if (!accessAllowed) {
+									await this.say("clineignore_error", relPath)
+									pushToolResult(formatResponse.toolError(formatResponse.clineIgnoreError(relPath)))
+									await this.saveCheckpoint()
+									break
+								}
+
 								this.consecutiveMistakeCount = 0
 								const absolutePath = path.resolve(cwd, relPath)
 								const completeMessage = JSON.stringify({
@@ -1920,9 +1949,17 @@ export class Cline {
 									break
 								}
 								this.consecutiveMistakeCount = 0
+
 								const absolutePath = path.resolve(cwd, relDirPath)
+
 								const [files, didHitLimit] = await listFiles(absolutePath, recursive, 200)
-								const result = formatResponse.formatFilesList(absolutePath, files, didHitLimit)
+
+								const result = formatResponse.formatFilesList(
+									absolutePath,
+									files,
+									didHitLimit,
+									this.clineIgnoreController,
+								)
 								const completeMessage = JSON.stringify({
 									...sharedMessageProps,
 									content: result,
@@ -1979,9 +2016,15 @@ export class Cline {
 									await this.saveCheckpoint()
 									break
 								}
+
 								this.consecutiveMistakeCount = 0
+
 								const absolutePath = path.resolve(cwd, relDirPath)
-								const result = await parseSourceCodeForDefinitionsTopLevel(absolutePath)
+								const result = await parseSourceCodeForDefinitionsTopLevel(
+									absolutePath,
+									this.clineIgnoreController,
+								)
+
 								const completeMessage = JSON.stringify({
 									...sharedMessageProps,
 									content: result,
@@ -2049,8 +2092,16 @@ export class Cline {
 									break
 								}
 								this.consecutiveMistakeCount = 0
+
 								const absolutePath = path.resolve(cwd, relDirPath)
-								const results = await regexSearchFiles(cwd, absolutePath, regex, filePattern)
+								const results = await regexSearchFiles(
+									cwd,
+									absolutePath,
+									regex,
+									filePattern,
+									this.clineIgnoreController,
+								)
+
 								const completeMessage = JSON.stringify({
 									...sharedMessageProps,
 									content: results,
@@ -2287,6 +2338,16 @@ export class Cline {
 								}
 								this.consecutiveMistakeCount = 0
 
+								const ignoredFileAttemptedToAccess = this.clineIgnoreController.validateCommand(command)
+								if (ignoredFileAttemptedToAccess) {
+									await this.say("clineignore_error", ignoredFileAttemptedToAccess)
+									pushToolResult(
+										formatResponse.toolError(formatResponse.clineIgnoreError(ignoredFileAttemptedToAccess)),
+									)
+									await this.saveCheckpoint()
+									break
+								}
+
 								let didAutoApprove = false
 
 								if (!requiresApproval && this.shouldAutoApproveTool(block.name)) {
@@ -2328,6 +2389,10 @@ export class Cline {
 								if (userRejected) {
 									this.didRejectTool = true
 								}
+
+								// Re-populate file paths in case the command modified the workspace (vscode listeners do not trigger unless the user manually creates/deletes files)
+								this.providerRef.deref()?.workspaceTracker?.populateFilePaths()
+
 								pushToolResult(result)
 								await this.saveCheckpoint()
 								break
@@ -2832,7 +2897,7 @@ export class Cline {
 		if (this.consecutiveMistakeCount >= 3) {
 			if (this.autoApprovalSettings.enabled && this.autoApprovalSettings.enableNotifications) {
 				showSystemNotification({
-					subtitle: "错误",
+					subtitle: "Error",
 					message: "AI Code遇到了一些问题。您想继续任务吗？",
 				})
 			}
@@ -3129,13 +3194,16 @@ export class Cline {
 				didEndLoop = recDidEndLoop
 			} else {
 				// if there's no assistant_responses, that means we got no text or tool_use content blocks from API which we should assume is an error
-				await this.say("error", "意外的API响应:语言模型没有提供任何助手消息。这可能表明API或模型输出存在问题。")
+				await this.say(
+					"error",
+					"意外的API响应：语言模型没有提供任何助手消息。这可能表明API或模型输出存在问题。",
+				)
 				await this.addToApiConversationHistory({
 					role: "assistant",
 					content: [
 						{
 							type: "text",
-							text: "失败:我没有提供响应。",
+							text: "Failure: 我没有提供响应。",
 						},
 					],
 				})
@@ -3181,26 +3249,38 @@ export class Cline {
 
 		// It could be useful for cline to know if the user went from one or no file to another between messages, so we always include this context
 		details += "\n\n# VSCode Visible Files"
-		const visibleFiles = vscode.window.visibleTextEditors
+		const visibleFilePaths = vscode.window.visibleTextEditors
 			?.map((editor) => editor.document?.uri?.fsPath)
 			.filter(Boolean)
-			.map((absolutePath) => path.relative(cwd, absolutePath).toPosix())
+			.map((absolutePath) => path.relative(cwd, absolutePath))
+
+		// Filter paths through clineIgnoreController
+		const allowedVisibleFiles = this.clineIgnoreController
+			.filterPaths(visibleFilePaths)
+			.map((p) => p.toPosix())
 			.join("\n")
-		if (visibleFiles) {
-			details += `\n${visibleFiles}`
+
+		if (allowedVisibleFiles) {
+			details += `\n${allowedVisibleFiles}`
 		} else {
 			details += "\n(No visible files)"
 		}
 
 		details += "\n\n# VSCode Open Tabs"
-		const openTabs = vscode.window.tabGroups.all
+		const openTabPaths = vscode.window.tabGroups.all
 			.flatMap((group) => group.tabs)
 			.map((tab) => (tab.input as vscode.TabInputText)?.uri?.fsPath)
 			.filter(Boolean)
-			.map((absolutePath) => path.relative(cwd, absolutePath).toPosix())
+			.map((absolutePath) => path.relative(cwd, absolutePath))
+
+		// Filter paths through clineIgnoreController
+		const allowedOpenTabs = this.clineIgnoreController
+			.filterPaths(openTabPaths)
+			.map((p) => p.toPosix())
 			.join("\n")
-		if (openTabs) {
-			details += `\n${openTabs}`
+
+		if (allowedOpenTabs) {
+			details += `\n${allowedOpenTabs}`
 		} else {
 			details += "\n(No open tabs)"
 		}
@@ -3314,7 +3394,7 @@ export class Cline {
 				details += "(Desktop files not shown automatically. Use list_files to explore if needed.)"
 			} else {
 				const [files, didHitLimit] = await listFiles(cwd, true, 200)
-				const result = formatResponse.formatFilesList(cwd, files, didHitLimit)
+				const result = formatResponse.formatFilesList(cwd, files, didHitLimit, this.clineIgnoreController)
 				details += result
 			}
 		}
