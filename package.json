@@ -2,7 +2,7 @@
 	"name": "claude-dev-china",
 	"displayName": "AI Code: Cline, Chat, Deepseek, 中文版",
 	"description": "在您的IDE中自动编码代理，能够在您的许可下创建/编辑文件、执行命令等等。支持deepseek模型",
-	"version": "3.2.6",
+	"version": "3.2.7",
 	"icon": "assets/icons/icon.png",
 	"galleryBanner": {
 		"color": "#617A91",
@@ -133,7 +133,7 @@
 		"configuration": {
 			"title": "AI Code",
 			"properties": {
-				"AICode.vsCodeLmModelSelector": {
+				"aiCode.vsCodeLmModelSelector": {
 					"type": "object",
 					"properties": {
 						"vendor": {
@@ -147,7 +147,7 @@
 					},
 					"description": "VSCode 语言模型 API 的设置"
 				},
-				"AICode.mcp.mode": {
+				"aiCode.mcp.mode": {
 					"type": "string",
 					"enum": [
 						"full",
@@ -162,7 +162,7 @@
 					"default": "full",
 					"description": "控制在提示中包含 MCP 的内容，如果你只需要访问某些功能，可以减少令牌使用量。"
 				},
-				"AICode.enableCheckpoints": {
+				"aiCode.enableCheckpoints": {
 					"type": "boolean",
 					"default": true,
 					"description": "允许扩展在任务执行过程中保存工作区的检查点。"
