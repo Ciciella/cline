@@ -167,6 +167,11 @@
 					"default": true,
 					"description": "允许扩展在任务执行过程中保存工作区的检查点。"
 				},
+				"aiCode.disableBrowserTool": {
+					"type": "boolean",
+					"default": false,
+					"description": "禁用扩展程序生成浏览器会话。"
+				},
 				"aiCode.modelSettings.o3Mini.reasoningEffort": {
 					"type": "string",
 					"enum": [
@@ -176,6 +181,11 @@
 					],
 					"default": "medium",
 					"description": "控制使用o3-mini模型时的推理努力。较高的值可能会导致更彻底但更慢的响应。"
+				},
+				"aiCode.chromeExecutablePath": {
+					"type": "string",
+					"default": null,
+					"description": "Chrome 可执行文件的路径，用于浏览器功能。如果未设置，扩展将尝试自动查找或下载它。"
 				}
 			}
 		}

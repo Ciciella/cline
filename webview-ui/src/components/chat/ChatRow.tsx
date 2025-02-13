@@ -24,6 +24,7 @@ import Thumbnails from "../common/Thumbnails"
 import McpResourceRow from "../mcp/McpResourceRow"
 import McpToolRow from "../mcp/McpToolRow"
 import { highlightMentions } from "./TaskHeader"
+import { CheckmarkControl } from "../common/CheckmarkControl"
 import { FormattedMessage } from "react-intl"
 
 const ChatRowContainer = styled.div`
@@ -60,8 +61,8 @@ const ChatRow = memo(
 				message.ask === "tool" ||
 				message.say === "command" ||
 				message.ask === "command" ||
-				message.say === "completion_result" ||
-				message.ask === "completion_result" ||
+				// message.say === "completion_result" ||
+				// message.ask === "completion_result" ||
 				message.say === "use_mcp_server" ||
 				message.ask === "use_mcp_server")
 
@@ -1036,6 +1037,12 @@ export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifi
 									文件阻止。
 								</div>
 							</div>
+						</>
+					)
+				case "checkpoint_created":
+					return (
+						<>
+							<CheckmarkControl messageTs={message.ts} isCheckpointCheckedOut={message.isCheckpointCheckedOut} />
 						</>
 					)
 				case "completion_result":

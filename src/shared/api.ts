@@ -21,6 +21,7 @@ export interface ApiHandlerOptions {
 	apiKey?: string // anthropic
 	liteLlmBaseUrl?: string
 	liteLlmModelId?: string
+	liteLlmApiKey?: string
 	anthropicBaseUrl?: string
 	openRouterApiKey?: string
 	openRouterModelId?: string
@@ -37,6 +38,7 @@ export interface ApiHandlerOptions {
 	openAiBaseUrl?: string
 	openAiApiKey?: string
 	openAiModelId?: string
+	openAiModelInfo?: ModelInfo
 	ollamaModelId?: string
 	ollamaBaseUrl?: string
 	lmStudioModelId?: string
@@ -529,6 +531,26 @@ export const qwenModels = {
 		cacheWritesPrice: 0.0056,
 		cacheReadsPrice: 0.0224,
 	},
+	"deepseek-v3": {
+		maxTokens: 8_000,
+		contextWindow: 64_000,
+		supportsImages: false,
+		supportsPromptCache: true,
+		inputPrice: 0,
+		outputPrice: 0.28,
+		cacheWritesPrice: 0.14,
+		cacheReadsPrice: 0.014,
+	},
+	"deepseek-r1": {
+		maxTokens: 8_000,
+		contextWindow: 64_000,
+		supportsImages: false,
+		supportsPromptCache: true,
+		inputPrice: 0,
+		outputPrice: 2.19,
+		cacheWritesPrice: 0.55,
+		cacheReadsPrice: 0.14,
+	},
 } as const satisfies Record<string, ModelInfo>
 
 // Mistral
@@ -615,9 +637,9 @@ export const mistralModels = {
 export type LiteLLMModelId = string
 export const liteLlmDefaultModelId = "gpt-3.5-turbo"
 export const liteLlmModelInfoSaneDefaults: ModelInfo = {
-	maxTokens: 4096,
-	contextWindow: 8192,
-	supportsImages: false,
+	maxTokens: -1,
+	contextWindow: 128_000,
+	supportsImages: true,
 	supportsPromptCache: false,
 	inputPrice: 0,
 	outputPrice: 0,

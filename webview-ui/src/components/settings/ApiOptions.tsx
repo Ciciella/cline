@@ -41,6 +41,7 @@ import VSCodeButtonLink from "../common/VSCodeButtonLink"
 import OpenRouterModelPicker, { ModelDescriptionMarkdown } from "./OpenRouterModelPicker"
 import styled from "styled-components"
 import * as vscodemodels from "vscode"
+import { getAsVar, VSC_DESCRIPTION_FOREGROUND } from "../../utils/vscStyles"
 import { FormattedMessage } from "react-intl"
 
 interface ApiOptionsProps {
@@ -81,6 +82,7 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 	const [vsCodeLmModels, setVsCodeLmModels] = useState<vscodemodels.LanguageModelChatSelector[]>([])
 	const [anthropicBaseUrlSelected, setAnthropicBaseUrlSelected] = useState(!!apiConfiguration?.anthropicBaseUrl)
 	const [azureApiVersionSelected, setAzureApiVersionSelected] = useState(!!apiConfiguration?.azureApiVersion)
+	const [modelConfigurationSelected, setModelConfigurationSelected] = useState(false)
 	const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false)
 
 	const handleInputChange = (field: keyof ApiConfiguration) => (event: any) => {
@@ -719,6 +721,127 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 							placeholder={`Default: ${azureOpenAiDefaultApiVersion}`}
 						/>
 					)}
+					<div
+						style={{
+							color: getAsVar(VSC_DESCRIPTION_FOREGROUND),
+							display: "flex",
+							margin: "10px 0",
+							cursor: "pointer",
+							alignItems: "center",
+						}}
+						onClick={() => setModelConfigurationSelected((val) => !val)}>
+						<span
+							className={`codicon ${modelConfigurationSelected ? "codicon-chevron-down" : "codicon-chevron-right"}`}
+							style={{
+								marginRight: "4px",
+							}}></span>
+						<span
+							style={{
+								fontWeight: 700,
+								textTransform: "uppercase",
+							}}>
+							模型配置
+						</span>
+					</div>
+					{modelConfigurationSelected && (
+						<>
+							<VSCodeCheckbox
+								checked={apiConfiguration?.openAiModelInfo?.supportsImages}
+								onChange={(e: any) => {
+									const isChecked = e.target.checked === true
+									let modelInfo = apiConfiguration?.openAiModelInfo
+										? apiConfiguration.openAiModelInfo
+										: { ...openAiModelInfoSaneDefaults }
+									modelInfo.supportsImages = isChecked
+									setApiConfiguration({
+										...apiConfiguration,
+										openAiModelInfo: modelInfo,
+									})
+								}}>
+								支持图像
+							</VSCodeCheckbox>
+							<div style={{ display: "flex", gap: 10, marginTop: "5px" }}>
+								<VSCodeTextField
+									value={
+										apiConfiguration?.openAiModelInfo?.contextWindow
+											? apiConfiguration.openAiModelInfo.contextWindow.toString()
+											: openAiModelInfoSaneDefaults.contextWindow?.toString()
+									}
+									style={{ flex: 1 }}
+									onInput={(input: any) => {
+										let modelInfo = apiConfiguration?.openAiModelInfo
+											? apiConfiguration.openAiModelInfo
+											: { ...openAiModelInfoSaneDefaults }
+										modelInfo.contextWindow = Number(input.target.value)
+										setApiConfiguration({
+											...apiConfiguration,
+											openAiModelInfo: modelInfo,
+										})
+									}}>
+									<span style={{ fontWeight: 500 }}>上下文窗口大小</span>
+								</VSCodeTextField>
+								<VSCodeTextField
+									value={
+										apiConfiguration?.openAiModelInfo?.maxTokens
+											? apiConfiguration.openAiModelInfo.maxTokens.toString()
+											: openAiModelInfoSaneDefaults.maxTokens?.toString()
+									}
+									style={{ flex: 1 }}
+									onInput={(input: any) => {
+										let modelInfo = apiConfiguration?.openAiModelInfo
+											? apiConfiguration.openAiModelInfo
+											: { ...openAiModelInfoSaneDefaults }
+										modelInfo.maxTokens = input.target.value
+										setApiConfiguration({
+											...apiConfiguration,
+											openAiModelInfo: modelInfo,
+										})
+									}}>
+									<span style={{ fontWeight: 500 }}>最大输出Tokens</span>
+								</VSCodeTextField>
+							</div>
+							<div style={{ display: "flex", gap: 10, marginTop: "5px" }}>
+								<VSCodeTextField
+									value={
+										apiConfiguration?.openAiModelInfo?.inputPrice
+											? apiConfiguration.openAiModelInfo.inputPrice.toString()
+											: openAiModelInfoSaneDefaults.inputPrice?.toString()
+									}
+									style={{ flex: 1 }}
+									onInput={(input: any) => {
+										let modelInfo = apiConfiguration?.openAiModelInfo
+											? apiConfiguration.openAiModelInfo
+											: { ...openAiModelInfoSaneDefaults }
+										modelInfo.inputPrice = input.target.value
+										setApiConfiguration({
+											...apiConfiguration,
+											openAiModelInfo: modelInfo,
+										})
+									}}>
+									<span style={{ fontWeight: 500 }}>输入价格 / 1M tokens</span>
+								</VSCodeTextField>
+								<VSCodeTextField
+									value={
+										apiConfiguration?.openAiModelInfo?.outputPrice
+											? apiConfiguration.openAiModelInfo.outputPrice.toString()
+											: openAiModelInfoSaneDefaults.outputPrice?.toString()
+									}
+									style={{ flex: 1 }}
+									onInput={(input: any) => {
+										let modelInfo = apiConfiguration?.openAiModelInfo
+											? apiConfiguration.openAiModelInfo
+											: { ...openAiModelInfoSaneDefaults }
+										modelInfo.outputPrice = input.target.value
+										setApiConfiguration({
+											...apiConfiguration,
+											openAiModelInfo: modelInfo,
+										})
+									}}>
+									<span style={{ fontWeight: 500 }}>输出价格 / 1M tokens</span>
+								</VSCodeTextField>
+							</div>
+						</>
+					)}
 					<p
 						style={{
 							fontSize: "12px",
@@ -931,6 +1054,14 @@ const ApiOptions = ({ showModelOptions, apiErrorMessage, modelIdErrorMessage, is
 
 			{selectedProvider === "litellm" && (
 				<div>
+					<VSCodeTextField
+						value={apiConfiguration?.liteLlmApiKey || ""}
+						style={{ width: "100%" }}
+						type="password"
+						onInput={handleInputChange("liteLlmApiKey")}
+						placeholder="Default: noop">
+						<span style={{ fontWeight: 500 }}>API Key</span>
+					</VSCodeTextField>
 					<VSCodeTextField
 						value={apiConfiguration?.liteLlmBaseUrl || ""}
 						style={{ width: "100%" }}
