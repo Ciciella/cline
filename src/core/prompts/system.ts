@@ -9,7 +9,9 @@ export const SYSTEM_PROMPT = async (
 	supportsComputerUse: boolean,
 	mcpHub: McpHub,
 	browserSettings: BrowserSettings,
-) => `You are Cline, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.
+) => `You are  AI Code, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.
+
+默认使用中文回复。
 
 ====
 
