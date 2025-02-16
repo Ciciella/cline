@@ -1,5 +1,6 @@
 import { VSCodeButton, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
 import { memo } from "react"
+import { FormattedMessage } from "react-intl"
 import { getAsVar, VSC_DESCRIPTION_FOREGROUND, VSC_INACTIVE_SELECTION_BACKGROUND } from "../../utils/vscStyles"
 
 interface AnnouncementProps {
@@ -26,32 +27,32 @@ const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 				<span className="codicon codicon-close"></span>
 			</VSCodeButton>
 			<h3 style={{ margin: "0 0 8px" }}>
-				🎉{"  "}New in v{minorVersion}
+				<FormattedMessage
+					id="announcement.newVersion"
+					defaultMessage="🎉 New in v{minorVersion}"
+					values={{ minorVersion }}
+				/>
 			</h3>
 			<ul style={{ margin: "0 0 8px", paddingLeft: "12px" }}>
 				<li>
-					<b>Plan/Act mode toggle:</b> Plan mode turns Cline into an architect that gathers information, asks clarifying
-					questions, and designs a solution. Switch back to Act mode to let him execute the plan!{" "}
-					<VSCodeLink href="https://x.com/sdrzn/status/1881761978986934582" style={{ display: "inline" }}>
-						See a demo here.
-					</VSCodeLink>
+					<b>计划/执行模式切换：</b> 计划模式让AI
+					Code集中于收集信息，提出澄清问题，脑暴想法，并架构解决方案。切换回执行模式，让他执行计划！
 				</li>
 				<li>
-					<b>Quick API/model switching</b> with a new popup menu under the chat field
+					<b>快速API/模型切换</b>，通过聊天字段下方的新弹出菜单
 				</li>
 				<li>
-					<b>VS Code LM API</b> lets you use models from other extensions like GitHub Copilot
+					<b>VS Code LM API</b> 让你可以使用来自其他扩展的模型，如GitHub Copilot
 				</li>
 				<li>
-					<b>MCP server improvements:</b> On/off toggle to disable servers when not in use, and Auto-approve option for
-					individual tools
+					<b>MCP服务器改进：</b> 当不使用时的开关切换，和单个工具的自动批准选项
 				</li>
-				<li>
-					In case you missed it, Cline now supports Checkpoints!{" "}
+				{/* <li>
+					如果你错过了，Cline现在支持检查点！{" "}
 					<VSCodeLink href="https://x.com/sdrzn/status/1876378124126236949" style={{ display: "inline" }}>
-						See it in action here.
+						在这里查看。
 					</VSCodeLink>
-				</li>
+				</li> */}
 			</ul>
 			{/*<ul style={{ margin: "0 0 8px", paddingLeft: "12px" }}>
 				 <li>
@@ -108,7 +109,7 @@ const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 					margin: "8px 0",
 				}}
 			/>
-			<p style={{ margin: "0" }}>
+			{/* <p style={{ margin: "0" }}>
 				Join our{" "}
 				<VSCodeLink style={{ display: "inline" }} href="https://discord.gg/cline">
 					discord
@@ -117,8 +118,8 @@ const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 				<VSCodeLink style={{ display: "inline" }} href="https://www.reddit.com/r/cline/">
 					r/cline
 				</VSCodeLink>
-				for more updates!
-			</p>
+				获取更多更新！
+			</p> */}
 		</div>
 	)
 }

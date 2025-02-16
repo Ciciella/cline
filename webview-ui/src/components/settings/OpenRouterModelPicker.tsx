@@ -9,6 +9,7 @@ import { useExtensionState } from "../../context/ExtensionStateContext"
 import { vscode } from "../../utils/vscode"
 import { highlight } from "../history/HistoryView"
 import { ModelInfoView, normalizeApiConfiguration } from "./ApiOptions"
+import { FormattedMessage } from "react-intl"
 import { CODE_BLOCK_BG_COLOR } from "../common/CodeBlock"
 
 export interface OpenRouterModelPickerProps {
@@ -220,19 +221,29 @@ const OpenRouterModelPicker: React.FC<OpenRouterModelPickerProps> = ({ isPopup }
 						marginTop: 0,
 						color: "var(--vscode-descriptionForeground)",
 					}}>
-					<>
-						The extension automatically fetches the latest list of models available on{" "}
-						<VSCodeLink style={{ display: "inline", fontSize: "inherit" }} href="https://openrouter.ai/models">
-							OpenRouter.
-						</VSCodeLink>
-						If you're unsure which model to choose, Cline works best with{" "}
-						<VSCodeLink
-							style={{ display: "inline", fontSize: "inherit" }}
-							onClick={() => handleModelChange("anthropic/claude-3.5-sonnet")}>
-							anthropic/claude-3.5-sonnet.
-						</VSCodeLink>
-						You can also try searching "free" for no-cost options currently available.
-					</>
+					<FormattedMessage
+						id="openRouterModelPicker.fetchModels"
+						defaultMessage="The extension automatically fetches the latest list of models available on "
+					/>
+					<VSCodeLink style={{ display: "inline", fontSize: "inherit" }} href="https://openrouter.ai/models">
+						<FormattedMessage id="openRouterModelPicker.openRouter" defaultMessage="OpenRouter." />
+					</VSCodeLink>
+					<FormattedMessage
+						id="openRouterModelPicker.modelRecommendation"
+						defaultMessage="If you're unsure which model to choose, AI Code works best with "
+					/>
+					<VSCodeLink
+						style={{ display: "inline", fontSize: "inherit" }}
+						onClick={() => handleModelChange("anthropic/claude-3.5-sonnet")}>
+						<FormattedMessage
+							id="openRouterModelPicker.recommendedModel"
+							defaultMessage="anthropic/claude-3.5-sonnet."
+						/>
+					</VSCodeLink>
+					<FormattedMessage
+						id="openRouterModelPicker.searchFreeOptions"
+						defaultMessage="You can also try searching 'free' for no-cost options currently available."
+					/>
 				</p>
 			)}
 		</div>
@@ -409,7 +420,7 @@ export const ModelDescriptionMarkdown = memo(
 									backgroundColor: isPopup ? CODE_BLOCK_BG_COLOR : "var(--vscode-sideBar-background)",
 								}}
 								onClick={() => setIsExpanded(true)}>
-								See more
+								查看更多
 							</VSCodeLink>
 						</div>
 					)}

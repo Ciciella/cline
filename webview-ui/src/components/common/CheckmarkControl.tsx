@@ -130,9 +130,7 @@ export const CheckmarkControl = ({ messageTs, isCheckpointCheckedOut }: Checkmar
 					flexShrink: 0,
 				}}
 			/>
-			<Label $isCheckedOut={isCheckpointCheckedOut}>
-				{isCheckpointCheckedOut ? "Checkpoint (restored)" : "Checkpoint"}
-			</Label>
+			<Label $isCheckedOut={isCheckpointCheckedOut}>{isCheckpointCheckedOut ? "检查点 (已恢复)" : "检查点"}</Label>
 			<DottedLine $isCheckedOut={isCheckpointCheckedOut} />
 			<ButtonGroup>
 				<CustomButton
@@ -146,7 +144,7 @@ export const CheckmarkControl = ({ messageTs, isCheckpointCheckedOut }: Checkmar
 							number: messageTs,
 						})
 					}}>
-					Compare
+					比较
 				</CustomButton>
 				<DottedLine small $isCheckedOut={isCheckpointCheckedOut} />
 				<div ref={refs.setReference} style={{ position: "relative", marginTop: -2 }}>
@@ -154,7 +152,7 @@ export const CheckmarkControl = ({ messageTs, isCheckpointCheckedOut }: Checkmar
 						$isCheckedOut={isCheckpointCheckedOut}
 						isActive={showRestoreConfirm}
 						onClick={() => setShowRestoreConfirm(true)}>
-						Restore
+						恢复
 					</CustomButton>
 					{showRestoreConfirm &&
 						createPortal(
@@ -173,12 +171,9 @@ export const CheckmarkControl = ({ messageTs, isCheckpointCheckedOut }: Checkmar
 											width: "100%",
 											marginBottom: "10px",
 										}}>
-										Restore Files
+										恢复文件
 									</VSCodeButton>
-									<p>
-										Restores your project's files back to a snapshot taken at this point (use "Compare" to see
-										what will be reverted)
-									</p>
+									<p>恢复您项目的文件到此点（使用“比较”查看将被恢复的内容）</p>
 								</RestoreOption>
 								{/* <RestoreOption>
 									<VSCodeButton
@@ -202,9 +197,9 @@ export const CheckmarkControl = ({ messageTs, isCheckpointCheckedOut }: Checkmar
 											width: "100%",
 											marginBottom: "10px",
 										}}>
-										Restore Files & Task
+										恢复文件和任务
 									</VSCodeButton>
-									<p>Restores your project's files and deletes all messages after this point</p>
+									<p>恢复您项目的文件并删除此时之后的所有消息</p>
 								</RestoreOption>
 							</RestoreConfirmTooltip>,
 							document.body,

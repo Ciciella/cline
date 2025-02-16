@@ -39,8 +39,8 @@ const AccountView = ({ onDone }: AccountViewProps) => {
 					marginBottom: "17px",
 					paddingRight: 17,
 				}}>
-				<h3 style={{ color: "var(--vscode-foreground)", margin: 0 }}>Account</h3>
-				<VSCodeButton onClick={onDone}>Done</VSCodeButton>
+				<h3 style={{ color: "var(--vscode-foreground)", margin: 0 }}>账户</h3>
+				<VSCodeButton onClick={onDone}>完成</VSCodeButton>
 			</div>
 			<div
 				style={{
@@ -66,13 +66,13 @@ const AccountView = ({ onDone }: AccountViewProps) => {
 								/>
 							)}
 							<div style={{ fontSize: "14px", marginBottom: 10 }}>
-								{userInfo?.displayName && <div>Name: {userInfo.displayName}</div>}
-								{userInfo?.email && <div>Email: {userInfo.email}</div>}
+								{userInfo?.displayName && <div>姓名: {userInfo.displayName}</div>}
+								{userInfo?.email && <div>邮箱: {userInfo.email}</div>}
 							</div>
-							<VSCodeButton onClick={handleLogout}>Log out</VSCodeButton>
+							<VSCodeButton onClick={handleLogout}>登出</VSCodeButton>
 						</>
 					) : (
-						<VSCodeButton onClick={handleLogin}>Log in to Cline</VSCodeButton>
+						<VSCodeButton onClick={handleLogin}>登录到AI Code</VSCodeButton>
 					)}
 				</div>
 			</div>
