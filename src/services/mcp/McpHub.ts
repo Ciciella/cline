@@ -125,7 +125,7 @@ export class McpHub {
 						await this.updateServerConnections(result.data.mcpServers || {})
 						vscode.window.showInformationMessage("MCP servers updated")
 					} catch (error) {
-						console.error("Failed to process MCP settings change:", error)
+						console.error("处理MCP设置更改失败:", error)
 					}
 				}
 			}),
@@ -139,7 +139,7 @@ export class McpHub {
 			const config = JSON.parse(content)
 			await this.updateServerConnections(config.mcpServers || {})
 		} catch (error) {
-			console.error("Failed to initialize MCP servers:", error)
+			console.error("初始化MCP服务器失败:", error)
 		}
 	}
 
@@ -171,7 +171,7 @@ export class McpHub {
 			})
 
 			transport.onerror = async (error) => {
-				console.error(`Transport error for "${name}":`, error)
+				console.error(`"${name}"传输错误:`, error)
 				const connection = this.connections.find((conn) => conn.server.name === name)
 				if (connection) {
 					connection.server.status = "disconnected"
@@ -190,7 +190,7 @@ export class McpHub {
 
 			// If the config is invalid, show an error
 			if (!StdioConfigSchema.safeParse(config).success) {
-				console.error(`Invalid config for "${name}": missing or invalid parameters`)
+				console.error(`"${name}"配置无效: 缺少或参数无效`)
 				const connection: McpConnection = {
 					server: {
 						name,
@@ -238,7 +238,7 @@ export class McpHub {
 					}
 				})
 			} else {
-				console.error(`No stderr stream for ${name}`)
+				console.error(`${name}没有stderr流`)
 			}
 			transport.start = async () => {} // No-op now, .connect() won't fail
 
@@ -350,7 +350,7 @@ export class McpHub {
 				await connection.transport.close()
 				await connection.client.close()
 			} catch (error) {
-				console.error(`Failed to close transport for ${name}:`, error)
+				console.error(`关闭${name}传输失败:`, error)
 			}
 			this.connections = this.connections.filter((conn) => conn.server.name !== name)
 		}
@@ -380,7 +380,7 @@ export class McpHub {
 					this.setupFileWatcher(name, config)
 					await this.connectToServer(name, config)
 				} catch (error) {
-					console.error(`Failed to connect to new MCP server ${name}:`, error)
+					console.error(`连接新MCP服务器${name}失败:`, error)
 				}
 			} else if (!deepEqual(JSON.parse(currentConnection.server.config), config)) {
 				// Existing server with changed config
@@ -390,7 +390,7 @@ export class McpHub {
 					await this.connectToServer(name, config)
 					console.log(`Reconnected MCP server with updated config: ${name}`)
 				} catch (error) {
-					console.error(`Failed to reconnect MCP server ${name}:`, error)
+					console.error(`重新连接MCP服务器${name}失败:`, error)
 				}
 			}
 			// If server exists with same config, do nothing

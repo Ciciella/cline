@@ -141,14 +141,14 @@
 					"properties": {
 						"vendor": {
 							"type": "string",
-							"description": "The vendor of the language model (e.g. copilot)"
+							"description": "语言模型的供应商（例如：copilot）"
 						},
 						"family": {
 							"type": "string",
-							"description": "The family of the language model (e.g. gpt-4)"
+							"description": "语言模型的系列（例如：gpt-4）"
 						}
 					},
-					"description": "Settings for VSCode Language Model API"
+					"description": "VSCode 语言模型 API 的设置"
 				},
 				"aiCode.mcp.mode": {
 					"type": "string",
@@ -158,22 +158,22 @@
 						"off"
 					],
 					"enumDescriptions": [
-						"Enable all MCP functionality (server use and build instructions)",
-						"Enable MCP server use only (excludes instructions about building MCP servers)",
-						"Disable all MCP functionality"
+						"启用所有 MCP 功能（服务器使用和构建说明）",
+						"仅启用 MCP 服务器使用（不包括构建 MCP 服务器的说明）",
+						"禁用所有 MCP 功能"
 					],
 					"default": "full",
-					"description": "Controls MCP inclusion in prompts, reduces token usage if you only need access to certain functionality."
+					"description": "控制在提示中包含 MCP 的内容，如果你只需要访问某些功能，可以减少令牌使用量。"
 				},
 				"aiCode.enableCheckpoints": {
 					"type": "boolean",
 					"default": true,
-					"description": "Enables extension to save checkpoints of workspace throughout the task."
+					"description": "允许扩展在任务执行过程中保存工作区的检查点。"
 				},
 				"aiCode.disableBrowserTool": {
 					"type": "boolean",
 					"default": false,
-					"description": "Disables extension from spawning browser session."
+					"description": "禁用扩展程序生成浏览器会话。"
 				},
 				"aiCode.modelSettings.o3Mini.reasoningEffort": {
 					"type": "string",
@@ -183,12 +183,12 @@
 						"high"
 					],
 					"default": "medium",
-					"description": "Controls the reasoning effort when using the o3-mini model. Higher values may result in more thorough but slower responses."
+					"description": "控制使用o3-mini模型时的推理努力。较高的值可能会导致更彻底但更慢的响应。"
 				},
 				"aiCode.chromeExecutablePath": {
 					"type": "string",
 					"default": null,
-					"description": "Path to Chrome executable for browser use functionality. If not set, the extension will attempt to find or download it automatically."
+					"description": "Chrome 可执行文件的路径，用于浏览器功能。如果未设置，扩展将尝试自动查找或下载它。"
 				}
 			}
 		}
