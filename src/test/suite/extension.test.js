@@ -6,7 +6,7 @@ describe("Extension Tests", function () {
 
 	it("should activate extension successfully", async () => {
 		// Get the extension
-		const extension = vscode.extensions.getExtension("saoudrizwan.claude-dev")
+		const extension = vscode.extensions.getExtension("tianguaduizhang.claude-dev-china")
 		expect(extension).to.not.be.undefined
 
 		// Activate the extension if not already activated
@@ -18,7 +18,7 @@ describe("Extension Tests", function () {
 
 	it("should open sidebar view", async () => {
 		// Execute the command to open sidebar
-		await vscode.commands.executeCommand("cline.plusButtonClicked")
+		await vscode.commands.executeCommand("aiCode.plusButtonClicked")
 
 		// Wait for sidebar to be visible
 		await new Promise((resolve) => setTimeout(resolve, 1000))
@@ -31,7 +31,7 @@ describe("Extension Tests", function () {
 
 	it("should handle basic commands", async () => {
 		// Test basic command execution
-		await vscode.commands.executeCommand("cline.historyButtonClicked")
+		await vscode.commands.executeCommand("aiCode.historyButtonClicked")
 		// Success if no error thrown
 	})
 

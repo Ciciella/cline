@@ -1,5 +1,6 @@
 import { VSCodeButton, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
 import { memo } from "react"
+import { FormattedMessage } from "react-intl"
 import { getAsVar, VSC_DESCRIPTION_FOREGROUND, VSC_INACTIVE_SELECTION_BACKGROUND } from "../../utils/vscStyles"
 import { vscode } from "../../utils/vscode"
 
@@ -27,12 +28,15 @@ const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 				<span className="codicon codicon-close"></span>
 			</VSCodeButton>
 			<h3 style={{ margin: "0 0 8px" }}>
-				🎉{"  "}New in v{minorVersion}
+				<FormattedMessage
+					id="announcement.newVersion"
+					defaultMessage="🎉 New in v{minorVersion}"
+					values={{ minorVersion }}
+				/>
 			</h3>
 			<ul style={{ margin: "0 0 8px", paddingLeft: "12px" }}>
 				<li>
-					<b>Introducing MCP Marketplace:</b> Discover and install the best MCP servers right from the extension, with
-					new servers added regularly! Get started by going to the{" "}
+					<b>引入MCP市场：</b> 直接从扩展中发现和安装最佳MCP服务器，定期添加新服务器！开始使用，请转到
 					<span className="codicon codicon-extensions" style={{ marginRight: "4px", fontSize: 10 }}></span>
 					<VSCodeLink
 						onClick={() => {
@@ -43,22 +47,17 @@ const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 					.
 				</li>
 				<li>
-					<b>Mermaid diagrams in Plan mode!</b> Cline can now visualize his plans using flowcharts, sequences,
-					entity-relationships, and more. When he explains his approach using mermaid, you'll see a diagram right in
-					chat that you can click to expand.
+					<b>在计划模式中使用Mermaid图表！</b> AI
+					Code现在可以使用流程图、序列图、实体关系图等可视化其计划。当他使用mermaid解释其方法时，您将在聊天中看到一个可以点击展开的图表。
 				</li>
 				<li>
-					Use <code>@terminal</code> to reference terminal contents, and <code>@git</code> to reference working changes
-					and commits!
+					使用 <code>@terminal</code> 引用终端内容，使用 <code>@git</code> 引用工作更改和提交！
 				</li>
-				<li>
-					New visual indicator for checkpoints after edits & commands, and automatic checkpoint at the start of each
-					task.
-				</li>
+				<li>编辑和命令后的新检查点视觉指示器，并在每个任务开始时自动检查点。</li>
 			</ul>
-			<VSCodeLink href="https://x.com/sdrzn/status/1892262424881090721" style={{ display: "inline" }}>
-				See a demo of the changes here!
-			</VSCodeLink>
+			{/* <VSCodeLink href="https://x.com/sdrzn/status/1892262424881090721" style={{ display: "inline" }}>
+				在此查看更改的演示！
+			</VSCodeLink> */}
 			{/*<ul style={{ margin: "0 0 8px", paddingLeft: "12px" }}>
 				 <li>
 					OpenRouter now supports prompt caching! They also have much higher rate limits than other providers,
@@ -114,7 +113,7 @@ const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 					margin: "8px 0",
 				}}
 			/>
-			<p style={{ margin: "0" }}>
+			{/* <p style={{ margin: "0" }}>
 				Join us on{" "}
 				<VSCodeLink style={{ display: "inline" }} href="https://x.com/cline">
 					X,
@@ -126,8 +125,8 @@ const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 				<VSCodeLink style={{ display: "inline" }} href="https://www.reddit.com/r/cline/">
 					r/cline
 				</VSCodeLink>
-				for more updates!
-			</p>
+				获取更多更新！
+			</p> */}
 		</div>
 	)
 }

@@ -195,7 +195,7 @@ export const openRouterDefaultModelInfo: ModelInfo = {
 	cacheWritesPrice: 3.75,
 	cacheReadsPrice: 0.3,
 	description:
-		"The new Claude 3.5 Sonnet delivers better-than-Opus capabilities, faster-than-Sonnet speeds, at the same Sonnet prices. Sonnet is particularly good at:\n\n- Coding: New Sonnet scores ~49% on SWE-Bench Verified, higher than the last best score, and without any fancy prompt scaffolding\n- Data science: Augments human data science expertise; navigates unstructured data while using multiple tools for insights\n- Visual processing: excelling at interpreting charts, graphs, and images, accurately transcribing text to derive insights beyond just the text alone\n- Agentic tasks: exceptional tool use, making it great at agentic tasks (i.e. complex, multi-step problem solving tasks that require engaging with other systems)\n\n#multimodal",
+		"新的Claude 3.5 Sonnet提供了优于Opus的能力，以更快的速度和相同的Sonnet价格。Sonnet特别擅长于：\n\n- 编码：新的Sonnet在SWE-Bench Verified上得分约为49%，高于之前的最佳得分，并且无需任何复杂的提示结构\n- 数据科学：增强了人类数据科学专业知识；在使用多种工具获取见解的同时，导航非结构化数据\n- 视觉处理：擅长解释图表、图形和图像，准确地转录文本以获取超越文本本身的见解\n- 代理任务：卓越的工具使用，使其在代理任务（即需要与其他系统交互的复杂多步骤问题解决任务）中表现出色\n\n#多模态",
 }
 
 // Vertex AI

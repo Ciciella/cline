@@ -5,6 +5,7 @@ import { validateApiConfiguration, validateModelId } from "../../utils/validate"
 import { vscode } from "../../utils/vscode"
 import ApiOptions from "./ApiOptions"
 import SettingsButton from "../common/SettingsButton"
+import { FormattedMessage, useIntl } from "react-intl"
 const { IS_DEV } = process.env
 
 type SettingsViewProps = {
@@ -12,6 +13,7 @@ type SettingsViewProps = {
 }
 
 const SettingsView = ({ onDone }: SettingsViewProps) => {
+	const intl = useIntl()
 	const { apiConfiguration, version, customInstructions, setCustomInstructions, openRouterModels } = useExtensionState()
 	const [apiErrorMessage, setApiErrorMessage] = useState<string | undefined>(undefined)
 	const [modelIdErrorMessage, setModelIdErrorMessage] = useState<string | undefined>(undefined)
@@ -75,8 +77,12 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
 					marginBottom: "17px",
 					paddingRight: 17,
 				}}>
-				<h3 style={{ color: "var(--vscode-foreground)", margin: 0 }}>Settings</h3>
-				<VSCodeButton onClick={handleSubmit}>Done</VSCodeButton>
+				<h3 style={{ color: "var(--vscode-foreground)", margin: 0 }}>
+					<FormattedMessage id="settings.title" defaultMessage="Settings" />
+				</h3>
+				<VSCodeButton onClick={handleSubmit}>
+					<FormattedMessage id="settings.done" defaultMessage="Done" />
+				</VSCodeButton>
 			</div>
 			<div
 				style={{
@@ -100,9 +106,15 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
 						style={{ width: "100%" }}
 						resize="vertical"
 						rows={4}
-						placeholder={'e.g. "Run unit tests at the end", "Use TypeScript with async/await", "Speak in Spanish"'}
+						placeholder={intl.formatMessage({
+							id: "settings.placeholder",
+							defaultMessage:
+								'e.g. "Run unit tests at the end", "Use TypeScript with async/await", "Speak in Spanish"',
+						})}
 						onInput={(e: any) => setCustomInstructions(e.target?.value ?? "")}>
-						<span style={{ fontWeight: "500" }}>Custom Instructions</span>
+						<span style={{ fontWeight: "500" }}>
+							<FormattedMessage id="settings.customInstructions" defaultMessage="Custom Instructions" />
+						</span>
 					</VSCodeTextArea>
 					<p
 						style={{
@@ -110,15 +122,20 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
 							marginTop: "5px",
 							color: "var(--vscode-descriptionForeground)",
 						}}>
-						These instructions are added to the end of the system prompt sent with every request.
+						<FormattedMessage
+							id="settings.instructionsInfo"
+							defaultMessage="These instructions are added to the end of the system prompt sent with every request."
+						/>
 					</p>
 				</div>
 
 				{IS_DEV && (
 					<>
-						<div style={{ marginTop: "10px", marginBottom: "4px" }}>Debug</div>
+						<div style={{ marginTop: "10px", marginBottom: "4px" }}>
+							<FormattedMessage id="settingsView.debug" defaultMessage="Debug" />
+						</div>
 						<VSCodeButton onClick={handleResetState} style={{ marginTop: "5px", width: "auto" }}>
-							Reset State
+							<FormattedMessage id="settingsView.resetState" defaultMessage="Reset State" />
 						</VSCodeButton>
 						<p
 							style={{
@@ -126,7 +143,10 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
 								marginTop: "5px",
 								color: "var(--vscode-descriptionForeground)",
 							}}>
-							This will reset all global state and secret storage in the extension.
+							<FormattedMessage
+								id="settingsView.resetDescription"
+								defaultMessage="This will reset all global state and secret storage in the extension."
+							/>
 						</p>
 					</>
 				)}
@@ -144,7 +164,7 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
 							margin: "0 0 16px 0",
 						}}>
 						<i className="codicon codicon-settings-gear" />
-						Advanced Settings
+						高级设置
 					</SettingsButton>
 				</div>
 				<div
@@ -155,15 +175,13 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
 						lineHeight: "1.2",
 						padding: "0 8px 15px 0",
 					}}>
-					<p
-						style={{
-							wordWrap: "break-word",
-							margin: 0,
-							padding: 0,
-						}}>
-						If you have any questions or feedback, feel free to open an issue at{" "}
-						<VSCodeLink href="https://github.com/cline/cline" style={{ display: "inline" }}>
-							https://github.com/cline/cline
+					<p style={{ wordWrap: "break-word", margin: 0, padding: 0 }}>
+						<FormattedMessage
+							id="settingsView.questionsFeedback"
+							defaultMessage="If you have any questions or feedback, feel free to open an issue at "
+						/>
+						<VSCodeLink href="https://github.com/Ciciella/AI-Code" style={{ display: "inline" }}>
+							https://github.com/Ciciella/AI-Code
 						</VSCodeLink>
 					</p>
 					<p

@@ -5,6 +5,7 @@ import { Virtuoso } from "react-virtuoso"
 import { memo, useMemo, useState, useEffect } from "react"
 import Fuse, { FuseResult } from "fuse.js"
 import { formatLargeNumber } from "../../utils/format"
+import { FormattedMessage } from "react-intl"
 import { formatSize } from "../../utils/size"
 
 type HistoryViewProps = {
@@ -37,10 +38,10 @@ const HistoryView = ({ onDone }: HistoryViewProps) => {
 		vscode.postMessage({ type: "deleteTaskWithId", text: id })
 	}
 
-	const formatDate = (timestamp: number) => {
+	const formatDate = (timestamp: number, useCustomFormat = "en-US") => {
 		const date = new Date(timestamp)
 		return date
-			?.toLocaleString("en-US", {
+			?.toLocaleString(useCustomFormat, {
 				month: "long",
 				day: "numeric",
 				hour: "numeric",
@@ -137,14 +138,10 @@ const HistoryView = ({ onDone }: HistoryViewProps) => {
 						alignItems: "center",
 						padding: "10px 17px 10px 20px",
 					}}>
-					<h3
-						style={{
-							color: "var(--vscode-foreground)",
-							margin: 0,
-						}}>
-						History
-					</h3>
-					<VSCodeButton onClick={onDone}>Done</VSCodeButton>
+					<h3 style={{ color: "var(--vscode-foreground)", margin: 0 }}>历史记录</h3>
+					<VSCodeButton onClick={onDone}>
+						<FormattedMessage id="settings.done" defaultMessage="完成" />
+					</VSCodeButton>
 				</div>
 				<div style={{ padding: "5px 17px 6px 17px" }}>
 					<div
@@ -155,7 +152,7 @@ const HistoryView = ({ onDone }: HistoryViewProps) => {
 						}}>
 						<VSCodeTextField
 							style={{ width: "100%" }}
-							placeholder="Fuzzy search history..."
+							placeholder="模糊搜索历史记录..."
 							value={searchQuery}
 							onInput={(e) => {
 								const newValue = (e.target as HTMLInputElement)?.value
@@ -192,12 +189,12 @@ const HistoryView = ({ onDone }: HistoryViewProps) => {
 							style={{ display: "flex", flexWrap: "wrap" }}
 							value={sortOption}
 							onChange={(e) => setSortOption((e.target as HTMLInputElement).value as SortOption)}>
-							<VSCodeRadio value="newest">Newest</VSCodeRadio>
-							<VSCodeRadio value="oldest">Oldest</VSCodeRadio>
-							<VSCodeRadio value="mostExpensive">Most Expensive</VSCodeRadio>
-							<VSCodeRadio value="mostTokens">Most Tokens</VSCodeRadio>
+							<VSCodeRadio value="newest">最新</VSCodeRadio>
+							<VSCodeRadio value="oldest">最早</VSCodeRadio>
+							<VSCodeRadio value="mostExpensive">最贵</VSCodeRadio>
+							<VSCodeRadio value="mostTokens">最多令牌</VSCodeRadio>
 							<VSCodeRadio value="mostRelevant" disabled={!searchQuery} style={{ opacity: searchQuery ? 1 : 0.5 }}>
-								Most Relevant
+								最相关
 							</VSCodeRadio>
 						</VSCodeRadioGroup>
 					</div>
@@ -256,7 +253,7 @@ const HistoryView = ({ onDone }: HistoryViewProps) => {
 												fontSize: "0.85em",
 												textTransform: "uppercase",
 											}}>
-											{formatDate(item.ts)}
+											{formatDate(item.ts, "zh-CN")}
 										</span>
 										<VSCodeButton
 											appearance="icon"
@@ -372,7 +369,7 @@ const HistoryView = ({ onDone }: HistoryViewProps) => {
 														fontWeight: 500,
 														color: "var(--vscode-descriptionForeground)",
 													}}>
-													Cache:
+													缓存：
 												</span>
 												<span
 													style={{
@@ -429,7 +426,7 @@ const HistoryView = ({ onDone }: HistoryViewProps) => {
 															fontWeight: 500,
 															color: "var(--vscode-descriptionForeground)",
 														}}>
-														API Cost:
+														API 费用：
 													</span>
 													<span
 														style={{
@@ -460,7 +457,7 @@ const ExportButton = ({ itemId }: { itemId: string }) => (
 			e.stopPropagation()
 			vscode.postMessage({ type: "exportTaskWithId", text: itemId })
 		}}>
-		<div style={{ fontSize: "11px", fontWeight: 500, opacity: 1 }}>EXPORT</div>
+		<div style={{ fontSize: "11px", fontWeight: 500, opacity: 1 }}>导出</div>
 	</VSCodeButton>
 )
 

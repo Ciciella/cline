@@ -1,7 +1,7 @@
 {
-	"name": "claude-dev",
-	"displayName": "Cline",
-	"description": "Autonomous coding agent right in your IDE, capable of creating/editing files, running commands, using the browser, and more with your permission every step of the way.",
+	"name": "claude-dev-china",
+	"displayName": "AI Code: Cline, Chat, Deepseek, 中文版",
+	"description": "在您的IDE中自动编码代理，能够在您的许可下创建/编辑文件、执行命令等等。支持deepseek模型",
 	"version": "3.4.5",
 	"icon": "assets/icons/icon.png",
 	"galleryBanner": {
@@ -12,15 +12,15 @@
 		"vscode": "^1.84.0"
 	},
 	"author": {
-		"name": "Cline Bot Inc."
+		"name": "AI Code Bot Inc."
 	},
 	"license": "Apache-2.0",
-	"publisher": "saoudrizwan",
+	"publisher": "tianguaduizhang",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/cline/cline"
+		"url": "https://github.com/Ciciella/AI-Code"
 	},
-	"homepage": "https://cline.bot",
+	"homepage": "https://github.com/Ciciella/AI-Code",
 	"categories": [
 		"AI",
 		"Chat",
@@ -41,7 +41,15 @@
 		"chatgpt",
 		"sonnet",
 		"ai",
-		"llama"
+		"llama",
+		"deepseek",
+		"qinghua",
+		"zhipu",
+		"aicode",
+		"ai code",
+		"lingma",
+		"roo code",
+		"roocode"
 	],
 	"activationEvents": [],
 	"main": "./dist/extension.js",
@@ -49,100 +57,100 @@
 		"viewsContainers": {
 			"activitybar": [
 				{
-					"id": "claude-dev-ActivityBar",
-					"title": "Cline",
+					"id": "ai-code-dev-ActivityBar",
+					"title": "AI Code",
 					"icon": "assets/icons/icon.svg"
 				}
 			]
 		},
 		"views": {
-			"claude-dev-ActivityBar": [
+			"ai-code-dev-ActivityBar": [
 				{
 					"type": "webview",
-					"id": "claude-dev.SidebarProvider",
+					"id": "ai-code-dev.SidebarProvider",
 					"name": ""
 				}
 			]
 		},
 		"commands": [
 			{
-				"command": "cline.plusButtonClicked",
-				"title": "New Task",
+				"command": "aiCode.plusButtonClicked",
+				"title": "新任务",
 				"icon": "$(add)"
 			},
 			{
-				"command": "cline.mcpButtonClicked",
-				"title": "MCP Servers",
+				"command": "aiCode.mcpButtonClicked",
+				"title": "MCP服务器",
 				"icon": "$(extensions)"
 			},
 			{
-				"command": "cline.historyButtonClicked",
-				"title": "History",
+				"command": "aiCode.historyButtonClicked",
+				"title": "历史记录",
 				"icon": "$(history)"
 			},
 			{
-				"command": "cline.popoutButtonClicked",
-				"title": "Open in Editor",
+				"command": "aiCode.popoutButtonClicked",
+				"title": "在编辑器中打开",
 				"icon": "$(link-external)"
 			},
 			{
-				"command": "cline.settingsButtonClicked",
-				"title": "Settings",
+				"command": "aiCode.settingsButtonClicked",
+				"title": "设置",
 				"icon": "$(settings-gear)"
 			},
 			{
-				"command": "cline.openInNewTab",
-				"title": "Open In New Tab",
-				"category": "Cline"
+				"command": "aiCode.openInNewTab",
+				"title": "在新标签页中打开",
+				"category": "AI Code"
 			}
 		],
 		"menus": {
 			"view/title": [
 				{
-					"command": "cline.plusButtonClicked",
+					"command": "aiCode.plusButtonClicked",
 					"group": "navigation@1",
-					"when": "view == claude-dev.SidebarProvider"
+					"when": "view == ai-code-dev.SidebarProvider"
 				},
 				{
-					"command": "cline.mcpButtonClicked",
+					"command": "aiCode.mcpButtonClicked",
 					"group": "navigation@2",
-					"when": "view == claude-dev.SidebarProvider"
+					"when": "view == ai-code-dev.SidebarProvider"
 				},
 				{
-					"command": "cline.historyButtonClicked",
+					"command": "aiCode.historyButtonClicked",
 					"group": "navigation@3",
-					"when": "view == claude-dev.SidebarProvider"
+					"when": "view == ai-code-dev.SidebarProvider"
 				},
 				{
-					"command": "cline.popoutButtonClicked",
+					"command": "aiCode.popoutButtonClicked",
 					"group": "navigation@4",
-					"when": "view == claude-dev.SidebarProvider"
+					"when": "view == ai-code-dev.SidebarProvider"
 				},
 				{
-					"command": "cline.settingsButtonClicked",
+					"command": "aiCode.settingsButtonClicked",
 					"group": "navigation@5",
-					"when": "view == claude-dev.SidebarProvider"
+					"when": "view == ai-code-dev.SidebarProvider"
 				}
 			]
 		},
 		"configuration": {
-			"title": "Cline",
+			"title": "AI Code",
 			"properties": {
-				"cline.vsCodeLmModelSelector": {
+				"aiCode.vsCodeLmModelSelector": {
 					"type": "object",
 					"properties": {
 						"vendor": {
 							"type": "string",
-							"description": "The vendor of the language model (e.g. copilot)"
+							"description": "语言模型的供应商（例如：copilot）"
 						},
 						"family": {
 							"type": "string",
-							"description": "The family of the language model (e.g. gpt-4)"
+							"description": "语言模型的系列（例如：gpt-4）"
 						}
 					},
-					"description": "Settings for VSCode Language Model API"
+					"description": "VSCode 语言模型 API 的设置"
 				},
-				"cline.mcp.mode": {
+				"aiCode.mcp.mode": {
 					"type": "string",
 					"enum": [
 						"full",
@@ -150,24 +158,24 @@
 						"off"
 					],
 					"enumDescriptions": [
-						"Enable all MCP functionality (server use and build instructions)",
-						"Enable MCP server use only (excludes instructions about building MCP servers)",
-						"Disable all MCP functionality"
+						"启用所有 MCP 功能（服务器使用和构建说明）",
+						"仅启用 MCP 服务器使用（不包括构建 MCP 服务器的说明）",
+						"禁用所有 MCP 功能"
 					],
 					"default": "full",
-					"description": "Controls MCP inclusion in prompts, reduces token usage if you only need access to certain functionality."
+					"description": "控制在提示中包含 MCP 的内容，如果你只需要访问某些功能，可以减少令牌使用量。"
 				},
-				"cline.enableCheckpoints": {
+				"aiCode.enableCheckpoints": {
 					"type": "boolean",
 					"default": true,
-					"description": "Enables extension to save checkpoints of workspace throughout the task."
+					"description": "允许扩展在任务执行过程中保存工作区的检查点。"
 				},
-				"cline.disableBrowserTool": {
+				"aiCode.disableBrowserTool": {
 					"type": "boolean",
 					"default": false,
-					"description": "Disables extension from spawning browser session."
+					"description": "禁用扩展程序生成浏览器会话。"
 				},
-				"cline.modelSettings.o3Mini.reasoningEffort": {
+				"aiCode.modelSettings.o3Mini.reasoningEffort": {
 					"type": "string",
 					"enum": [
 						"low",
@@ -175,17 +183,17 @@
 						"high"
 					],
 					"default": "medium",
-					"description": "Controls the reasoning effort when using the o3-mini model. Higher values may result in more thorough but slower responses."
+					"description": "控制使用o3-mini模型时的推理努力。较高的值可能会导致更彻底但更慢的响应。"
 				},
-				"cline.chromeExecutablePath": {
+				"aiCode.chromeExecutablePath": {
 					"type": "string",
 					"default": null,
-					"description": "Path to Chrome executable for browser use functionality. If not set, the extension will attempt to find or download it automatically."
+					"description": "用于浏览器功能的 Chrome 可执行文件路径。如果未设置，扩展将尝试自动查找或下载它。"
 				},
-				"cline.mcpMarketplace.enabled": {
+				"aiCode.mcpMarketplace.enabled": {
 					"type": "boolean",
 					"default": true,
-					"description": "Controls whether the MCP Marketplace is enabled."
+					"description": "控制是否启用 MCP 市场。"
 				}
 			}
 		}

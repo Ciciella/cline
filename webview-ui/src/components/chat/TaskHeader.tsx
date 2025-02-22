@@ -9,6 +9,7 @@ import { formatSize } from "../../utils/size"
 import { vscode } from "../../utils/vscode"
 import Thumbnails from "../common/Thumbnails"
 import { normalizeApiConfiguration } from "../settings/ApiOptions"
+import { FormattedMessage } from "react-intl"
 
 interface TaskHeaderProps {
 	task: ClineMessage
@@ -135,7 +136,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 						}}>
 						<span style={{ fontWeight: "bold" }}>
 							{/* {windowWidth > 280 && windowWidth < 310 ? "Context:" : "Context Window:"} */}
-							Context Window:
+							上下文窗口:
 						</span>
 					</div>
 					<div
@@ -230,10 +231,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 								flexGrow: 1,
 								minWidth: 0, // This allows the div to shrink below its content size
 							}}>
-							<span style={{ fontWeight: "bold" }}>
-								Task
-								{!isTaskExpanded && ":"}
-							</span>
+							<span style={{ fontWeight: "bold" }}>任务{!isTaskExpanded && ":"}</span>
 							{!isTaskExpanded && <span style={{ marginLeft: 4 }}>{highlightMentions(task.text, false)}</span>}
 						</div>
 					</div>
@@ -307,7 +305,7 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 											backgroundColor: "var(--vscode-badge-background)",
 										}}
 										onClick={() => setIsTextExpanded(!isTextExpanded)}>
-										See more
+										查看更多
 									</div>
 								</div>
 							)}
@@ -393,7 +391,9 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 										gap: "4px",
 										flexWrap: "wrap",
 									}}>
-									<span style={{ fontWeight: "bold" }}>Cache:</span>
+									<span style={{ fontWeight: "bold" }}>
+										<FormattedMessage id="taskHeader.cache" defaultMessage="Cache:" />
+									</span>
 									<span
 										style={{
 											display: "flex",
@@ -437,13 +437,10 @@ const TaskHeader: React.FC<TaskHeaderProps> = ({
 										alignItems: "center",
 										height: 17,
 									}}>
-									<div
-										style={{
-											display: "flex",
-											alignItems: "center",
-											gap: "4px",
-										}}>
-										<span style={{ fontWeight: "bold" }}>API Cost:</span>
+									<div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+										<span style={{ fontWeight: "bold" }}>
+											<FormattedMessage id="taskHeader.apiCost" defaultMessage="API Cost:" />
+										</span>
 										<span>${totalCost?.toFixed(4)}</span>
 									</div>
 									<DeleteButton taskSize={formatSize(currentTaskItem?.size)} taskId={currentTaskItem?.id} />

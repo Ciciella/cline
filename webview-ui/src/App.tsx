@@ -9,6 +9,29 @@ import AccountView from "./components/account/AccountView"
 import { ExtensionStateContextProvider, useExtensionState } from "./context/ExtensionStateContext"
 import { vscode } from "./utils/vscode"
 import McpView from "./components/mcp/McpView"
+import enMessages from "./locales/en.json"
+import zhCNMessages from "./locales/zh-CN.json"
+import { IntlProvider } from "react-intl"
+import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
+
+// 定义消息类型
+type MessageType = {
+	[key: string]: string
+}
+
+// 定义消息对象的类型
+type MessagesType = {
+	en: MessageType
+	"zh-CN": MessageType
+}
+
+// 定义允许的语言环境
+type Locale = keyof MessagesType
+
+const messages: MessagesType = {
+	en: enMessages,
+	"zh-CN": zhCNMessages,
+}
 
 const AppContent = () => {
 	const { didHydrateState, showWelcome, shouldShowAnnouncement } = useExtensionState()
@@ -101,10 +124,29 @@ const AppContent = () => {
 }
 
 const App = () => {
+	const [locale, setLocale] = useState<Locale>("zh-CN")
+
+	const toggleLanguage = useCallback(() => {
+		setLocale((prevLocale) => (prevLocale === "en" ? "zh-CN" : "en"))
+	}, [])
+
+	useEffect(() => {
+		console.log("当前语言:", locale)
+		console.log("当前消息:", messages[locale])
+		console.log("欢迎标题:", messages[locale]["welcome.title"])
+	}, [locale])
+
 	return (
-		<ExtensionStateContextProvider>
-			<AppContent />
-		</ExtensionStateContextProvider>
+		<IntlProvider key={locale} messages={messages[locale]} locale={locale}>
+			{/* <div style={{ position: 'fixed', top: 10, right: 10, zIndex: 1000 }}>
+				<VSCodeButton onClick={toggleLanguage}>
+					{locale === 'en' ? 'Switch to Chinese' : '切换到英文'}
+				</VSCodeButton>
+			</div> */}
+			<ExtensionStateContextProvider>
+				<AppContent />
+			</ExtensionStateContextProvider>
+		</IntlProvider>
 	)
 }
 

@@ -6,6 +6,7 @@ import { vscode } from "../../utils/vscode"
 import ApiOptions from "../settings/ApiOptions"
 import { useEvent } from "react-use"
 import { ExtensionMessage } from "../../../../src/shared/ExtensionMessage"
+import { FormattedMessage } from "react-intl"
 
 const WelcomeView = () => {
 	const { apiConfiguration } = useExtensionState()
@@ -56,60 +57,39 @@ const WelcomeView = () => {
 					padding: "0 20px",
 					overflow: "auto",
 				}}>
-				<h2>Hi, I'm Cline</h2>
+				<h2>
+					<FormattedMessage id="welcome.title" defaultMessage="Hi, I'm AI Code" />
+				</h2>
 				<p>
-					I can do all kinds of tasks thanks to the latest breakthroughs in{" "}
+					<FormattedMessage
+						id="welcome.capabilities"
+						defaultMessage="I can do all kinds of tasks thanks to the latest breakthroughs in"
+					/>{" "}
 					<VSCodeLink
 						href="https://www-cdn.anthropic.com/fed9cc193a14b84131812372d8d5857f8f304c52/Model_Card_Claude_3_Addendum.pdf"
 						style={{ display: "inline" }}>
-						Claude 3.5 Sonnet's agentic coding capabilities
+						<FormattedMessage
+							id="welcome.capabilities.link"
+							defaultMessage="Claude 3.5 Sonnet's agentic coding capabilities"
+						/>
 					</VSCodeLink>{" "}
-					and access to tools that let me create & edit files, explore complex projects, use the browser, and execute
-					terminal commands (with your permission, of course). I can even use MCP to create new tools and extend my own
-					capabilities.
+					<FormattedMessage
+						id="welcome.tools"
+						defaultMessage="以及使用工具来创建和编辑文件，探索复杂的项目，使用浏览器和执行终端命令（当然，需要您的许可）。我甚至可以使用MCP来创建新的工具并扩展我自己的工具功能。"
+					/>
 				</p>
 
-				<b>To get started, this extension needs an API provider for Claude 3.5 Sonnet.</b>
-
-				<div
-					style={{
-						marginTop: "15px",
-						padding: isSubscribed ? "5px 15px 5px 15px" : "12px",
-						background: "var(--vscode-textBlockQuote-background)",
-						borderRadius: "6px",
-						fontSize: "0.9em",
-					}}>
-					{isSubscribed ? (
-						<p style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-							<span style={{ color: "var(--vscode-testing-iconPassed)", fontSize: "1.5em" }}>✓</span>
-							Thanks for subscribing! We'll keep you updated on new features.
-						</p>
-					) : (
-						<>
-							<p style={{ margin: 0, marginBottom: "8px" }}>
-								While Cline currently requires you bring your own API key, we are working on an official accounts
-								system with additional capabilities. Subscribe to our mailing list to get updates!
-							</p>
-							<div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-								<VSCodeTextField
-									type="email"
-									value={email}
-									onInput={(e: any) => setEmail(e.target.value)}
-									placeholder="Enter your email"
-									style={{ flex: 1 }}
-								/>
-								<VSCodeButton appearance="secondary" onClick={handleSubscribe} disabled={!email}>
-									Subscribe
-								</VSCodeButton>
-							</div>
-						</>
-					)}
-				</div>
+				<b>
+					<FormattedMessage
+						id="welcome.apiProvider"
+						defaultMessage="To get started, this extension needs an API provider for Claude 3.5 Sonnet."
+					/>
+				</b>
 
 				<div style={{ marginTop: "15px" }}>
 					<ApiOptions showModelOptions={false} />
 					<VSCodeButton onClick={handleSubmit} disabled={disableLetsGoButton} style={{ marginTop: "3px" }}>
-						Let's go!
+						<FormattedMessage id="welcome.letsGo" defaultMessage="Let's go!" />
 					</VSCodeButton>
 				</div>
 			</div>
