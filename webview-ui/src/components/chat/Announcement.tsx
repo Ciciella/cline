@@ -2,6 +2,7 @@ import { VSCodeButton, VSCodeLink } from "@vscode/webview-ui-toolkit/react"
 import { memo } from "react"
 import { FormattedMessage } from "react-intl"
 import { getAsVar, VSC_DESCRIPTION_FOREGROUND, VSC_INACTIVE_SELECTION_BACKGROUND } from "../../utils/vscStyles"
+import { vscode } from "../../utils/vscode"
 
 interface AnnouncementProps {
 	version: string
@@ -35,25 +36,34 @@ const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 			</h3>
 			<ul style={{ margin: "0 0 8px", paddingLeft: "12px" }}>
 				<li>
-					<b>计划/执行模式切换：</b> 计划模式让AI
-					Code集中于收集信息，提出澄清问题，脑暴想法，并架构解决方案。切换回执行模式，让他执行计划！
-				</li>
-				<li>
-					<b>快速API/模型切换</b>，通过聊天字段下方的新弹出菜单
-				</li>
-				<li>
-					<b>VS Code LM API</b> 让你可以使用来自其他扩展的模型，如GitHub Copilot
-				</li>
-				<li>
-					<b>MCP服务器改进：</b> 当不使用时的开关切换，和单个工具的自动批准选项
-				</li>
-				{/* <li>
-					如果你错过了，Cline现在支持检查点！{" "}
-					<VSCodeLink href="https://x.com/sdrzn/status/1876378124126236949" style={{ display: "inline" }}>
-						在这里查看。
+					<b>Introducing MCP Marketplace:</b> Discover and install the best MCP servers right from the extension, with
+					new servers added regularly! Get started by going to the{" "}
+					<span className="codicon codicon-extensions" style={{ marginRight: "4px", fontSize: 10 }}></span>
+					<VSCodeLink
+						onClick={() => {
+							vscode.postMessage({ type: "showMcpView" })
+						}}>
+						MCP Servers tab
 					</VSCodeLink>
-				</li> */}
+					.
+				</li>
+				<li>
+					<b>Mermaid diagrams in Plan mode!</b> Cline can now visualize his plans using flowcharts, sequences,
+					entity-relationships, and more. When he explains his approach using mermaid, you'll see a diagram right in
+					chat that you can click to expand.
+				</li>
+				<li>
+					Use <code>@terminal</code> to reference terminal contents, and <code>@git</code> to reference working changes
+					and commits!
+				</li>
+				<li>
+					New visual indicator for checkpoints after edits & commands, and automatic checkpoint at the start of each
+					task.
+				</li>
 			</ul>
+			<VSCodeLink href="https://x.com/sdrzn/status/1892262424881090721" style={{ display: "inline" }}>
+				See a demo of the changes here!
+			</VSCodeLink>
 			{/*<ul style={{ margin: "0 0 8px", paddingLeft: "12px" }}>
 				 <li>
 					OpenRouter now supports prompt caching! They also have much higher rate limits than other providers,
@@ -109,17 +119,20 @@ const Announcement = ({ version, hideAnnouncement }: AnnouncementProps) => {
 					margin: "8px 0",
 				}}
 			/>
-			{/* <p style={{ margin: "0" }}>
-				Join our{" "}
+			<p style={{ margin: "0" }}>
+				Join us on{" "}
+				<VSCodeLink style={{ display: "inline" }} href="https://x.com/cline">
+					X,
+				</VSCodeLink>{" "}
 				<VSCodeLink style={{ display: "inline" }} href="https://discord.gg/cline">
-					discord
+					discord,
 				</VSCodeLink>{" "}
 				or{" "}
 				<VSCodeLink style={{ display: "inline" }} href="https://www.reddit.com/r/cline/">
 					r/cline
 				</VSCodeLink>
 				获取更多更新！
-			</p> */}
+			</p>
 		</div>
 	)
 }

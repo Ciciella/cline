@@ -175,7 +175,7 @@ export const CheckmarkControl = ({ messageTs, isCheckpointCheckedOut }: Checkmar
 									</VSCodeButton>
 									<p>恢复您项目的文件到此点（使用“比较”查看将被恢复的内容）</p>
 								</RestoreOption>
-								{/* <RestoreOption>
+								<RestoreOption>
 									<VSCodeButton
 										onClick={handleRestoreTask}
 										disabled={restoreTaskDisabled}
@@ -187,7 +187,7 @@ export const CheckmarkControl = ({ messageTs, isCheckpointCheckedOut }: Checkmar
 										Restore Task Only
 									</VSCodeButton>
 									<p>Deletes messages after this point (does not affect workspace files)</p>
-								</RestoreOption> */}
+								</RestoreOption>
 								<RestoreOption>
 									<VSCodeButton
 										onClick={handleRestoreBoth}
