@@ -70,7 +70,7 @@ const McpToolRow = ({ tool, serverName }: McpToolRowProps) => {
 								fontSize: "11px",
 								textTransform: "uppercase",
 							}}>
-							Parameters
+							参数
 						</div>
 						{Object.entries(tool.inputSchema.properties as Record<string, any>).map(([paramName, schema]) => {
 							const isRequired =

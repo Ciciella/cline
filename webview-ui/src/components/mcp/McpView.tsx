@@ -69,11 +69,11 @@ const McpView = ({ onDone }: McpViewProps) => {
 					}}>
 					{mcpMarketplaceEnabled && (
 						<TabButton isActive={activeTab === "marketplace"} onClick={() => handleTabChange("marketplace")}>
-							Marketplace
+							市场
 						</TabButton>
 					)}
 					<TabButton isActive={activeTab === "installed"} onClick={() => handleTabChange("installed")}>
-						Installed
+						已安装
 					</TabButton>
 				</div>
 
@@ -89,20 +89,14 @@ const McpView = ({ onDone }: McpViewProps) => {
 									marginBottom: "16px",
 									marginTop: "5px",
 								}}>
-								The{" "}
-								<VSCodeLink href="https://github.com/modelcontextprotocol" style={{ display: "inline" }}>
-									模型上下文协议
-								</VSCodeLink>{" "}
-								enables communication with locally running MCP servers that provide additional tools and resources
-								to extend Cline's capabilities. You can use{" "}
+								启用与本地运行的 MCP 服务器的通信，这些服务器提供额外的工具和资源以扩展 AI Code 的功能。您可以使用{" "}
 								<VSCodeLink href="https://github.com/modelcontextprotocol/servers" style={{ display: "inline" }}>
 									社区制作的服务器
 								</VSCodeLink>{" "}
-								or ask Cline to create new tools specific to your workflow (e.g., "add a tool that gets the latest
-								npm docs").{" "}
+								{/* 或要求 Cline 创建特定于您的工作流程的新工具（例如，"添加一个获取最新 npm 文档的工具"）。{" "}
 								<VSCodeLink href="https://x.com/sdrzn/status/1867271665086074969" style={{ display: "inline" }}>
 									在此处查看演示。
-								</VSCodeLink>
+								</VSCodeLink> */}
 							</div>
 
 							{servers.length > 0 ? (
@@ -127,7 +121,7 @@ const McpView = ({ onDone }: McpViewProps) => {
 										marginBottom: 20,
 										color: "var(--vscode-descriptionForeground)",
 									}}>
-									No MCP servers installed
+									没有安装 MCP 服务器
 								</div>
 							)}
 
@@ -352,9 +346,9 @@ const ServerRow = ({ server }: { server: McpServer }) => {
 							borderRadius: "0 0 4px 4px",
 						}}>
 						<VSCodePanels>
-							<VSCodePanelTab id="tools">Tools ({server.tools?.length || 0})</VSCodePanelTab>
+							<VSCodePanelTab id="tools">工具 ({server.tools?.length || 0})</VSCodePanelTab>
 							<VSCodePanelTab id="resources">
-								Resources ({[...(server.resourceTemplates || []), ...(server.resources || [])].length || 0})
+								资源 ({[...(server.resourceTemplates || []), ...(server.resources || [])].length || 0})
 							</VSCodePanelTab>
 
 							<VSCodePanelView id="tools-view">

@@ -2,24 +2,24 @@
 
 ## [3.4.0]
 
--   Introducing MCP Marketplace! You can now discover and install the best MCP servers right from within the extension, with new servers added regularly
--   Add mermaid diagram support in Plan mode! You can now see visual representations of mermaid code blocks in chat, and click on them to see an expanded view
--   Use more visual checkpoints indicators after editing files & running commands
--   Create a checkpoint at the beginning of each task to easily revert to the initial state
--   Add 'Terminal' context mention to reference the active terminal's contents
--   Add 'Git Commits' context mention to reference current working changes or specific commits (thanks @mrubens!)
--   Send current textfield contents as additional feedback when toggling from Plan to Act Mode, or when hitting 'Approve' button
--   Add advanced configuration options for OpenAI Compatible (context window, max output, pricing, etc.)
--   Add Alibaba Qwen 2.5 coder models, VL models, and DeepSeek-R1/V3 support
--   Improve support for AWS Bedrock Profiles
--   Fix Mistral provider support for non-codestral models
--   Add advanced setting to disable browser tool
--   Add advanced setting to set chromium executable path for browser tool
+-   引入 MCP 市场！您现在可以直接在扩展中发现和安装最佳的 MCP 服务器，新的服务器会定期添加
+-   在计划模式中添加 mermaid 图表支持！您现在可以在聊天中查看 mermaid 代码块的可视化表示，并点击它们以查看扩展视图
+-   在编辑文件和运行命令后使用更多可视化检查点指示器
+-   在每个任务开始时创建一个检查点，以便轻松恢复到初始状态
+-   添加“终端”上下文提及，以引用活动终端的内容
+-   添加“Git 提交”上下文提及，以引用当前工作更改或特定提交（感谢 @mrubens！）
+-   在从计划模式切换到执行模式时，发送当前文本框内容作为额外反馈，或在点击“批准”按钮时
+-   为 OpenAI 兼容性添加高级配置选项（上下文窗口、最大输出、定价等）
+-   添加阿里巴巴 Qwen 2.5 编码模型、VL 模型和 DeepSeek-R1/V3 支持
+-   改进对 AWS Bedrock 配置文件的支持
+-   修复 Mistral 提供商对非代码模型的支持
+-   添加禁用浏览器工具的高级设置
+-   添加设置 Chromium 可执行路径的高级设置
 
 ## [3.3.2]
 
--   Fix bug where OpenRouter requests would periodically not return cost/token stats, leading to context window limit errors
--   Make checkpoints more visible and keep track of restored checkpoints
+-   修复 OpenRouter 请求周期性不返回成本/令牌统计的错误，导致上下文窗口限制错误
+-   使检查点更可见，并跟踪恢复的检查点
 
 ## [3.3.0]
 
@@ -156,7 +156,7 @@
 - AI Code现在使用基于搜索和替换的差异方法来编辑大文件，以防止代码删除问题。
 - 增加了对更全面的自动批准配置的支持，允许您指定哪些工具需要批准，哪些不需要。
 - 增加了启用系统通知的功能，当AI Code需要批准或完成任务时通知您。
-- 增加了对根级别`.aicoderules`文件的支持，该文件可用于为项目指定自定义指令。
+- 增加了对根级别`.clinerules`文件的支持，该文件可用于为项目指定自定义指令。
 
 ## [2.2.0]
 - 添加对模型上下文协议（MCP）的支持，允许AI Code使用自定义工具，如web搜索工具或GitHub工具

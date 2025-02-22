@@ -210,11 +210,11 @@ export const ChatRowContent = ({ message, isExpanded, onToggleExpand, lastModifi
 							}}></span>
 					),
 					<span style={{ color: normalColor, fontWeight: "bold", wordBreak: "break-word" }}>
-						Cline wants to {mcpServerUse.type === "use_mcp_tool" ? "use a tool" : "access a resource"} on the{" "}
+						AI Code 想要 {mcpServerUse.type === "use_mcp_tool" ? "使用一个工具" : "访问一个资源"} 在{" "}
 						<code style={{ wordBreak: "break-all" }}>
 							{getMcpServerDisplayName(mcpServerUse.serverName, mcpMarketplaceCatalog)}
 						</code>{" "}
-						MCP server:
+						MCP 服务器上：
 					</span>,
 				]
 			case "completion_result":
