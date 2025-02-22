@@ -9,7 +9,7 @@
 <table>
 <tbody>
 <td align="center">
-<a href="https://github.com/Ciciella/AIcoder/discussions/1"><strong>功能请求</strong></a>
+<a href="https://github.com/Ciciella/AI-Code/discussions/1"><strong>功能请求</strong></a>
 </td>
 </tbody>
 </table>

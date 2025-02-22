@@ -180,8 +180,8 @@ const SettingsView = ({ onDone }: SettingsViewProps) => {
 							id="settingsView.questionsFeedback"
 							defaultMessage="If you have any questions or feedback, feel free to open an issue at "
 						/>
-						<VSCodeLink href="https://github.com/Ciciella/AI-Code/tree/main" style={{ display: "inline" }}>
-							https://github.com/Ciciella/AI-Code/tree/main
+						<VSCodeLink href="https://github.com/Ciciella/AI-Code" style={{ display: "inline" }}>
+							https://github.com/Ciciella/AI-Code
 						</VSCodeLink>
 					</p>
 					<p
