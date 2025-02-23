@@ -1,101 +1,101 @@
-# Cline Tools Reference Guide
+# Cline 工具参考指南
 
-## What Can Cline Do?
+## Cline 能做什么？
 
-Cline is your AI assistant that can:
+Cline 是你的 AI 助手，可以：
 
--   Edit and create files in your project
--   Run terminal commands
--   Search and analyze your code
--   Help debug and fix issues
--   Automate repetitive tasks
--   Integrate with external tools
+- 编辑和创建项目中的文件
+- 运行终端命令
+- 搜索和分析代码
+- 帮助调试和修复问题
+- 自动化重复任务
+- 与外部工具集成
 
-## First Steps
+## 第一步
 
-1. **Start a Task**
+1. **开始任务**
 
-    - Type your request in the chat
-    - Example: "Create a new React component called Header"
+    - 在聊天中输入你的请求
+    - 示例："创建一个名为 Header 的 React 组件"
 
-2. **Provide Context**
+2. **提供上下文**
 
-    - Use @ mentions to add files, folders, or URLs
-    - Example: "@file:src/components/App.tsx"
+    - 使用 @ 提及添加文件、文件夹或 URL
+    - 示例："@file:src/components/App.tsx"
 
-3. **Review Changes**
-    - Cline will show diffs before making changes
-    - You can edit or reject changes
+3. **审查更改**
+    - Cline 会在进行更改前显示差异
+    - 你可以编辑或拒绝更改
 
-## Key Features
+## 主要功能
 
-1. **File Editing**
+1. **文件编辑**
 
-    - Create new files
-    - Modify existing code
-    - Search and replace across files
+    - 创建新文件
+    - 修改现有代码
+    - 跨文件搜索和替换
 
-2. **Terminal Commands**
+2. **终端命令**
 
-    - Run npm commands
-    - Start development servers
-    - Install dependencies
+    - 运行 npm 命令
+    - 启动开发服务器
+    - 安装依赖
 
-3. **Code Analysis**
+3. **代码分析**
 
-    - Find and fix errors
-    - Refactor code
-    - Add documentation
+    - 查找并修复错误
+    - 重构代码
+    - 添加文档
 
-4. **Browser Integration**
-    - Test web pages
-    - Capture screenshots
-    - Inspect console logs
+4. **浏览器集成**
+    - 测试网页
+    - 捕获截图
+    - 检查控制台日志
 
-## Available Tools
+## 可用工具
 
-For the most up-to-date implementation details, you can view the full source code in the [Cline repository](https://github.com/cline/cline/blob/main/src/core/Cline.ts).
+有关最新的实现细节，你可以在 [Cline 仓库](https://github.com/cline/cline/blob/main/src/core/Cline.ts) 查看完整的源代码。
 
-Cline has access to the following tools for various tasks:
+Cline 可以访问以下工具来完成各种任务：
 
-1. **File Operations**
+1. **文件操作**
 
-    - `write_to_file`: Create or overwrite files
-    - `read_file`: Read file contents
-    - `replace_in_file`: Make targeted edits to files
-    - `search_files`: Search files using regex
-    - `list_files`: List directory contents
+    - `write_to_file`: 创建或覆盖文件
+    - `read_file`: 读取文件内容
+    - `replace_in_file`: 对文件进行有针对性的编辑
+    - `search_files`: 使用正则表达式搜索文件
+    - `list_files`: 列出目录内容
 
-2. **Terminal Operations**
+2. **终端操作**
 
-    - `execute_command`: Run CLI commands
-    - `list_code_definition_names`: List code definitions
+    - `execute_command`: 运行 CLI 命令
+    - `list_code_definition_names`: 列出代码定义
 
-3. **MCP Tools**
+3. **MCP 工具**
 
-    - `use_mcp_tool`: Use tools from MCP servers
-    - `access_mcp_resource`: Access MCP server resources
-    - Users can create custom MCP tools that Cline can then access
-    - Example: Create a weather API tool that Cline can use to fetch forecasts
+    - `use_mcp_tool`: 使用 MCP 服务器的工具
+    - `access_mcp_resource`: 访问 MCP 服务器资源
+    - 用户可以创建自定义 MCP 工具，Cline 可以访问这些工具
+    - 示例：创建一个天气 API 工具，Cline 可以使用它来获取天气预报
 
-4. **Interaction Tools**
-    - `ask_followup_question`: Ask user for clarification
-    - `attempt_completion`: Present final results
+4. **交互工具**
+    - `ask_followup_question`: 向用户询问澄清问题
+    - `attempt_completion`: 提交最终结果
 
-Each tool has specific parameters and usage patterns. Here are some examples:
+每个工具都有特定的参数和使用模式。以下是一些示例：
 
--   Create a new file (write_to_file):
+- 创建新文件 (write_to_file):
 
     ```xml
     <write_to_file>
     <path>src/components/Header.tsx</path>
     <content>
-    // Header component code
+    // Header 组件代码
     </content>
     </write_to_file>
     ```
 
--   Search for a pattern (search_files):
+- 搜索模式 (search_files):
 
     ```xml
     <search_files>
@@ -105,7 +105,7 @@ Each tool has specific parameters and usage patterns. Here are some examples:
     </search_files>
     ```
 
--   Run a command (execute_command):
+- 运行命令 (execute_command):
     ```xml
     <execute_command>
     <command>npm install axios</command>
@@ -113,25 +113,25 @@ Each tool has specific parameters and usage patterns. Here are some examples:
     </execute_command>
     ```
 
-## Common Tasks
+## 常见任务
 
-1. **Create a New Component**
+1. **创建新组件**
 
-    - "Create a new React component called Footer"
+    - "创建一个名为 Footer 的 React 组件"
 
-2. **Fix a Bug**
+2. **修复错误**
 
-    - "Fix the error in src/utils/format.ts"
+    - "修复 src/utils/format.ts 中的错误"
 
-3. **Refactor Code**
+3. **重构代码**
 
-    - "Refactor the Button component to use TypeScript"
+    - "重构 Button 组件以使用 TypeScript"
 
-4. **Run Commands**
-    - "Run npm install to add axios"
+4. **运行命令**
+    - "运行 npm install 添加 axios"
 
-## Getting Help
+## 获取帮助
 
--   [Join the Discord community](https://discord.gg/cline)
--   Check the documentation
--   Provide feedback to improve Cline
+- [加入 Discord 社区](https://discord.gg/cline)
+- 查看文档
+- 提供反馈以改进 Cline

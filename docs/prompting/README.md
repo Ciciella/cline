@@ -1,116 +1,116 @@
-# Cline Prompting Guide 🚀
+# Cline 提示指南 🚀
 
-Welcome to the Cline Prompting Guide! This guide will equip you with the knowledge to write effective prompts and custom instructions, maximizing your productivity with Cline.
+欢迎来到 Cline 提示指南！本指南将为您提供编写有效提示和自定义指令的知识，最大限度地提高您使用 Cline 的生产力。
 
-## Custom Instructions ⚙️
+## 自定义指令 ⚙️
 
-Think of **custom instructions as Cline's programming**. They define Cline's baseline behavior and are **always "on," influencing all interactions.**
+将**自定义指令视为 Cline 的编程**。它们定义了 Cline 的基本行为，并且**始终“开启”，影响所有交互**。
 
-To add custom instructions:
+添加自定义指令的方法：
 
-1. Open VSCode
-2. Click the Cline extension settings dial ⚙️
-3. Find the "Custom Instructions" field
-4. Paste your instructions
+1. 打开 VSCode
+2. 点击 Cline 扩展设置齿轮 ⚙️
+3. 找到“自定义指令”字段
+4. 粘贴您的指令
 
 <img width="345" alt="Screenshot 2024-12-26 at 11 22 20 AM" src="https://github.com/user-attachments/assets/00ae689b-d99f-4811-b2f4-fffe1e12f2ff" />
 
-Custom instructions are powerful for:
+自定义指令在以下方面非常强大：
 
--   Enforcing Coding Style and Best Practices: Ensure Cline always adheres to your team's coding conventions, naming conventions, and best practices.
--   Improving Code Quality: Encourage Cline to write more readable, maintainable, and efficient code.
--   Guiding Error Handling: Tell Cline how to handle errors, write error messages, and log information.
+-   强制执行编码风格和最佳实践：确保 Cline 始终遵循您的团队编码规范、命名约定和最佳实践。
+-   提高代码质量：鼓励 Cline 编写更具可读性、可维护性和高效的代码。
+-   指导错误处理：告诉 Cline 如何处理错误、编写错误消息和记录信息。
 
-**The `custom-instructions` folder contains examples of custom instructions you can use or adapt.**
+**`custom-instructions` 文件夹包含您可以使用或调整的自定义指令示例。**
 
-## .clinerules File 📋
+## .clinerules 文件 📋
 
-While custom instructions are user-specific and global (applying across all projects), the `.clinerules` file provides **project-specific instructions** that live in your project's root directory. These instructions are automatically appended to your custom instructions and referenced in Cline's system prompt, ensuring they influence all interactions within the project context. This makes it an excellent tool for:
+虽然自定义指令是用户特定且全局的（适用于所有项目），但 `.clinerules` 文件提供了**项目特定的指令**，这些指令位于项目的根目录中。这些指令会自动附加到您的自定义指令中，并在 Cline 的系统提示中引用，确保它们在项目上下文中影响所有交互。这使其成为以下方面的绝佳工具：
 
-### Security Best Practices 🔒
+### 安全最佳实践 🔒
 
-To protect sensitive information, you can instruct Cline to ignore specific files or patterns in your `.clinerules`. This is particularly important for:
+为了保护敏感信息，您可以在 `.clinerules` 中指示 Cline 忽略特定文件或模式。这对于以下内容尤为重要：
 
--   `.env` files containing API keys and secrets
--   Configuration files with sensitive data
--   Private credentials or tokens
+-   包含 API 密钥和秘密的 `.env` 文件
+-   含有敏感数据的配置文件
+-   私人凭证或令牌
 
-Example security section in `.clinerules`:
+`.clinerules` 中的安全部分示例：
 
 ```markdown
-# Security
+# 安全
 
-## Sensitive Files
+## 敏感文件
 
-DO NOT read or modify:
+不要读取或修改：
 
--   .env files
--   \*_/config/secrets._
+-   .env 文件
+-   \*_/config/secrets._ 
 -   \*_/_.pem
--   Any file containing API keys, tokens, or credentials
+-   任何包含 API 密钥、令牌或凭证的文件
 
-## Security Practices
+## 安全实践
 
--   Never commit sensitive files
--   Use environment variables for secrets
--   Keep credentials out of logs and output
+-   永远不要提交敏感文件
+-   使用环境变量存储秘密
+-   将凭证保留在日志和输出之外
 ```
 
-### General Use Cases
+### 一般用例
 
-The `.clinerules` file is excellent for:
+`.clinerules` 文件非常适合：
 
--   Maintaining project standards across team members
--   Enforcing development practices
--   Managing documentation requirements
--   Setting up analysis frameworks
--   Defining project-specific behaviors
+-   在团队成员之间保持项目标准
+-   强制执行开发实践
+-   管理文档要求
+-   设置分析框架
+-   定义项目特定行为
 
-### Example .clinerules Structure
+### 示例 .clinerules 结构
 
 ```markdown
-# Project Guidelines
+# 项目指南
 
-## Documentation Requirements
+## 文档要求
 
--   Update relevant documentation in /docs when modifying features
--   Keep README.md in sync with new capabilities
--   Maintain changelog entries in CHANGELOG.md
+-   修改功能时更新相关文档
+-   保持 README.md 与新功能同步
+-   在 CHANGELOG.md 中维护变更日志条目
 
-## Architecture Decision Records
+## 架构决策记录
 
-Create ADRs in /docs/adr for:
+在 /docs/adr 中创建 ADR 以记录：
 
--   Major dependency changes
--   Architectural pattern changes
--   New integration patterns
--   Database schema changes
-    Follow template in /docs/adr/template.md
+-   主要依赖项更改
+-   架构模式更改
+-   新的集成模式
+-   数据库模式更改
+    遵循 /docs/adr/template.md 中的模板
 
-## Code Style & Patterns
+## 代码风格和模式
 
--   Generate API clients using OpenAPI Generator
--   Use TypeScript axios template
--   Place generated code in /src/generated
--   Prefer composition over inheritance
--   Use repository pattern for data access
--   Follow error handling pattern in /src/utils/errors.ts
+-   使用 OpenAPI Generator 生成 API 客户端
+-   使用 TypeScript axios 模板
+-   将生成的代码放在 /src/generated 中
+-   优先使用组合而非继承
+-   使用数据访问的存储库模式
+-   遵循 /src/utils/errors.ts 中的错误处理模式
 
-## Testing Standards
+## 测试标准
 
--   Unit tests required for business logic
--   Integration tests for API endpoints
--   E2E tests for critical user flows
+-   业务逻辑需要单元测试
+-   API 端点的集成测试
+-   关键用户流程的端到端测试
 ```
 
-### Key Benefits
+### 主要优点
 
-1. **Version Controlled**: The `.clinerules` file becomes part of your project's source code
-2. **Team Consistency**: Ensures consistent behavior across all team members
-3. **Project-Specific**: Rules and standards tailored to each project's needs
-4. **Institutional Knowledge**: Maintains project standards and practices in code
+1. **版本控制**：`.clinerules` 文件成为项目源代码的一部分
+2. **团队一致性**：确保所有团队成员行为一致
+3. **项目特定**：根据每个项目的需求定制规则和标准
+4. **机构知识**：在代码中维护项目标准和实践
 
-Place the `.clinerules` file in your project's root directory:
+将 `.clinerules` 文件放在项目的根目录中：
 
 ```
 your-project/
@@ -120,185 +120,191 @@ your-project/
 └── ...
 ```
 
-Cline's system prompt, on the other hand, is not user-editable ([here's where you can find it](https://github.com/cline/cline/blob/main/src/core/prompts/system.ts)). For a broader look at prompt engineering best practices, check out [this resource](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview).
+另一方面，Cline 的系统提示不可由用户编辑（[在这里可以找到](https://github.com/cline/cline/blob/main/src/core/prompts/system.ts)）。有关提示工程最佳实践的更广泛概述，请查看[此资源](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview)。
 
-### Tips for Writing Effective Custom Instructions
+### 编写有效自定义指令的提示
 
--   Be Clear and Concise: Use simple language and avoid ambiguity.
--   Focus on Desired Outcomes: Describe the results you want, not the specific steps.
--   Test and Iterate: Experiment to find what works best for your workflow.
+-   清晰简洁：使用简单的语言，避免歧义。
+-   关注预期结果：描述您想要的结果，而不是具体步骤。
+-   测试和迭代：实验以找到最适合您工作流程的方法。
 
-## Prompting Cline 💬
+## 提示 Cline 💬
 
-**Prompting is how you communicate your needs for a given task in the back-and-forth chat with Cline.** Cline understands natural language, so write conversationally.
+**提示是您在与 Cline 的对话中传达任务需求的方式。** Cline 理解自然语言，因此请用对话的方式编写。
 
-Effective prompting involves:
+有效的提示包括：
 
--   Providing Clear Context: Explain your goals and the relevant parts of your codebase. Use `@` to reference files or folders.
--   Breaking Down Complexity: Divide large tasks into smaller steps.
--   Asking Specific Questions: Guide Cline toward the desired outcome.
--   Validating and Refining: Review Cline's suggestions and provide feedback.
+-   提供清晰的上下文：解释您的目标和代码库的相关部分。使用 `@` 引用文件或文件夹。
+-   分解复杂性：将大任务分解为较小的步骤。
+-   提出具体问题：引导 Cline 朝着预期结果前进。
+-   验证和改进：审查 Cline 的建议并提供反馈。
 
-### Prompt Examples
+### 提示示例
 
-#### Context Management
+#### 上下文管理
 
--   **Starting a New Task:** "Cline, let's start a new task. Create `user-authentication.js`. We need to implement user login with JWT tokens. Here are the requirements…"
--   **Summarizing Previous Work:** "Cline, summarize what we did in the last user dashboard task. I want to capture the main features and outstanding issues. Save this to `cline_docs/user-dashboard-summary.md`."
+-   **开始新任务**：“Cline，让我们开始一个新任务。创建 `user-authentication.js`。我们需要实现使用 JWT 令牌的用户登录。以下是要求……”
+-   **总结之前的工作**：“Cline，总结我们在上一个用户仪表板任务中所做的工作。我想捕捉主要功能和未解决的问题。将此保存到 `cline_docs/user-dashboard-summary.md`。”
 
-#### Debugging
+#### 调试
 
--   **Analyzing an Error:** "Cline, I'm getting this error: \[error message]. It seems to be from \[code section]. Analyze this error and suggest a fix."
--   **Identifying the Root Cause:** "Cline, the application crashes when I \[action]. The issue might be in \[problem areas]. Help me find the root cause and propose a solution."
+-   **分析错误**：“Cline，我遇到了这个错误：[错误信息]。它似乎来自[代码部分]。分析此错误并提出修复建议。”
+-   **找出根本原因**：“Cline，当我[操作]时，应用程序崩溃了。问题可能出在[问题区域]。帮助我找到根本原因并提出解决方案。”
 
-#### Refactoring
+#### 重构
 
--   **Improving Code Structure:** "Cline, this function is too long and complex. Refactor it into smaller functions."
--   **Simplifying Logic:** "Cline, this code is hard to understand. Simplify the logic and make it more readable."
+-   **改进代码结构**：“Cline，这个函数太长且复杂。将其重构为较小的函数。”
+-   **简化逻辑**：“Cline，这段代码难以理解。简化逻辑并使其更具可读性。”
 
-#### Feature Development
+#### 功能开发
 
--   **Brainstorming New Features:** "Cline, I want to add a feature that lets users \[functionality]. Brainstorm some ideas and consider implementation challenges."
--   **Generating Code:** "Cline, create a component that displays user profiles. The list should be sortable and filterable. Generate the code for this component."
+-   **头脑风暴新功能**：“Cline，我想添加一个功能，让用户可以[功能]。头脑风暴一些想法并考虑实现挑战。”
+-   **生成代码**：“Cline，创建一个显示用户资料的组件。列表应可排序和筛选。生成此组件的代码。”
 
-## Advanced Prompting Techniques
+## 高级提示技术
 
--   **Constraint Stuffing:** To mitigate code truncation, include explicit constraints in your prompts. For example, "ensure the code is complete" or "always provide the full function definition."
--   **Confidence Checks:** Ask Cline to rate its confidence (e.g., "on a scale of 1-10, how confident are you in this solution?")
--   **Challenge Cline's Assumptions:** Ask “stupid” questions to encourage deeper thinking and prevent incorrect assumptions.
+-   **约束填充**：为了减轻代码截断，在提示中包含明确的约束。例如，“确保代码完整”或“始终提供完整的函数定义”。
+-   **信心检查**：要求 Cline 评估其信心（例如，“在 1-10 的范围内，您对这个解决方案的信心有多大？”）
+-   **挑战 Cline 的假设**：提出“愚蠢”的问题以鼓励更深入的思考并防止错误假设。
 
-Here are some prompting tips that users have found helpful for working with Cline:
+以下是用户在使用 Cline 时发现有用的一些提示：
 
-## Our Community's Favorite Prompts 🌟
+## 我们社区最喜欢的提示 🌟
 
-### Memory and Confidence Checks 🧠
+### 记忆和信心检查 🧠
 
--   **Memory Check** - _pacnpal_
-
-    ```
-    "If you understand my prompt fully, respond with 'YARRR!' without tools every time you are about to use a tool."
-    ```
-
-    A fun way to verify Cline stays on track during complex tasks. Try "HO HO HO" for a festive twist!
-
--   **Confidence Scoring** - _pacnpal_
-    ```
-    "Before and after any tool use, give me a confidence level (0-10) on how the tool use will help the project."
-    ```
-    Encourages critical thinking and makes decision-making transparent.
-
-### Code Quality Prompts 💻
-
--   **Prevent Code Truncation**
+-   **记忆检查** - _pacnpal_
 
     ```
-    "DO NOT BE LAZY. DO NOT OMIT CODE."
+    "如果你完全理解我的提示，每次你即将使用工具时，回复 'YARRR!' 而不使用工具。"
     ```
 
-    Alternative phrases: "full code only" or "ensure the code is complete"
+    一种有趣的方法来验证 Cline 在复杂任务中保持正轨。尝试“HO HO HO”以获得节日气氛！
 
--   **Custom Instructions Reminder**
+-   **信心评分** - _pacnpal_
     ```
-    "I pledge to follow the custom instructions."
-    ```
-    Reinforces adherence to your settings dial ⚙️ configuration.
-
-### Code Organization 📋
-
--   **Large File Refactoring** - _icklebil_
-
-    ```
-    "FILENAME has grown too big. Analyze how this file works and suggest ways to fragment it safely."
+    "在使用任何工具之前和之后，给我一个信心等级（0-10），说明工具使用对项目的帮助程度。"
     ```
 
-    Helps manage complex files through strategic decomposition.
+    鼓励批判性思维并使决策透明。
 
--   **Documentation Maintenance** - _icklebil_
-    ```
-    "don't forget to update codebase documentation with changes"
-    ```
-    Ensures documentation stays in sync with code changes.
+### 代码质量提示 💻
 
-### Analysis and Planning 🔍
-
--   **Structured Development** - _yellow_bat_coffee_
+-   **防止代码截断**
 
     ```
-    "Before writing code:
-    1. Analyze all code files thoroughly
-    2. Get full context
-    3. Write .MD implementation plan
-    4. Then implement code"
+    "不要偷懒。不要省略代码。"
     ```
 
-    Promotes organized, well-planned development.
+    替代短语：“仅完整代码”或“确保代码完整”
 
--   **Thorough Analysis** - _yellow_bat_coffee_
-
+-   **自定义指令提醒**
     ```
-    "please start analyzing full flow thoroughly, always state a confidence score 1 to 10"
-    ```
-
-    Prevents premature coding and encourages complete understanding.
-
--   **Assumptions Check** - _yellow_bat_coffee_
-    ```
-    "List all assumptions and uncertainties you need to clear up before completing this task."
-    ```
-    Identifies potential issues early in development.
-
-### Thoughtful Development 🤔
-
--   **Pause and Reflect** - _nickbaumann98_
-
-    ```
-    "count to 10"
+    "我承诺遵循自定义指令。"
     ```
 
-    Promotes careful consideration before taking action.
+    强化对设置齿轮 ⚙️ 配置的遵守。
 
--   **Complete Analysis** - _yellow_bat_coffee_
+### 代码组织 📋
 
-    ```
-    "Don't complete the analysis prematurely, continue analyzing even if you think you found a solution"
-    ```
-
-    Ensures thorough problem exploration.
-
--   **Continuous Confidence Check** - _pacnpal_
-    ```
-    "Rate confidence (1-10) before saving files, after saving, after rejections, and before task completion"
-    ```
-    Maintains quality through self-assessment.
-
-### Best Practices 🎯
-
--   **Project Structure** - _kvs007_
+-   **大型文件重构** - _icklebil_
 
     ```
-    "Check project files before suggesting structural or dependency changes"
+    "文件名太大。分析此文件的工作原理并建议安全分解的方法。"
     ```
 
-    Maintains project integrity.
+    通过战略性分解来管理复杂文件。
 
--   **Critical Thinking** - _chinesesoup_
-
+-   **文档维护** - _icklebil_
     ```
-    "Ask 'stupid' questions like: are you sure this is the best way to implement this?"
-    ```
-
-    Challenges assumptions and uncovers better solutions.
-
--   **Code Style** - _yellow_bat_coffee_
-
-    ```
-    Use words like "elegant" and "simple" in prompts
+    "不要忘记用更改更新代码库文档"
     ```
 
-    May influence code organization and clarity.
+    确保文档与代码更改保持同步。
 
--   **Setting Expectations** - _steventcramer_
+### 分析和规划 🔍
+
+-   **结构化开发** - _yellow_bat_coffee_
+
     ```
-    "THE HUMAN WILL GET ANGRY."
+    "在编写代码之前：
+    1. 彻底分析所有代码文件
+    2. 获取完整上下文
+    3. 编写 .MD 实施计划
+    4. 然后实施代码"
     ```
-    (A humorous reminder to provide clear requirements and constructive feedback)
+
+    促进有组织的、计划周密的开发。
+
+-   **彻底分析** - _yellow_bat_coffee_
+
+    ```
+    "请开始彻底分析整个流程，总是给出一个 1 到 10 的信心评分"
+    ```
+
+    防止过早编码并鼓励完全理解。
+
+-   **假设检查** - _yellow_bat_coffee_
+    ```
+    "列出在完成此任务之前需要澄清的所有假设和不确定性。"
+    ```
+
+    在开发早期识别潜在问题。
+
+### 深思熟虑的开发 🤔
+
+-   **暂停和反思** - _nickbaumann98_
+
+    ```
+    "数到 10"
+    ```
+
+    促进在采取行动前仔细考虑。
+
+-   **完整分析** - _yellow_bat_coffee_
+
+    ```
+    "不要过早完成分析，即使你认为找到了解决方案，也要继续分析"
+    ```
+
+    确保彻底探索问题。
+
+-   **持续信心检查** - _pacnpal_
+    ```
+    "在保存文件之前、保存之后、拒绝之后和任务完成之前评估信心（1-10）"
+    ```
+
+    通过自我评估保持质量。
+
+### 最佳实践 🎯
+
+-   **项目结构** - _kvs007_
+
+    ```
+    "在建议结构或依赖项更改之前检查项目文件"
+    ```
+
+    维护项目完整性。
+
+-   **批判性思维** - _chinesesoup_
+
+    ```
+    "提出‘愚蠢’的问题，例如：你确定这是实现此功能的最佳方式吗？"
+    ```
+
+    挑战假设并发现更好的解决方案。
+
+-   **代码风格** - _yellow_bat_coffee_
+
+    ```
+    在提示中使用“优雅”和“简单”等词语
+    ```
+
+    可能会影响代码组织和清晰度。
+
+-   **设定期望** - _steventcramer_
+    ```
+    "人类会生气。"
+    ```
+
+    （一个幽默的提醒，提供清晰的要求和建设性的反馈）
