@@ -49,13 +49,18 @@ export interface WebviewMessage {
 		| "register"
 		| "loginSuccess"
 		| "logoutSuccess"
-	action?: "login" | "register" | "loginSuccess" | "logoutSuccess" | "resetPassword"
+	action?: "login" | "register" | "loginSuccess" | "logoutSuccess" | "resetPassword" | "verification"
 	data?: {
 		email: string
 		username?: string
 		password?: string
+		password2?: string
+		verification_code?: string
+		turnstile?: string
 	}
 	text?: string
+	success?: boolean
+	message?: string
 	disabled?: boolean
 	askResponse?: ClineAskResponse
 	apiConfiguration?: ApiConfiguration

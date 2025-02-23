@@ -44,7 +44,10 @@ export interface ExtensionMessage {
 		| "aiCodelogoutButtonClickedUI"
 		| "loginSuccess"
 		| "logoutSuccess"
+		| "verification"
 	data?: any
+	success?: boolean
+	message?: string
 	invoke?: "sendMessage" | "primaryButtonClick" | "secondaryButtonClick"
 	state?: ExtensionState
 	images?: string[]

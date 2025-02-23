@@ -45,7 +45,7 @@ const AppContent = () => {
 
 	const handleMessage = useCallback((e: MessageEvent) => {
 		const message: ExtensionMessage = e.data
-		console.log("Received message:", message);
+		console.log("Received message:", message)
 		switch (message.type) {
 			case "action":
 				switch (message.action!) {
@@ -85,7 +85,7 @@ const AppContent = () => {
 						setShowAuth(false)
 						break
 					case "loginButtonClicked":
-						console.log("Login button clicked");
+						console.log("Login button clicked")
 						setShowSettings(false)
 						setShowHistory(false)
 						setShowMcp(false)

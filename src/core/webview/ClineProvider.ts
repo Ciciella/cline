@@ -156,22 +156,22 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 
 	// Auth methods
 	async handleSignOut() {
-		this.outputChannel.appendLine("=== handleSignOut 开始执行 ===");
-		console.log("=== handleSignOut 开始执行 ===");
+		this.outputChannel.appendLine("=== handleSignOut 开始执行 ===")
+		console.log("=== handleSignOut 开始执行 ===")
 		try {
-			this.outputChannel.appendLine("正在调用 customAuthManager.signOut()");
-			console.log("正在调用 customAuthManager.signOut()");
-			await this.customAuthManager.signOut();
-			this.outputChannel.appendLine("customAuthManager.signOut() 执行成功");
-			console.log("customAuthManager.signOut() 执行成功");
-			vscode.window.showInformationMessage("成功退出登录");
+			this.outputChannel.appendLine("正在调用 customAuthManager.signOut()")
+			console.log("正在调用 customAuthManager.signOut()")
+			await this.customAuthManager.signOut()
+			this.outputChannel.appendLine("customAuthManager.signOut() 执行成功")
+			console.log("customAuthManager.signOut() 执行成功")
+			vscode.window.showInformationMessage("成功退出登录")
 		} catch (error) {
-			this.outputChannel.appendLine(`退出登录失败: ${error}`);
-			console.error("退出登录失败:", error);
-			vscode.window.showErrorMessage("退出登录失败");
+			this.outputChannel.appendLine(`退出登录失败: ${error}`)
+			console.error("退出登录失败:", error)
+			vscode.window.showErrorMessage("退出登录失败")
 		}
-		this.outputChannel.appendLine("=== handleSignOut 执行结束 ===");
-		console.log("=== handleSignOut 执行结束 ===");
+		this.outputChannel.appendLine("=== handleSignOut 执行结束 ===")
+		console.log("=== handleSignOut 执行结束 ===")
 	}
 
 	async setAuthToken(token?: string) {
@@ -432,11 +432,11 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 						})
 						break
 					case "accountLogoutClicked":
-						this.outputChannel.appendLine("=== 收到退出登录消息 ===");
-						console.log("=== 收到退出登录消息 ===");
-						await this.handleSignOut();
-						this.outputChannel.appendLine("=== 退出登录消息处理完成 ===");
-						console.log("=== 退出登录消息处理完成 ===");
+						this.outputChannel.appendLine("=== 收到退出登录消息 ===")
+						console.log("=== 收到退出登录消息 ===")
+						await this.handleSignOut()
+						this.outputChannel.appendLine("=== 退出登录消息处理完成 ===")
+						console.log("=== 退出登录消息处理完成 ===")
 						break
 					case "newTask":
 						// Code that should run in response to the hello message command
@@ -785,10 +785,10 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 						console.log("正在打开认证页面")
 
 						const uriScheme = vscode.env.uriScheme
-						
+
 						// 使用您自己的认证URL
 						const authUrl = vscode.Uri.parse(
-							`https://your-auth-server.com/auth?state=${encodeURIComponent(nonce)}&callback_url=${encodeURIComponent(`${uriScheme || "vscode"}://your-extension-id/auth`)}`
+							`https://your-auth-server.com/auth?state=${encodeURIComponent(nonce)}&callback_url=${encodeURIComponent(`${uriScheme || "vscode"}://your-extension-id/auth`)}`,
 						)
 						vscode.env.openExternal(authUrl)
 						break
@@ -849,57 +849,112 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 					}
 					case "auth": {
 						switch (message.action) {
+							case "verification": {
+								try {
+									// 调用发送验证码API
+									const response = await axios.get(`${aicodeAuthConfig.authServerUrl}/verification`, {
+										params: {
+											email: message.data?.email,
+											turnstile: message.data?.turnstile || "",
+										},
+									})
+									if (response.data.success) {
+										// 发送成功消息到webview
+										await this.postMessageToWebview({
+											type: "auth",
+											action: "verification",
+											success: true,
+										})
+										vscode.window.showInformationMessage(
+											`验证码发送成功，已发送至邮箱 ${message.data?.email}`,
+										)
+									} else {
+										throw new Error(response.data.message || "验证码发送失败")
+									}
+								} catch (error) {
+									console.error("发送验证码失败:", error)
+									await this.postMessageToWebview({
+										type: "auth",
+										action: "verification",
+										success: false,
+										message: error instanceof Error ? error.message : "验证码发送失败，请重试",
+									})
+									vscode.window.showErrorMessage(
+										error instanceof Error ? error.message : "验证码发送失败，请重试",
+									)
+								}
+								break
+							}
 							case "login": {
 								try {
 									// 调用登录API
-									const response = await axios.post(`${aicodeAuthConfig.authServerUrl}/user/login`, message.data);
+									const response = await axios.post(
+										`${aicodeAuthConfig.authServerUrl}/user/login`,
+										message.data,
+									)
 									if (response.data.success) {
-										const userInfo = response.data.data;
-										// 使用用户信息中的access_token作为认证token
-										await this.handleAuthCallback(userInfo.access_token);
-										// 发送登录成功消息到webview
+										const userInfo = response.data.data
+										await this.handleAuthCallback(userInfo.access_token)
 										await this.postMessageToWebview({
 											type: "auth",
 											action: "loginSuccess",
-											data: userInfo
-										});
-										vscode.window.showInformationMessage("登录成功");
+											data: userInfo,
+										})
+										vscode.window.showInformationMessage("登录成功")
 									} else {
-										throw new Error(response.data.message || "登录失败");
+										throw new Error(response.data.message || "登录失败")
 									}
 								} catch (error) {
-									console.error("登录失败:", error);
-									vscode.window.showErrorMessage("登录失败");
+									console.error("登录失败:", error)
+									vscode.window.showErrorMessage("登录失败")
 								}
-								break;
+								break
 							}
 							case "register": {
 								try {
 									// 调用注册API
-									const response = await axios.post(`${aicodeAuthConfig.authServerUrl}/register`, message.data);
-									if (response.data.token) {
-										await this.handleAuthCallback(response.data.token);
-										vscode.window.showInformationMessage("注册成功并已登录");
+									const response = await axios.post(
+										`${aicodeAuthConfig.authServerUrl}/user/register?turnstile=`,
+										message.data,
+									)
+									if (response.data.success) {
+										vscode.window.showInformationMessage("注册成功")
+										// 注册成功后自动登录
+										const loginResponse = await axios.post(`${aicodeAuthConfig.authServerUrl}/user/login`, {
+											username: message.data?.username,
+											password: message.data?.password,
+										})
+										if (loginResponse.data.success) {
+											const userInfo = loginResponse.data.data
+											await this.handleAuthCallback(userInfo.access_token)
+											await this.postMessageToWebview({
+												type: "auth",
+												action: "loginSuccess",
+												data: userInfo,
+											})
+										}
+									} else {
+										throw new Error(response.data.message || "注册失败")
 									}
 								} catch (error) {
-									console.error("注册失败:", error);
-									vscode.window.showErrorMessage("注册失败");
+									console.error("注册失败:", error)
+									vscode.window.showErrorMessage(error instanceof Error ? error.message : "注册失败")
 								}
-								break;
+								break
 							}
 							case "resetPassword": {
 								try {
 									// 调用重置密码API
-									await axios.post(`${aicodeAuthConfig.authServerUrl}/reset-password`, message.data);
-									vscode.window.showInformationMessage("重置密码邮件已发送，请查收");
+									await axios.post(`${aicodeAuthConfig.authServerUrl}/reset-password`, message.data)
+									vscode.window.showInformationMessage("重置密码邮件已发送，请查收")
 								} catch (error) {
-									console.error("重置密码失败:", error);
-									vscode.window.showErrorMessage("重置密码失败");
+									console.error("重置密码失败:", error)
+									vscode.window.showErrorMessage("重置密码失败")
 								}
-								break;
+								break
 							}
 						}
-						break;
+						break
 					}
 					// Add more switch case statements here as more webview message commands
 					// are created within the webview context (i.e. inside media/main.js)
@@ -1642,7 +1697,7 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 	}
 
 	async updateTaskHistory(item: HistoryItem): Promise<HistoryItem[]> {
-		const history = (await this.getGlobalState("taskHistory") as HistoryItem[]) || []
+		const history = ((await this.getGlobalState("taskHistory")) as HistoryItem[]) || []
 		const existingItemIndex = history.findIndex((h) => h.id === item.id)
 		if (existingItemIndex !== -1) {
 			history[existingItemIndex] = item

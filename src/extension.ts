@@ -7,8 +7,8 @@ import { Logger } from "./services/logging/Logger"
 import { createClineAPI } from "./exports"
 import "./utils/path" // necessary to have access to String.prototype.toPosix
 import { DIFF_VIEW_URI_SCHEME } from "./integrations/editor/DiffViewProvider"
-import { AiCodeAuthService } from './services/aicode-auth';
-import { AuthCommandHandler } from './commands/auth';
+import { AiCodeAuthService } from "./services/aicode-auth"
+import { AuthCommandHandler } from "./commands/auth"
 
 /*
 Built using https://github.com/microsoft/vscode-webview-ui-toolkit
@@ -117,13 +117,13 @@ export function activate(context: vscode.ExtensionContext) {
 
 	context.subscriptions.push(
 		vscode.commands.registerCommand("aiCode.aiCodeLoginButtonClickedUI", () => {
-			console.log("Login button clicked in extension");
+			console.log("Login button clicked in extension")
 			sidebarProvider.postMessageToWebview({
 				type: "action",
-				action: "loginButtonClicked"
-			});
-		})
-	);
+				action: "loginButtonClicked",
+			})
+		}),
+	)
 
 	/*
 	We use the text document content provider API to show the left side for diff view by creating a virtual document for the original content. This makes it readonly so users know to edit the right side if they want to keep their changes.
@@ -188,12 +188,12 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(vscode.window.registerUriHandler({ handleUri }))
 
 	// 初始化认证服务
-	const authService = new AiCodeAuthService(context);
-	const authCommandHandler = new AuthCommandHandler(authService);
-	authCommandHandler.registerCommands(context);
+	const authService = new AiCodeAuthService(context)
+	const authCommandHandler = new AuthCommandHandler(authService)
+	authCommandHandler.registerCommands(context)
 
 	// 设置初始登录状态
-	vscode.commands.executeCommand('setContext', 'aiCode.isLoggedIn', authService.state.isLoggedIn);
+	vscode.commands.executeCommand("setContext", "aiCode.isLoggedIn", authService.state.isLoggedIn)
 
 	return createClineAPI(outputChannel, sidebarProvider)
 }
