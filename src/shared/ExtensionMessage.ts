@@ -45,6 +45,7 @@ export interface ExtensionMessage {
 		| "loginSuccess"
 		| "logoutSuccess"
 		| "verification"
+		| "resetPassword"
 	data?: any
 	success?: boolean
 	message?: string

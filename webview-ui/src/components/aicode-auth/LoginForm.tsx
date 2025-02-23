@@ -91,6 +91,19 @@ const RegisterComponent = ({
 		<>
 			<div style={{ marginBottom: "15px" }}>
 				<VSCodeTextField
+					placeholder="用户名"
+					value={username}
+					onInput={(e) => setUsername((e.target as HTMLInputElement).value)}
+					style={{ width: "100%" }}
+				/>
+				{errors.username && (
+					<div style={{ color: "var(--vscode-errorForeground)", fontSize: "12px", marginTop: "4px" }}>
+						{errors.username}
+					</div>
+				)}
+			</div>
+			<div style={{ marginBottom: "15px" }}>
+				<VSCodeTextField
 					type="email"
 					placeholder="邮箱地址"
 					value={email}
@@ -113,7 +126,7 @@ const RegisterComponent = ({
 				<VSCodeButton
 					onClick={handleSendVerificationCode}
 					disabled={countdown > 0 || isSendingCode}
-					style={{ width: "120px" }}>
+					style={{ width: "130px" }}>
 					{countdown > 0 ? `${countdown}秒后重试` : "获取验证码"}
 				</VSCodeButton>
 			</div>
@@ -130,21 +143,8 @@ const RegisterComponent = ({
 			)}
 			<div style={{ marginBottom: "15px" }}>
 				<VSCodeTextField
-					placeholder="用户名"
-					value={username}
-					onInput={(e) => setUsername((e.target as HTMLInputElement).value)}
-					style={{ width: "100%" }}
-				/>
-				{errors.username && (
-					<div style={{ color: "var(--vscode-errorForeground)", fontSize: "12px", marginTop: "4px" }}>
-						{errors.username}
-					</div>
-				)}
-			</div>
-			<div style={{ marginBottom: "15px" }}>
-				<VSCodeTextField
 					type="password"
-					placeholder="密码"
+					placeholder="请输入密码(8-20位)"
 					value={password}
 					onInput={(e) => setPassword((e.target as HTMLInputElement).value)}
 					style={{ width: "100%" }}
@@ -154,14 +154,11 @@ const RegisterComponent = ({
 						{errors.password}
 					</div>
 				)}
-				<div style={{ fontSize: "12px", color: "var(--vscode-descriptionForeground)", marginTop: "4px" }}>
-					密码长度不得小于8位,最长20位
-				</div>
 			</div>
 			<div style={{ marginBottom: "20px" }}>
 				<VSCodeTextField
 					type="password"
-					placeholder="确认密码"
+					placeholder="请再次输入密码"
 					value={confirmPassword}
 					onInput={(e) => setConfirmPassword((e.target as HTMLInputElement).value)}
 					style={{ width: "100%" }}
@@ -176,8 +173,14 @@ const RegisterComponent = ({
 	)
 }
 
+interface ResetPasswordProps {
+	email: string
+	setEmail: (value: string) => void
+	errors: { [key: string]: string }
+}
+
 // 重置密码组件
-const ResetPasswordComponent = ({ email, setEmail }: { email: string; setEmail: (value: string) => void }) => {
+const ResetPasswordComponent: React.FC<ResetPasswordProps> = ({ email, setEmail, errors }) => {
 	return (
 		<>
 			<h2 style={{ marginBottom: "20px", textAlign: "center" }}>重置密码</h2>
@@ -189,6 +192,11 @@ const ResetPasswordComponent = ({ email, setEmail }: { email: string; setEmail: 
 					onInput={(e) => setEmail((e.target as HTMLInputElement).value)}
 					style={{ width: "100%" }}
 				/>
+				{errors.email && (
+					<div style={{ color: "var(--vscode-errorForeground)", fontSize: "12px", marginTop: "4px" }}>
+						{errors.email}
+					</div>
+				)}
 			</div>
 		</>
 	)
@@ -205,6 +213,7 @@ export const LoginForm = ({ onClose }: LoginFormProps) => {
 	const [isSendingCode, setIsSendingCode] = useState(false)
 	const [countdown, setCountdown] = useState(0)
 	const [errors, setErrors] = useState<{ [key: string]: string }>({})
+	const [isLoading, setIsLoading] = useState(false)
 
 	// 添加消息监听
 	useEffect(() => {
@@ -235,22 +244,21 @@ export const LoginForm = ({ onClose }: LoginFormProps) => {
 				if (message.action === "verification") {
 					console.log("收到验证码响应，success:", message.success)
 					if (message.success === true) {
-						// 使用严格相等
-						console.log("验证码发送成功")
-						setCountdown(60)
-						const timer = setInterval(() => {
-							setCountdown((prev) => {
-								if (prev <= 1) {
-									clearInterval(timer)
-									return 0
-								}
-								return prev - 1
-							})
-						}, 1000)
+						// 验证码发送成功，只需要设置发送状态
+						setIsSendingCode(false)
 					} else {
 						console.log("验证码发送失败，错误信息:", message.message)
+						// 发送失败时重置计时
 						setCountdown(0)
 						setIsSendingCode(false)
+					}
+				} else if (message.action === "resetPassword") {
+					setIsLoading(false)
+					if (message.success) {
+						// 重置密码邮件发送成功，返回登录页面
+						setIsReset(false)
+						setIsLogin(true)
+						setEmail("")
 					}
 				}
 			} else {
@@ -264,6 +272,16 @@ export const LoginForm = ({ onClose }: LoginFormProps) => {
 
 	const validateForm = () => {
 		const newErrors: { [key: string]: string } = {}
+
+		if (isReset) {
+			if (!email) {
+				newErrors.email = "请输入邮箱地址"
+			} else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+				newErrors.email = "请输入有效的邮箱地址"
+			}
+			setErrors(newErrors)
+			return Object.keys(newErrors).length === 0
+		}
 
 		if (!isLogin) {
 			if (!email) {
@@ -306,6 +324,17 @@ export const LoginForm = ({ onClose }: LoginFormProps) => {
 		console.log("开始发送验证码请求")
 		console.log("邮箱地址:", email)
 		setIsSendingCode(true)
+		// 立即开始计时
+		setCountdown(60)
+		const timer = setInterval(() => {
+			setCountdown((prev) => {
+				if (prev <= 1) {
+					clearInterval(timer)
+					return 0
+				}
+				return prev - 1
+			})
+		}, 1000)
 
 		try {
 			// 发送验证码请求
@@ -322,6 +351,8 @@ export const LoginForm = ({ onClose }: LoginFormProps) => {
 			console.log("消息已发送，等待响应")
 		} catch (error) {
 			console.error("发送验证码失败:", error)
+			// 发送失败时清除计时
+			clearInterval(timer)
 			setCountdown(0)
 			setIsSendingCode(false)
 		}
@@ -334,6 +365,7 @@ export const LoginForm = ({ onClose }: LoginFormProps) => {
 			}
 
 			if (isReset) {
+				setIsLoading(true)
 				vscode.postMessage({
 					type: "auth",
 					action: "resetPassword",
@@ -373,7 +405,7 @@ export const LoginForm = ({ onClose }: LoginFormProps) => {
 
 	const renderForm = () => {
 		if (isReset) {
-			return <ResetPasswordComponent email={email} setEmail={setEmail} />
+			return <ResetPasswordComponent email={email} setEmail={setEmail} errors={errors} />
 		}
 
 		return (
@@ -426,10 +458,10 @@ export const LoginForm = ({ onClose }: LoginFormProps) => {
 					marginBottom: "15px",
 					flexDirection: "row",
 				}}>
-				<VSCodeButton onClick={handleSubmit} style={{ width: "45%" }}>
-					{isReset ? "发送重置邮件" : isLogin ? "登录" : "注册"}
+				<VSCodeButton onClick={handleSubmit} disabled={isLoading} style={{ width: "45%" }}>
+					{isLoading ? "发送中..." : isReset ? "发送重置邮件" : isLogin ? "登录" : "注册"}
 				</VSCodeButton>
-				<VSCodeButton onClick={onClose} style={{ width: "45%" }}>
+				<VSCodeButton onClick={onClose} disabled={isLoading} style={{ width: "45%" }}>
 					取消
 				</VSCodeButton>
 			</div>

@@ -945,11 +945,31 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 							case "resetPassword": {
 								try {
 									// 调用重置密码API
-									await axios.post(`${aicodeAuthConfig.authServerUrl}/reset-password`, message.data)
-									vscode.window.showInformationMessage("重置密码邮件已发送，请查收")
+									const response = await axios.get(`${aicodeAuthConfig.authServerUrl}/reset_password`, {
+										params: {
+											email: message.data?.email,
+											turnstile: message.data?.turnstile || "",
+										},
+									})
+									if (response.data.success) {
+										vscode.window.showInformationMessage("重置密码邮件已发送，请查收")
+										await this.postMessageToWebview({
+											type: "auth",
+											action: "resetPassword",
+											success: true,
+										})
+									} else {
+										throw new Error(response.data.message || "重置密码失败")
+									}
 								} catch (error) {
 									console.error("重置密码失败:", error)
-									vscode.window.showErrorMessage("重置密码失败")
+									vscode.window.showErrorMessage(error instanceof Error ? error.message : "重置密码失败")
+									await this.postMessageToWebview({
+										type: "auth",
+										action: "resetPassword",
+										success: false,
+										message: error instanceof Error ? error.message : "重置密码失败",
+									})
 								}
 								break
 							}
