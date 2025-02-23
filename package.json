@@ -102,6 +102,18 @@
 				"command": "aiCode.openInNewTab",
 				"title": "在新标签页中打开",
 				"category": "AI Code"
+			},
+			{
+				"command": "aiCode.aiCodeLoginButtonClickedUI",
+				"title": "登录",
+				"category": "AI Code",
+				"icon": "$(sign-in)"
+			},
+			{
+				"command": "aiCode.aiCodeLogoutButtonClickedUI",
+				"title": "登出",
+				"category": "AI Code",
+				"icon": "$(sign-out)"
 			}
 		],
 		"menus": {
@@ -130,6 +142,16 @@
 					"command": "aiCode.settingsButtonClicked",
 					"group": "navigation@5",
 					"when": "view == ai-code-dev.SidebarProvider"
+				},
+				{
+					"command": "aiCode.aiCodeLoginButtonClickedUI",
+					"group": "navigation@6",
+					"when": "view == ai-code-dev.SidebarProvider && !aiCode.isLoggedIn"
+				},
+				{
+					"command": "aiCode.aiCodeLogoutButtonClickedUI",
+					"group": "navigation@6",
+					"when": "view == ai-code-dev.SidebarProvider && aiCode.isLoggedIn"
 				}
 			]
 		},

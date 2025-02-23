@@ -44,7 +44,17 @@ export interface WebviewMessage {
 		| "accountLogoutClicked"
 		| "subscribeEmail"
 		| "searchCommits"
-	// | "relaunchChromeDebugMode"
+		| "auth"
+		| "login"
+		| "register"
+		| "loginSuccess"
+		| "logoutSuccess"
+	action?: "login" | "register" | "loginSuccess" | "logoutSuccess" | "resetPassword"
+	data?: {
+		email: string
+		username?: string
+		password?: string
+	}
 	text?: string
 	disabled?: boolean
 	askResponse?: ClineAskResponse

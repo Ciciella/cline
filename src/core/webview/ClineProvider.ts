@@ -29,6 +29,8 @@ import { AutoApprovalSettings, DEFAULT_AUTO_APPROVAL_SETTINGS } from "../../shar
 import { BrowserSettings, DEFAULT_BROWSER_SETTINGS } from "../../shared/BrowserSettings"
 import { ChatSettings, DEFAULT_CHAT_SETTINGS } from "../../shared/ChatSettings"
 import { searchCommits } from "../../utils/git"
+import { CustomAuthManager } from "../../services/auth/CustomAuthManager"
+import { aicodeAuthConfig } from "../../services/aicode-auth/config"
 
 /*
 https://github.com/microsoft/vscode-webview-ui-toolkit-samples/blob/main/default/weather-webview/src/providers/WeatherViewProvider.ts
@@ -108,6 +110,7 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 	workspaceTracker?: WorkspaceTracker
 	mcpHub?: McpHub
 	private authManager: FirebaseAuthManager
+	private customAuthManager: CustomAuthManager
 	private latestAnnouncementId = "jan-20-2025" // update to some unique identifier when we add a new announcement
 
 	constructor(
@@ -119,6 +122,7 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 		this.workspaceTracker = new WorkspaceTracker(this)
 		this.mcpHub = new McpHub(this)
 		this.authManager = new FirebaseAuthManager(this)
+		this.customAuthManager = new CustomAuthManager(this)
 	}
 
 	/*
@@ -145,18 +149,29 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 		this.mcpHub?.dispose()
 		this.mcpHub = undefined
 		this.authManager.dispose()
+		this.customAuthManager.dispose()
 		this.outputChannel.appendLine("Disposed all disposables")
 		ClineProvider.activeInstances.delete(this)
 	}
 
 	// Auth methods
 	async handleSignOut() {
+		this.outputChannel.appendLine("=== handleSignOut 开始执行 ===");
+		console.log("=== handleSignOut 开始执行 ===");
 		try {
-			await this.authManager.signOut()
-			vscode.window.showInformationMessage("Successfully logged out of AI Code")
+			this.outputChannel.appendLine("正在调用 customAuthManager.signOut()");
+			console.log("正在调用 customAuthManager.signOut()");
+			await this.customAuthManager.signOut();
+			this.outputChannel.appendLine("customAuthManager.signOut() 执行成功");
+			console.log("customAuthManager.signOut() 执行成功");
+			vscode.window.showInformationMessage("成功退出登录");
 		} catch (error) {
-			vscode.window.showErrorMessage("Logout failed")
+			this.outputChannel.appendLine(`退出登录失败: ${error}`);
+			console.error("退出登录失败:", error);
+			vscode.window.showErrorMessage("退出登录失败");
 		}
+		this.outputChannel.appendLine("=== handleSignOut 执行结束 ===");
+		console.log("=== handleSignOut 执行结束 ===");
 	}
 
 	async setAuthToken(token?: string) {
@@ -379,9 +394,10 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 	private setWebviewMessageListener(webview: vscode.Webview) {
 		webview.onDidReceiveMessage(
 			async (message: WebviewMessage) => {
+				console.log("Message received from webview:", message)
 				switch (message.type) {
 					case "webviewDidLaunch":
-						this.postStateToWebview()
+						await this.postStateToWebview()
 						this.workspaceTracker?.populateFilePaths() // don't await
 						getTheme().then((theme) =>
 							this.postMessageToWebview({
@@ -414,6 +430,13 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 								}
 							}
 						})
+						break
+					case "accountLogoutClicked":
+						this.outputChannel.appendLine("=== 收到退出登录消息 ===");
+						console.log("=== 收到退出登录消息 ===");
+						await this.handleSignOut();
+						this.outputChannel.appendLine("=== 退出登录消息处理完成 ===");
+						console.log("=== 退出登录消息处理完成 ===");
 						break
 					case "newTask":
 						// Code that should run in response to the hello message command
@@ -753,24 +776,21 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 						this.subscribeEmail(message.text)
 						break
 					case "accountLoginClicked": {
-						// Generate nonce for state validation
+						// 生成随机nonce用于状态验证
 						const nonce = crypto.randomBytes(32).toString("hex")
 						await this.storeSecret("authNonce", nonce)
 
-						// Open browser for authentication with state param
-						console.log("Login button clicked in account page")
-						console.log("Opening auth page with state param")
+						// 打开浏览器进行认证
+						console.log("登录按钮被点击")
+						console.log("正在打开认证页面")
 
 						const uriScheme = vscode.env.uriScheme
-
+						
+						// 使用您自己的认证URL
 						const authUrl = vscode.Uri.parse(
-							`https://app.cline.bot/auth?state=${encodeURIComponent(nonce)}&callback_url=${encodeURIComponent(`${uriScheme || "vscode"}://saoudrizwan.claude-dev/auth`)}`,
+							`https://your-auth-server.com/auth?state=${encodeURIComponent(nonce)}&callback_url=${encodeURIComponent(`${uriScheme || "vscode"}://your-extension-id/auth`)}`
 						)
 						vscode.env.openExternal(authUrl)
-						break
-					}
-					case "accountLogoutClicked": {
-						await this.handleSignOut()
 						break
 					}
 					case "openMcpSettings": {
@@ -826,6 +846,60 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 							`@ext:tianguaduizhang.claude-dev-china ${settingsFilter}`.trim(), // trim whitespace if no settings filter
 						)
 						break
+					}
+					case "auth": {
+						switch (message.action) {
+							case "login": {
+								try {
+									// 调用登录API
+									const response = await axios.post(`${aicodeAuthConfig.authServerUrl}/user/login`, message.data);
+									if (response.data.success) {
+										const userInfo = response.data.data;
+										// 使用用户信息中的access_token作为认证token
+										await this.handleAuthCallback(userInfo.access_token);
+										// 发送登录成功消息到webview
+										await this.postMessageToWebview({
+											type: "auth",
+											action: "loginSuccess",
+											data: userInfo
+										});
+										vscode.window.showInformationMessage("登录成功");
+									} else {
+										throw new Error(response.data.message || "登录失败");
+									}
+								} catch (error) {
+									console.error("登录失败:", error);
+									vscode.window.showErrorMessage("登录失败");
+								}
+								break;
+							}
+							case "register": {
+								try {
+									// 调用注册API
+									const response = await axios.post(`${aicodeAuthConfig.authServerUrl}/register`, message.data);
+									if (response.data.token) {
+										await this.handleAuthCallback(response.data.token);
+										vscode.window.showInformationMessage("注册成功并已登录");
+									}
+								} catch (error) {
+									console.error("注册失败:", error);
+									vscode.window.showErrorMessage("注册失败");
+								}
+								break;
+							}
+							case "resetPassword": {
+								try {
+									// 调用重置密码API
+									await axios.post(`${aicodeAuthConfig.authServerUrl}/reset-password`, message.data);
+									vscode.window.showInformationMessage("重置密码邮件已发送，请查收");
+								} catch (error) {
+									console.error("重置密码失败:", error);
+									vscode.window.showErrorMessage("重置密码失败");
+								}
+								break;
+							}
+						}
+						break;
 					}
 					// Add more switch case statements here as more webview message commands
 					// are created within the webview context (i.e. inside media/main.js)
@@ -1005,16 +1079,12 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 
 	async handleAuthCallback(token: string) {
 		try {
-			// First sign in with Firebase to trigger auth state change
-			await this.authManager.signInWithCustomToken(token)
-
-			// Then store the token securely
-			await this.storeSecret("authToken", token)
+			await this.customAuthManager.signInWithToken(token)
 			await this.postStateToWebview()
-			vscode.window.showInformationMessage("Successfully logged in to AI Code")
+			vscode.window.showInformationMessage("登录成功")
 		} catch (error) {
-			console.error("Failed to handle auth callback:", error)
-			vscode.window.showErrorMessage("Failed to log in to AI Code")
+			console.error("处理认证回调失败:", error)
+			vscode.window.showErrorMessage("登录失败")
 		}
 	}
 
@@ -1572,7 +1642,7 @@ export class ClineProvider implements vscode.WebviewViewProvider {
 	}
 
 	async updateTaskHistory(item: HistoryItem): Promise<HistoryItem[]> {
-		const history = ((await this.getGlobalState("taskHistory")) as HistoryItem[]) || []
+		const history = (await this.getGlobalState("taskHistory") as HistoryItem[]) || []
 		const existingItemIndex = history.findIndex((h) => h.id === item.id)
 		if (existingItemIndex !== -1) {
 			history[existingItemIndex] = item

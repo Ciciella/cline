@@ -13,6 +13,7 @@ import enMessages from "./locales/en.json"
 import zhCNMessages from "./locales/zh-CN.json"
 import { IntlProvider } from "react-intl"
 import { VSCodeButton } from "@vscode/webview-ui-toolkit/react"
+import { AuthView } from "./components/aicode-auth/AuthView"
 
 // 定义消息类型
 type MessageType = {
@@ -40,9 +41,11 @@ const AppContent = () => {
 	const [showMcp, setShowMcp] = useState(false)
 	const [showAccount, setShowAccount] = useState(false)
 	const [showAnnouncement, setShowAnnouncement] = useState(false)
+	const [showAuth, setShowAuth] = useState(false)
 
 	const handleMessage = useCallback((e: MessageEvent) => {
 		const message: ExtensionMessage = e.data
+		console.log("Received message:", message);
 		switch (message.type) {
 			case "action":
 				switch (message.action!) {
@@ -51,30 +54,43 @@ const AppContent = () => {
 						setShowHistory(false)
 						setShowMcp(false)
 						setShowAccount(false)
+						setShowAuth(false)
 						break
 					case "historyButtonClicked":
 						setShowSettings(false)
 						setShowHistory(true)
 						setShowMcp(false)
 						setShowAccount(false)
+						setShowAuth(false)
 						break
 					case "mcpButtonClicked":
 						setShowSettings(false)
 						setShowHistory(false)
 						setShowMcp(true)
 						setShowAccount(false)
+						setShowAuth(false)
 						break
 					case "accountLoginClicked":
 						setShowSettings(false)
 						setShowHistory(false)
 						setShowMcp(false)
 						setShowAccount(true)
+						setShowAuth(false)
 						break
 					case "chatButtonClicked":
 						setShowSettings(false)
 						setShowHistory(false)
 						setShowMcp(false)
 						setShowAccount(false)
+						setShowAuth(false)
+						break
+					case "loginButtonClicked":
+						console.log("Login button clicked");
+						setShowSettings(false)
+						setShowHistory(false)
+						setShowMcp(false)
+						setShowAccount(false)
+						setShowAuth(true)
 						break
 				}
 				break
@@ -92,6 +108,10 @@ const AppContent = () => {
 
 	if (!didHydrateState) {
 		return null
+	}
+
+	if (showAuth) {
+		return <AuthView onClose={() => setShowAuth(false)} />
 	}
 
 	return (

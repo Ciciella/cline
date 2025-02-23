@@ -28,6 +28,9 @@ export interface ExtensionMessage {
 		| "requestVsCodeLmModels"
 		| "emailSubscribed"
 		| "commitSearchResults"
+		| "loginButtonClicked"
+		| "aiCodelogoutButtonClickedUI"
+		| "auth"
 	text?: string
 	action?:
 		| "chatButtonClicked"
@@ -37,6 +40,11 @@ export interface ExtensionMessage {
 		| "didBecomeVisible"
 		| "accountLoginClicked"
 		| "accountLogoutClicked"
+		| "loginButtonClicked"
+		| "aiCodelogoutButtonClickedUI"
+		| "loginSuccess"
+		| "logoutSuccess"
+	data?: any
 	invoke?: "sendMessage" | "primaryButtonClick" | "secondaryButtonClick"
 	state?: ExtensionState
 	images?: string[]
